@@ -1,0 +1,58 @@
+<!--
+  ~ THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
+  ~ TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
+  ~ STATUTORY AND DISCLAIMS ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  ~ SATISFACTORY QUALITY, NON INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+  ~
+  ~ THE SOURCE CODE AND DOCUMENTATION MAY INCLUDE ERRORS. INFINEON TECHNOLOGIES
+  ~ RESERVES THE RIGHT TO INCORPORATE MODIFICATIONS TO THE SOURCE CODE IN LATER
+  ~ REVISIONS OF IT, AND TO MAKE IMPROVEMENTS OR CHANGES IN THE DOCUMENTATION OR
+  ~ THE PRODUCTS OR TECHNOLOGIES DESCRIBED THEREIN AT ANY TIME.
+  ~
+  ~ INFINEON TECHNOLOGIES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT OR
+  ~ CONSEQUENTIAL DAMAGE OR LIABILITY ARISING FROM YOUR USE OF THE SOURCE CODE OR
+  ~ ANY DOCUMENTATION, INCLUDING BUT NOT LIMITED TO, LOST REVENUES, DATA OR
+  ~ PROFITS, DAMAGES OF ANY SPECIAL, INCIDENTAL OR CONSEQUENTIAL NATURE, PUNITIVE
+  ~ DAMAGES, LOSS OF PROPERTY OR LOSS OF PROFITS ARISING OUT OF OR IN CONNECTION
+  ~ WITH THIS AGREEMENT, OR BEING UNUSABLE, EVEN IF ADVISED OF THE POSSIBILITY OR
+  ~ PROBABILITY OF SUCH DAMAGES AND WHETHER A CLAIM FOR SUCH DAMAGE IS BASED UPON
+  ~ WARRANTY, CONTRACT, TORT, NEGLIGENCE OR OTHERWISE.
+  ~
+  ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.android.infineon.lpa.com.infineon.esim.lpa.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/menu_item_preferences"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_app_version"
+        android:orderInCategory="200"
+        android:title="@string/menu_item_app_version"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_euicc_info"
+        android:orderInCategory="300"
+        android:title="@string/menu_item_euicc_info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_license_info"
+        android:orderInCategory="400"
+        android:title="@string/menu_item_license_info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_notifications"
+        android:orderInCategory="500"
+        android:title="@string/menu_item_clear_notifications"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="900"
+        android:title="@string/menu_item_refresh"
+        app:showAsAction="never"/>
+</menu>

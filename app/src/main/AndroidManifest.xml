@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
+  ~ TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
+  ~ STATUTORY AND DISCLAIMS ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  ~ SATISFACTORY QUALITY, NON INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+  ~
+  ~ THE SOURCE CODE AND DOCUMENTATION MAY INCLUDE ERRORS. INFINEON TECHNOLOGIES
+  ~ RESERVES THE RIGHT TO INCORPORATE MODIFICATIONS TO THE SOURCE CODE IN LATER
+  ~ REVISIONS OF IT, AND TO MAKE IMPROVEMENTS OR CHANGES IN THE DOCUMENTATION OR
+  ~ THE PRODUCTS OR TECHNOLOGIES DESCRIBED THEREIN AT ANY TIME.
+  ~
+  ~ INFINEON TECHNOLOGIES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT OR
+  ~ CONSEQUENTIAL DAMAGE OR LIABILITY ARISING FROM YOUR USE OF THE SOURCE CODE OR
+  ~ ANY DOCUMENTATION, INCLUDING BUT NOT LIMITED TO, LOST REVENUES, DATA OR
+  ~ PROFITS, DAMAGES OF ANY SPECIAL, INCIDENTAL OR CONSEQUENTIAL NATURE, PUNITIVE
+  ~ DAMAGES, LOSS OF PROPERTY OR LOSS OF PROFITS ARISING OUT OF OR IN CONNECTION
+  ~ WITH THIS AGREEMENT, OR BEING UNUSABLE, EVEN IF ADVISED OF THE POSSIBILITY OR
+  ~ PROBABILITY OF SUCH DAMAGES AND WHETHER A CLAIM FOR SUCH DAMAGE IS BASED UPON
+  ~ WARRANTY, CONTRACT, TORT, NEGLIGENCE OR OTHERWISE.
+  ~
+  ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2,
+                                     androidx.camera.core,
+                                     androidx.camera.view,
+                                     androidx.camera.lifecycle" />
+
+    <uses-permission android:name="android.permission.CAMERA" />                   <!-- QR code scanning -->
+    <uses-permission android:name="android.permission.INTERNET"/>                  <!-- profile download -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>         <!-- checking of Wi-Fi state -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>      <!-- checking of network connection -->
+
+
+    <application
+        android:name="com.infineon.esim.lpa.Application"
+        android:label="@string/app_name"
+        android:allowBackup="false"
+        android:icon="@mipmap/ifx_lpa_icon_grey"
+        android:roundIcon="@mipmap/ifx_lpa_icon_grey_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.profileList.ProfileListActivity"
+            android:label="@string/profile_list_title"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true"
+            android:launchMode="singleInstance">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/device_filter" />
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" android:resource="@xml/device_filter" />
+        </activity>
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.scanBarcode.ScanBarcodeActivity"
+            android:label="@string/scan_qr_title"
+            android:noHistory="true">
+        </activity>
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.downloadProfile.DownloadActivity"
+            android:label="@string/download_profile_title">
+        </activity>
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.profileDetails.ProfileDetailsActivity"
+            android:label="@string/profile_details_title">
+        </activity>
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.preference.PreferenceActivity"
+            android:label="@string/pref_title">
+        </activity>
+
+        <activity
+            android:name="com.infineon.esim.lpa.ui.euiccDetails.EuiccDetailsActivity"
+            android:label="@string/euicc_info_title">
+        </activity>
+    </application>
+
+</manifest>

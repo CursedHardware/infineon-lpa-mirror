@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
+  ~ TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
+  ~ STATUTORY AND DISCLAIMS ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  ~ SATISFACTORY QUALITY, NON INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+  ~
+  ~ THE SOURCE CODE AND DOCUMENTATION MAY INCLUDE ERRORS. INFINEON TECHNOLOGIES
+  ~ RESERVES THE RIGHT TO INCORPORATE MODIFICATIONS TO THE SOURCE CODE IN LATER
+  ~ REVISIONS OF IT, AND TO MAKE IMPROVEMENTS OR CHANGES IN THE DOCUMENTATION OR
+  ~ THE PRODUCTS OR TECHNOLOGIES DESCRIBED THEREIN AT ANY TIME.
+  ~
+  ~ INFINEON TECHNOLOGIES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT OR
+  ~ CONSEQUENTIAL DAMAGE OR LIABILITY ARISING FROM YOUR USE OF THE SOURCE CODE OR
+  ~ ANY DOCUMENTATION, INCLUDING BUT NOT LIMITED TO, LOST REVENUES, DATA OR
+  ~ PROFITS, DAMAGES OF ANY SPECIAL, INCIDENTAL OR CONSEQUENTIAL NATURE, PUNITIVE
+  ~ DAMAGES, LOSS OF PROPERTY OR LOSS OF PROFITS ARISING OUT OF OR IN CONNECTION
+  ~ WITH THIS AGREEMENT, OR BEING UNUSABLE, EVEN IF ADVISED OF THE POSSIBILITY OR
+  ~ PROBABILITY OF SUCH DAMAGES AND WHETHER A CLAIM FOR SUCH DAMAGE IS BASED UPON
+  ~ WARRANTY, CONTRACT, TORT, NEGLIGENCE OR OTHERWISE.
+  ~
+  ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_eid_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+    <TextView
+        android:id="@+id/text_eid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_eid_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_gsma_sgp_22_version_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+
+    <TextView
+        android:id="@+id/text_gsma_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_gsma_sgp22_version_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_tca_version_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+    <TextView
+        android:id="@+id/text_tca_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_tca_version_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_pki_ids_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+    <TextView
+        android:id="@+id/text_pki_ids"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_pki_ids_example"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:typeface="monospace"
+        android:textIsSelectable="true"
+        />
+
+</LinearLayout>

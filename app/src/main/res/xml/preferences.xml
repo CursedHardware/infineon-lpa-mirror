@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
+  ~ TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
+  ~ STATUTORY AND DISCLAIMS ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  ~ SATISFACTORY QUALITY, NON INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+  ~
+  ~ THE SOURCE CODE AND DOCUMENTATION MAY INCLUDE ERRORS. INFINEON TECHNOLOGIES
+  ~ RESERVES THE RIGHT TO INCORPORATE MODIFICATIONS TO THE SOURCE CODE IN LATER
+  ~ REVISIONS OF IT, AND TO MAKE IMPROVEMENTS OR CHANGES IN THE DOCUMENTATION OR
+  ~ THE PRODUCTS OR TECHNOLOGIES DESCRIBED THEREIN AT ANY TIME.
+  ~
+  ~ INFINEON TECHNOLOGIES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT OR
+  ~ CONSEQUENTIAL DAMAGE OR LIABILITY ARISING FROM YOUR USE OF THE SOURCE CODE OR
+  ~ ANY DOCUMENTATION, INCLUDING BUT NOT LIMITED TO, LOST REVENUES, DATA OR
+  ~ PROFITS, DAMAGES OF ANY SPECIAL, INCIDENTAL OR CONSEQUENTIAL NATURE, PUNITIVE
+  ~ DAMAGES, LOSS OF PROPERTY OR LOSS OF PROFITS ARISING OUT OF OR IN CONNECTION
+  ~ WITH THIS AGREEMENT, OR BEING UNUSABLE, EVEN IF ADVISED OF THE POSSIBILITY OR
+  ~ PROBABILITY OF SUCH DAMAGES AND WHETHER A CLAIM FOR SUCH DAMAGE IS BASED UPON
+  ~ WARRANTY, CONTRACT, TORT, NEGLIGENCE OR OTHERWISE.
+  ~
+  ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
+  -->
+
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
+
+    <PreferenceCategory android:title="@string/pref_category_general">
+        <ListPreference
+            android:title="@string/pref_title_select_se"
+            android:key="@string/pref_key_select_se"
+            android:summary="@string/pref_summary_select_se"
+            android:defaultValue="@string/pref_def_value_select_se">
+        </ListPreference>
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_keep_active_profile"
+            android:key="@string/pref_key_keep_active_profile"
+            android:summary="@string/pref_summary_keep_active_profile"
+            android:defaultValue="@string/pref_def_value_keep_active_profile">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_simslots_need_term_cap_cmd"
+            android:key="@string/pref_key_sim_slot_needs_term_cap_cmd"
+            android:summary="@string/pref_summary_sim_slot_needs_term_cap_cmd"
+            android:defaultValue="@string/pref_def_value_simslots_need_term_cap_cmd">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_trust_gsma_test_ci"
+            android:key="@string/pref_key_trust_gsma_test_ci"
+            android:summary="@string/pref_summary_trust_gsma_test_ci"
+            android:defaultValue="@string/pref_def_value_trust_gsma_test_ci">
+        </CheckBoxPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_se_reader">
+        <EditTextPreference
+            android:title="@string/pref_title_euicc_profile_init_time"
+            android:key="@string/pref_key_euicc_profile_init_time"
+            android:summary="@string/pref_summary_euicc_profile_init_time"
+            android:defaultValue="@string/pref_def_value_euicc_profile_init_time">
+        </EditTextPreference>
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

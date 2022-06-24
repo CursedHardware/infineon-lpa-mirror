@@ -1,0 +1,17 @@
+Extracted from UserManual V2.0 Chapter 2.0
+===========================================
+This license applies to "IdentiveReader.java"
+
+2.0 Licenses
+
+If the document contains source code examples, they are provided for illustrative purposes only and subject to the following restrictions:
+
+• You MAY at your own risk use or modify the source code provided in the document in
+applications you may develop. You MAY distribute those applications ONLY in form of
+compiled applications.
+
+• You MAY NOT copy or distribute parts of or the entire source code without prior
+written consent from Identive.
+
+• You MAY NOT combine or distribute the source code provided with Open Source
+Software or with software developed using Open Source Software in a manner that subjects the source code or any portion thereof to any license obligations of such Open Source Software.

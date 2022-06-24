@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
+  ~ TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
+  ~ STATUTORY AND DISCLAIMS ANY AND ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  ~ SATISFACTORY QUALITY, NON INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+  ~
+  ~ THE SOURCE CODE AND DOCUMENTATION MAY INCLUDE ERRORS. INFINEON TECHNOLOGIES
+  ~ RESERVES THE RIGHT TO INCORPORATE MODIFICATIONS TO THE SOURCE CODE IN LATER
+  ~ REVISIONS OF IT, AND TO MAKE IMPROVEMENTS OR CHANGES IN THE DOCUMENTATION OR
+  ~ THE PRODUCTS OR TECHNOLOGIES DESCRIBED THEREIN AT ANY TIME.
+  ~
+  ~ INFINEON TECHNOLOGIES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT OR
+  ~ CONSEQUENTIAL DAMAGE OR LIABILITY ARISING FROM YOUR USE OF THE SOURCE CODE OR
+  ~ ANY DOCUMENTATION, INCLUDING BUT NOT LIMITED TO, LOST REVENUES, DATA OR
+  ~ PROFITS, DAMAGES OF ANY SPECIAL, INCIDENTAL OR CONSEQUENTIAL NATURE, PUNITIVE
+  ~ DAMAGES, LOSS OF PROPERTY OR LOSS OF PROFITS ARISING OUT OF OR IN CONNECTION
+  ~ WITH THIS AGREEMENT, OR BEING UNUSABLE, EVEN IF ADVISED OF THE POSSIBILITY OR
+  ~ PROBABILITY OF SUCH DAMAGES AND WHETHER A CLAIM FOR SUCH DAMAGE IS BASED UPON
+  ~ WARRANTY, CONTRACT, TORT, NEGLIGENCE OR OTHERWISE.
+  ~
+  ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context="com.infineon.esim.lpa.ui.profileDetails.ProfileDetailsActivity">
+
+
+    <ImageView
+        android:id="@+id/imageViewProfileIcon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:padding="0dp"
+        android:background="@null"
+        android:src="@drawable/profile_default"
+        android:contentDescription="@string/profile_details_profile_icon_content_description" />
+
+    <Space
+        android:layout_height="50dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_nickname_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textViewNicknameBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_provider_example"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="0dp"
+            android:layout_width="5dp" />
+
+        <ImageView
+            android:id="@+id/imageViewNicknameEditIcon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:padding="0dp"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_edit_24"
+            android:contentDescription="@string/profile_details_nickname_edit_icon_content_description" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_height="10dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_provider_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/textViewProviderBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_provider_example"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="10dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_iccid_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/textViewIccidBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_iccid_example"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="10dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_status"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/textViewStatusBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/profile_details_status_enabled"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="30dp"
+        android:layout_width="match_parent" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <Button
+            android:id="@+id/button_enable_disable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/profile_details_button_enable_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAllCaps="false" />
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="20dp" />
+
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/profile_details_button_delete_text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</LinearLayout>
