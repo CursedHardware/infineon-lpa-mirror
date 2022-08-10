@@ -33,6 +33,7 @@
     <string name="menu_item_euicc_info">eUICC info</string>
     <string name="menu_item_license_info">License info</string>
     <string name="menu_item_clear_notifications">Clear notifications</string>
+    <string name="menu_item_refresh_esims">Refresh eSIMs</string>
     <string name="menu_item_refresh">Refresh profiles</string>
 
     <!-- Actions -->
@@ -164,7 +165,7 @@
     <string name="pref_def_value_trust_gsma_test_ci">true</string>
     <string name="pref_def_value_change_mtu">true</string>
 
-    <string name="pref_progress_refreshing_reader_list">Refreshing reader list…</string>
+    <string name="pref_progress_refreshing_euicc_list">Refreshing reader list…</string>
     <string name="pref_progress_connecting_reader">Connecting %1$s reader…</string>
     <string name="pref_progress_disconnecting_reader">Disconnecting reader…</string>
     <string name="pref_bluetooth_permission_alert_dialog_title">Bluetooth permission required!</string>

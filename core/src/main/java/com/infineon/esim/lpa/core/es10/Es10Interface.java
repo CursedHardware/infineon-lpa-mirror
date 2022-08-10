@@ -292,10 +292,15 @@ public class Es10Interface {
 
         Log.debug(TAG, "ES10 -> : " + berRequest.getClass().getSimpleName() + "\n" + berRequest);
         String response = transmitApdus(requests);
-        T berResponse = Ber.createFromEncodedHexString(berResponseClass, response);
-        Log.debug(TAG, "ES10 <- : " + berResponse.getClass().getSimpleName() + "\n" + berResponse);
 
-        return berResponse;
+        if(Apdu.isSuccessResponse(response)) {
+            T berResponse = Ber.createFromEncodedHexString(berResponseClass, response);
+            Log.debug(TAG, "ES10 <- : " + berResponse.getClass().getSimpleName() + "\n" + berResponse);
+
+            return berResponse;
+        } else {
+            throw new Exception("Error: APDU response is no success: " + Apdu.getStatusWord(response));
+        }
     }
 
     private <T extends BerType> T sendCommand(List<String> encodedRequests, Class<T> berResponseClass) throws Exception {
@@ -303,10 +308,14 @@ public class Es10Interface {
 
         String response = transmitApdus(requests);
 
-        if(berResponseClass != null) {
-            return Ber.createFromEncodedHexString(berResponseClass, response);
+        if(Apdu.isSuccessResponse(response)) {
+            if(berResponseClass != null) {
+                return Ber.createFromEncodedHexString(berResponseClass, response);
+            } else {
+                return null;
+            }
         } else {
-            return null;
+            throw new Exception("Error: APDU response is no success: " + Apdu.getStatusWord(response));
         }
     }
 

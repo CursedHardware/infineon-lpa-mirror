@@ -32,13 +32,19 @@ import com.infineon.esim.lpa.euicc.base.EuiccInterfaceStatusChangeHandler;
 import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 final public class IdentiveEuiccInterface implements EuiccInterface {
     private static final String TAG = IdentiveEuiccInterface.class.getName();
 
     public static final String INTERFACE_TAG = "USB";
-    public static final String READER_NAME = "SCR3500 A Contact Reader";
+
+    public static final List<String> READER_NAMES = new ArrayList<>(Arrays.asList(
+            "SCR3500 A Contact Reader",
+            "Identive CLOUD 4700 F Dual Interface Reader",
+            "Identiv uTrust 4701 F Dual Interface Reader"
+    ));
 
     private final EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler;
     private final IdentiveService identiveService;

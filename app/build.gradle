@@ -9,8 +9,8 @@ android {
         applicationId "com.infineon.esim.lpa"
         minSdkVersion 28
         targetSdkVersion 32
-        versionCode 40000
-        versionName "4.0.0"
+        versionCode 40001
+        versionName "4.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
     }
@@ -110,7 +110,7 @@ dependencies {
     // ---------------------------------------------------------------------------------------------
     // CameraX library
     // ---------------------------------------------------------------------------------------------
-    def cameraVersion = "1.2.0-alpha02"
+    def cameraVersion = "1.2.0-alpha04"
     // Camera2 library
     implementation "androidx.camera:camera-camera2:$cameraVersion"
     // Camera core
@@ -128,10 +128,10 @@ dependencies {
     // AppCompat
     implementation "androidx.appcompat:appcompat:1.4.2"
     // Activity (for permission handling)
-    implementation "androidx.activity:activity:1.4.0"
+    implementation "androidx.activity:activity:1.5.1"
     // Fragment is needed for ActivityResult API to work properly (needs 1.3.0-rc01, 1.2.5 is not supporting ActivityResult)
     // see: https://stackoverflow.com/questions/62771948/new-result-api-error-can-only-use-lower-16-bits-for-requestcode
-    implementation "androidx.fragment:fragment:1.4.1"
+    implementation "androidx.fragment:fragment:1.5.1"
     // ConstraintLayout for profile list
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     // SwiperefreshLayout for profile list
@@ -144,7 +144,7 @@ dependencies {
     // ---------------------------------------------------------------------------------------------
     // Lifecycle management
     // ---------------------------------------------------------------------------------------------
-    def lifecycle_version = "2.4.1"
+    def lifecycle_version = "2.5.1"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -171,7 +171,6 @@ dependencies {
     // Testing
     ////////////////////////////////////////////////////////////////////////////////////////////////
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-//    testImplementation "junit:junit:4.13.2"
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.8.1"
 
     androidTestImplementation "androidx.test:rules:1.4.1-alpha07"

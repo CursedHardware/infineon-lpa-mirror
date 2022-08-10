@@ -119,6 +119,11 @@ public class DataModel implements StatusAndEventHandler{
 
     // region eUICC interface methods
 
+    public void refreshEuiccs() {
+        Log.debug(TAG, "Refreshing eUICC list...");
+        euiccManager.startRefreshingEuiccList();
+    }
+
     public void selectEuicc(String euiccName) {
         Log.debug(TAG, "Selecting euicc " + euiccName + "...");
         euiccManager.selectEuicc(euiccName);

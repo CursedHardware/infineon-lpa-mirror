@@ -66,6 +66,9 @@ public class SeEuiccConnection implements EuiccConnection {
     public boolean resetEuicc() throws Exception {
         Log.debug(TAG, "Resetting the eUICC.");
 
+        // Close the connection first
+        close();
+
         // Wait for the phone to detect the profile change
         try {
             Thread.sleep(euiccConnectionSettings.getProfileInitializationTime());
@@ -73,6 +76,7 @@ public class SeEuiccConnection implements EuiccConnection {
             Log.error(Log.getFileLineNumber() + " " + e.getMessage());
         }
 
+        // Open the connection again
         return open();
     }
 
@@ -81,7 +85,14 @@ public class SeEuiccConnection implements EuiccConnection {
         Log.debug(TAG, "Opening connection for eUICC " + reader.getName());
         try {
             if (session == null || session.isClosed()) {
+                Log.debug(TAG, "Opening a new session...");
                 session = reader.openSession();
+                if(session != null) {
+                    Log.debug(TAG, "Successfully opened a new session.");
+                } else {
+                    Log.error(TAG, "Failed to open a new session.");
+                    return false;
+                }
 
                 if(!Atr.isAtrValid(session.getATR())) {
                     Log.error(TAG, "eUICC not allowed!");
@@ -89,16 +100,22 @@ public class SeEuiccConnection implements EuiccConnection {
                     throw new Exception("eUICC not allowed!");
                 }
             }
-            if (channel == null || !channel.isOpen()) {
-                channel = session.openLogicalChannel(Bytes.decodeHexString(Definitions.ISDR_AID));
 
+            if (channel == null || !channel.isOpen()) {
+                Log.debug(TAG, "Opening a new logical channel...");
+                channel = session.openLogicalChannel(Bytes.decodeHexString(Definitions.ISDR_AID));
+                Log.debug(TAG, "Opened logical channel: " + Bytes.encodeHexString(channel.getSelectResponse()));
             }
         } catch (IOException e) {
             Log.error(TAG, "Opening eUICC connection failed.", e);
             throw new Exception("Opening eUICC connection failed.", e);
         }
 
-        return channel.isOpen();
+        if(channel != null) {
+            return channel.isOpen();
+        } else {
+            return false;
+        }
     }
 
     @Override

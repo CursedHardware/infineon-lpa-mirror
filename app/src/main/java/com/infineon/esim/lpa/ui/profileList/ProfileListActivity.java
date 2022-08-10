@@ -161,7 +161,11 @@ final public class ProfileListActivity extends AppCompatActivity {
             // Clear all eUICC notifications
             viewModel.clearAllNotifications();
             return true;
-        } else if(id == R.id.action_refresh) {
+        } else if(id == R.id.action_refresh_esims) {
+            // Start eUICC info intent
+            viewModel.refreshEuiccs();
+            return true;
+        } else if(id == R.id.action_refresh_profile_list) {
             // Start eUICC info intent
             viewModel.refreshProfileList();
             return true;
@@ -281,6 +285,11 @@ final public class ProfileListActivity extends AppCompatActivity {
         dismissProgressDialog();
 
         switch (actionStatus.getActionStatus()) {
+            case REFRESHING_EUICC_LIST_STARTED: {
+                progressDialog = DialogHelper.showProgressDialog(this, R.string.pref_progress_refreshing_euicc_list);
+                disallowBackButtonPress();
+                break;
+            }
             case OPENING_EUICC_CONNECTION_STARTED: {
                 String euiccName = (String) actionStatus.getExtras();
                 if(euiccName != null) {
@@ -305,6 +314,7 @@ final public class ProfileListActivity extends AppCompatActivity {
                 disallowBackButtonPress();
                 break;
             }
+            case REFRESHING_EUICC_LIST_FINISHED:
             case OPENING_EUICC_CONNECTION_FINISHED:
             case GET_PROFILE_LIST_FINISHED:
             case ENABLE_PROFILE_FINISHED:

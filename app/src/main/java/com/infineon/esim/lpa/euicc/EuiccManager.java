@@ -292,7 +292,7 @@ public class EuiccManager implements EuiccInterfaceStatusChangeHandler {
 
         if(switchEuiccInterface != null) {
             String euiccName = getDefaultEuiccNameFromTag(switchEuiccInterface);
-            startEuiccInitialization(euiccName);
+            selectEuicc(euiccName);
 
             switchEuiccInterface = null;
         }
@@ -308,23 +308,23 @@ public class EuiccManager implements EuiccInterfaceStatusChangeHandler {
     // Private methods
 
     private String getDefaultEuiccNameFromTag(String interfaceTag)  {
+        String defaultEuiccName = Preferences.getNoEuiccName();
+
         try {
             EuiccInterface euiccInterface = getEuiccInterfaceFromTag(interfaceTag);
             List<String> euiccNames = euiccInterface.getEuiccNames();
-            String defaultEuiccName = null;
 
             for (String readerName : euiccNames) {
                 defaultEuiccName = readerName;
                 break;
             }
 
-            Log.debug(TAG, "Getting default reader name for reader tag \"" + interfaceTag + "\": \"" + defaultEuiccName + "\".");
-            return defaultEuiccName;
         } catch (Exception e) {
             statusAndEventHandler.onError(new Error("Error getting default reader name for reader " + interfaceTag + ".", e.getMessage()));
         }
 
-        return null;
+        Log.debug(TAG, "Getting default reader name for reader tag \"" + interfaceTag + "\": \"" + defaultEuiccName + "\".");
+        return defaultEuiccName;
     }
 
     private String getFallbackEuicc() {

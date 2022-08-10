@@ -81,20 +81,23 @@ import com.infineon.esim.messages.Ber;
 import com.infineon.esim.util.Bytes;
 import com.infineon.esim.util.Log;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class Es10InterfaceTest {
     private static final String TAG = Es10InterfaceTest.class.getName();
 
     private MockEuiccChannel mockReaderChannel;
     private Es10Interface es10Interface;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         this.mockReaderChannel = new MockEuiccChannel();
         this.es10Interface = new Es10Interface(this.mockReaderChannel);

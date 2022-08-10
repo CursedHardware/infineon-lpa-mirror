@@ -51,7 +51,12 @@
         android:title="@string/menu_item_clear_notifications"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/action_refresh_esims"
+        android:orderInCategory="900"
+        android:title="@string/menu_item_refresh_esims"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_refresh_profile_list"
         android:orderInCategory="900"
         android:title="@string/menu_item_refresh"
         app:showAsAction="never"/>

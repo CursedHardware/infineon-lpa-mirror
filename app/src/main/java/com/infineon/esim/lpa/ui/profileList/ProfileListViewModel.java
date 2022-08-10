@@ -46,9 +46,13 @@ public class ProfileListViewModel extends ViewModel {
 
     public void selectFreshlyAttachedUsbReader() {
         // Check if USB reader really has been freshly attached
-        if(IdentiveConnectionBroadcastReceiver.hasBeenFreshlyAttached()) {
-            Log.debug(TAG, "USB reader is freshly attached.");
-            connectIdentiveEuiccInterface();
+        try {
+            if (IdentiveConnectionBroadcastReceiver.hasBeenFreshlyAttached()) {
+                Log.debug(TAG, "USB reader is freshly attached.");
+                connectIdentiveEuiccInterface();
+            }
+        } catch (Exception e) {
+            dataModel.onError(new Error("Exception during switching to freshly attached USB reader.", e.getMessage()));
         }
     }
 
@@ -77,7 +81,12 @@ public class ProfileListViewModel extends ViewModel {
         dataModel.refreshProfileList();
     }
 
+    public void refreshEuiccs() {
+        dataModel.refreshEuiccs();
+    }
+
     public void clearAllNotifications() {
         dataModel.handleAndClearAllNotifications();
     }
+
 }

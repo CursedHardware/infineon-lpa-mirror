@@ -113,7 +113,7 @@ public class PreferenceActivity extends AppCompatActivity {
         switch (actionStatus.getActionStatus()) {
             case REFRESHING_EUICC_LIST_STARTED:
                 Log.debug(TAG, "Show progress dialog for refreshing the eUICC list.");
-                progressDialog = DialogHelper.showProgressDialog(this, R.string.pref_progress_refreshing_reader_list);
+                progressDialog = DialogHelper.showProgressDialog(this, R.string.pref_progress_refreshing_euicc_list);
                 break;
             case REFRESHING_EUICC_LIST_FINISHED:
                 Log.debug(TAG, "Refreshing eUICC list finished.");

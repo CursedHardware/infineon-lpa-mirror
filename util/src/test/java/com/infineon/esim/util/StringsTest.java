@@ -23,7 +23,7 @@
 
 package com.infineon.esim.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StringsTest {
     private static final String TAG = StringsTest.class.getName();

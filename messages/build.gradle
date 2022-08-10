@@ -42,19 +42,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     namespace 'com.gsma.sgp.messages'
 }
 
 dependencies {
     implementation project(path: ':util')
-
-// https://mvnrepository.com/artifact/com.beanit/jasn1
     implementation 'com.beanit:jasn1:1.11.3'
-
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    testImplementation 'junit:junit:4.13.2'
 }
