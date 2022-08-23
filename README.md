@@ -29,7 +29,7 @@ This software supports the following features:
 
 ## Implementation information
 ### Development environment
-* Android Studio 2021.2.1
+* Android Studio Chipmunk 2021.2.1
 
 ### Project structure
 * com.infineon.esim.lpa

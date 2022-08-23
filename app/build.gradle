@@ -1,46 +1,3 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
-apply plugin: 'de.undercouch.download'
-
-android {
-    namespace 'com.infineon.esim.lpa'
-    compileSdkVersion 32
-    defaultConfig {
-        applicationId "com.infineon.esim.lpa"
-        minSdkVersion 28
-        targetSdkVersion 32
-        versionCode 40001
-        versionName "4.0.1"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.debug
-    }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'gson-proguard-rules.txt'
-        }
-        debug {
-            minifyEnabled = false
-            proguardFiles 'gson-proguard-rules.txt'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    packagingOptions {
-        jniLibs {
-            excludes += ['libbarhopper_v2.so']
-        }
-    }
-
-    testOptions {
-        unitTests.all {
-            useJUnitPlatform()
-        }
-    }
-}
-
 /*
  * THE SOURCE CODE AND ITS RELATED DOCUMENTATION IS PROVIDED "AS IS". INFINEON
  * TECHNOLOGIES MAKES NO OTHER WARRANTY OF ANY KIND,WHETHER EXPRESS,IMPLIED OR,
@@ -63,6 +20,50 @@ android {
  *
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'de.undercouch.download'
+
+android {
+    namespace 'com.infineon.esim.lpa'
+    compileSdkVersion 32
+
+    defaultConfig {
+        applicationId "com.infineon.esim.lpa"
+        minSdkVersion 28
+        targetSdkVersion 32
+        versionCode 40002
+        versionName "4.0.2"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
+    }
+
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            minifyEnabled = false
+            proguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
+}
 
 // Gradle tasks to automatically download Identiv Smartcard SDK dependency
 task downloadIdentivAndroidSdkZipFile(type: Download) {
@@ -126,12 +127,12 @@ dependencies {
     // UI support
     // ---------------------------------------------------------------------------------------------
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.4.2"
+    implementation "androidx.appcompat:appcompat:1.5.0"
     // Activity (for permission handling)
     implementation "androidx.activity:activity:1.5.1"
     // Fragment is needed for ActivityResult API to work properly (needs 1.3.0-rc01, 1.2.5 is not supporting ActivityResult)
     // see: https://stackoverflow.com/questions/62771948/new-result-api-error-can-only-use-lower-16-bits-for-requestcode
-    implementation "androidx.fragment:fragment:1.5.1"
+    implementation "androidx.fragment:fragment:1.5.2"
     // ConstraintLayout for profile list
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     // SwiperefreshLayout for profile list

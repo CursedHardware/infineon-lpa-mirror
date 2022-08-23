@@ -1,5 +1,10 @@
 # Release Notes
 
+## 4.0.2 (2022-08-23)
+
+Bugfix:
+  - Fixed ProGuard rules for release build variant
+
 ## 4.0.1 (2022-08-10)
 
 Features:

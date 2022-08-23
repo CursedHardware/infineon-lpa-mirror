@@ -26,6 +26,7 @@ plugins {
 }
 
 android {
+    namespace 'com.gsma.sgp.messages'
     compileSdk 31
 
     defaultConfig {
@@ -38,7 +39,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,11 +48,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    namespace 'com.gsma.sgp.messages'
 }
 
 dependencies {
+    // Project internal dependencies
     implementation project(path: ':util')
+
+    // ASN1/BER codec
     implementation 'com.beanit:jasn1:1.11.3'
 }

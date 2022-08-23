@@ -26,6 +26,7 @@ plugins {
 }
 
 android {
+    namespace 'com.infineon.esim.util'
     compileSdk 31
 
     defaultConfig {
@@ -38,7 +39,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -53,13 +54,9 @@ android {
             useJUnitPlatform()
         }
     }
-
-    namespace 'com.infineon.esim.util'
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-
     // Testing
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"

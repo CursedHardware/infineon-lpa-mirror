@@ -28,6 +28,7 @@ plugins {
 android {
     namespace 'com.infineon.esim.lpa.core'
     compileSdk 31
+
     defaultConfig {
         minSdk 24
         targetSdk 31
@@ -38,8 +39,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'gson-proguard-rules.txt'
         }
     }
 
@@ -56,6 +57,7 @@ android {
 }
 
 dependencies {
+    // Project internal dependencies
     implementation project(path: ':messages')
     implementation project(path: ':util')
 
@@ -66,7 +68,7 @@ dependencies {
     implementation 'com.beanit:jasn1:1.11.3'
 
     // Needed for @NonNull and @Nullable annotations
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
 
     // Testing
     testImplementation 'org.junit.jupiter:junit-jupiter'
