@@ -34,12 +34,12 @@ import java.util.List;
 public class Atr {
     private static final String TAG = Atr.class.getName();
 
-    // Allowed/valid ATRs
+    // Allowed/valid ATRs of tested eUICCs. Extend on own risk.
     private static final List<String> VALID_ATR_PARTS = new ArrayList<>(Arrays.asList(
-            "3B9F96803FC7828031E073F6215757A44D000560700014", // TWPHW004, TWPHW007, TWPHW008
-            "3B9F96803FC7828031E073F62157574A4D0005608000E4", // TWPHW011, TWPHW013, TWPHW040, TWPHW041
-            "3B9F96803FC7828031E073F62157574A4D0005609000F4", // TWPOC002, TWPOC101, TWPOC102
-            "3B9F96803FC7828031E073F62157574A4D020B60010069"  // Comprion Test eUICC Consumer Device
+            "3B9F96803FC7828031E073F6215757A44D000560700014",
+            "3B9F96803FC7828031E073F62157574A4D0005608000E4",
+            "3B9F96803FC7828031E073F62157574A4D0005609000F4",
+            "3B9F96803FC7828031E073F62157574A4D020B60010069"
     ));
 
     public static Boolean isAtrValid(byte[] atr) {

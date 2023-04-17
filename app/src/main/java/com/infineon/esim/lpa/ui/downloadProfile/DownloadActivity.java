@@ -24,6 +24,7 @@ package com.infineon.esim.lpa.ui.downloadProfile;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -37,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.infineon.esim.lpa.Application;
 import com.infineon.esim.lpa.R;
 import com.infineon.esim.lpa.core.dtos.ActivationCode;
 import com.infineon.esim.lpa.core.dtos.enums.CancelSessionReasons;
@@ -74,12 +76,18 @@ final public class DownloadActivity extends AppCompatActivity {
     // region Lifecycle management
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // retrieve the data passed using caller's intent
-        this.activationCode = getIntent().getParcelableExtra(getResources()
-                .getString(R.string.intent_extra_activation_code));
+
+        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU) {
+            this.activationCode = getIntent().getParcelableExtra(Application.INTENT_EXTRA_ACTIVATION_CODE, ActivationCode.class);
+        } else {
+            this.activationCode = getIntent().getParcelableExtra(Application.INTENT_EXTRA_ACTIVATION_CODE);
+        }
+
         this.authenticateResult = null;
         this.downloadResult = null;
 

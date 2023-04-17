@@ -119,12 +119,12 @@ final public class ProfileListAdapter extends ArrayAdapter<ProfileMetadata> {
         // Get profile metadata from (image)View via tag
         ImageView imageView = (ImageView) view;
         ListViewElementViewHolder listViewElementViewHolder = (ListViewElementViewHolder) imageView.getTag();
-        ProfileMetadata profile = super.getItem(listViewElementViewHolder.position);
+        ProfileMetadata profileMetadata = super.getItem(listViewElementViewHolder.position);
 
         // Send profile metadata to the new intent
         Context context = super.getContext();
         Intent intent = new Intent(context, ProfileDetailsActivity.class);
-        intent.putExtra(Application.getStringResource(R.string.intent_extra_profile), profile);
+        intent.putExtra(Application.INTENT_EXTRA_PROFILE_METADATA, profileMetadata);
         context.startActivity(intent);
     };
 }

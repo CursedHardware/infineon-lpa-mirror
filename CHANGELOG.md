@@ -1,5 +1,11 @@
 # Release Notes
 
+## 4.0.3 (2023-04-06)
+
+Maintenance:
+  - Update to latest dependency versions
+  - Minor housekeeping
+
 ## 4.0.2 (2022-08-23)
 
 Bugfix:

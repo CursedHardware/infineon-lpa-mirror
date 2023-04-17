@@ -47,6 +47,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
+import com.infineon.esim.lpa.Application;
 import com.infineon.esim.lpa.R;
 import com.infineon.esim.lpa.core.dtos.ActivationCode;
 import com.infineon.esim.lpa.ui.downloadProfile.DownloadActivity;
@@ -292,7 +293,7 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
 
         // Put activation code into the intent
         Intent i = new Intent(ScanBarcodeActivity.this, DownloadActivity.class);
-        i.putExtra(getResources().getString(R.string.intent_extra_activation_code), activationCode);
+        i.putExtra(Application.INTENT_EXTRA_ACTIVATION_CODE, activationCode);
         startActivity(i);
     };
 

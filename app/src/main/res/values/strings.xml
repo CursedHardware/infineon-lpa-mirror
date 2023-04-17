@@ -197,10 +197,6 @@
     <string name="error_bluetooth_permission_request_finally_denied_header">Bluetooth permission finally denied!</string>
     <string name="error_bluetooth_permission_request_finally_denied_body">You have finally denied the bluetooth permission to this app.\n\nYou cannot connect to a BLE companion device.\n\nPlease check the app permissions in the Android settings and grant bluetooth permission.</string>
 
-    <!-- Intent Extras -->
-    <string name="intent_extra_profile">com.infineon.esim.lpa.PROFILE</string>
-    <string name="intent_extra_activation_code">com.infineon.esim.lpa.ACTIVATION_CODE</string>
-
     <!-- BLE -->
     <string name="bluetooth_enabled">Bluetooth has been enabled</string>
     <string name="bluetooth_not_enabled">Bluetooth has NOT been enabled</string>

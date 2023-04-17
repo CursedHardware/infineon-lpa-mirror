@@ -18,7 +18,7 @@ This software supports the following features:
         * Confirmation code handling
     * Switching/Enabling/Disabling of profiles
     * Deleting of profiles
-* Support for three reader types:
+* Support for two reader types:
     * Secure Element Reader: Reads an internal (soldered) or SIM slot inserted eSIM
     * Identiv USB Reader: Reads from an external Identiv USB reader (e.g. Identiv SCR3500)
 * Display of eUICC information

@@ -51,6 +51,10 @@ public class Application extends android.app.Application {
     private static Context applicationContext;
     private static Resources resources;
 
+    // Intent extra identifiers
+    public static final String INTENT_EXTRA_PROFILE_METADATA = "com.infineon.esim.lpa.PROFILE_METADATA";
+    public static final String INTENT_EXTRA_ACTIVATION_CODE = "com.infineon.esim.lpa.ACTIVATION_CODE";
+
     @Override
     public void onCreate() {
         Log.debug(TAG, "Initializing application.");

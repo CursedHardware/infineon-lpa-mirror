@@ -24,7 +24,9 @@ package com.infineon.esim.lpa.ui.profileList;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -66,6 +68,7 @@ final public class ProfileListActivity extends AppCompatActivity {
     // region Lifecycle Management
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.debug(TAG, "Created activity.");
@@ -81,7 +84,14 @@ final public class ProfileListActivity extends AppCompatActivity {
         attachUi();
 
         // Initialize USB reader if app has been started from USB attach event
-        if(getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE) != null) {
+        UsbDevice usbDevice;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            usbDevice = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice.class);
+        } else {
+            usbDevice = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        }
+
+        if(usbDevice != null) {
             viewModel.connectIdentiveEuiccInterface();
         }
     }

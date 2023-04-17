@@ -23,6 +23,7 @@
 package com.infineon.esim.lpa.ui.profileDetails;
 
 import android.app.AlertDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,13 +58,19 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
     private ProfileMetadata profileMetadata;
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         Log.debug(TAG,"Creating activity.");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_details);
 
         // retrieve the data passed using caller's intent
-        this.profileMetadata = getIntent().getParcelableExtra(Application.getStringResource(R.string.intent_extra_profile));
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU) {
+            this.profileMetadata = getIntent().getParcelableExtra(Application.INTENT_EXTRA_PROFILE_METADATA, ProfileMetadata.class);
+        } else {
+            this.profileMetadata = getIntent().getParcelableExtra(Application.INTENT_EXTRA_PROFILE_METADATA);
+        }
+
         if(profileMetadata == null) {
             DialogHelper.showGenericErrorDialog(this, true);
         }
