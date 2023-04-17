@@ -183,8 +183,23 @@ public class ISO7816Channel {
 
     private void terminalCapability() throws Exception {
         // According to ETS 102 221 Release 17 section 11.1.19 TERMINAL CAPABILITY
-        // 80AA000005A903830107
-        String request = genericCommand("80", "AA", "00", "00", "A903830107", null);
+        // 80AA000005A9038301 +
+
+        // RSP device capabilities (see GSMA SGP.22 v3.0.0 3.4.2 RSP Device Capabilities
+        // 0011 0111 = 0x37
+        // ││││ │││└─ Local User Interface in the Device (LUId) supported
+        // ││││ ││└── Local Profile Download in the Device (LPDd) supported
+        // ││││ │└─── Local Discovery Service in the Device (LDSd) supported
+        // ││││ └──── LUIe based on SCWS supported
+        // │││└────── Metadata update alerting supported
+        // ││└─────── Enterprise Capable Device
+        // │└──────── LUIe using E4E supported
+        // └───────── LPR supported
+
+        String rspDeviceCapabilities = "37";
+        String data = "A9038301" + rspDeviceCapabilities;
+
+        String request = genericCommand("80", "AA", "00", "00", data, null);
 
         Log.debug(TAG, "TERMINAL CAPABILITY request: " + request);
         String response = transmitAPDU(request, BASIC_CHANNEL);

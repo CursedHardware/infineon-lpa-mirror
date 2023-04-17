@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,6 +32,7 @@ public class EnableProfileResponse implements BerType, Serializable {
 
 	public byte[] code = null;
 	private BerInteger enableResult = null;
+	private BerInteger targetEsimPort = null;
 	
 	public EnableProfileResponse() {
 	}
@@ -45,6 +47,14 @@ public class EnableProfileResponse implements BerType, Serializable {
 
 	public BerInteger getEnableResult() {
 		return enableResult;
+	}
+
+	public void setTargetEsimPort(BerInteger targetEsimPort) {
+		this.targetEsimPort = targetEsimPort;
+	}
+
+	public BerInteger getTargetEsimPort() {
+		return targetEsimPort;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -64,6 +74,13 @@ public class EnableProfileResponse implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (targetEsimPort != null) {
+			codeLength += targetEsimPort.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
+			reverseOS.write(0x81);
+			codeLength += 1;
+		}
+		
 		codeLength += enableResult.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
 		reverseOS.write(0x80);
@@ -105,6 +122,18 @@ public class EnableProfileResponse implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			targetEsimPort = new BerInteger();
+			subCodeLength += targetEsimPort.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -135,6 +164,14 @@ public class EnableProfileResponse implements BerType, Serializable {
 		}
 		else {
 			sb.append("enableResult: <empty-required-field>");
+		}
+		
+		if (targetEsimPort != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("targetEsimPort: ").append(targetEsimPort);
 		}
 		
 		sb.append("\n");

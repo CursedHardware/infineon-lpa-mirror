@@ -134,7 +134,7 @@ public class LocalProfileAssistantCoreImpl implements LocalProfileAssistantCore 
             throw new Exception("ES9+ interface is not available! Enable internet connection?");
         }
 
-        profileDownloadSession = new ProfileDownloadSession(activationCode, DeviceInformation.getDeviceInformation(), es10Interface, es9PlusInterface);
+        profileDownloadSession = new ProfileDownloadSession(activationCode, es10Interface, es9PlusInterface);
 
         boolean success = new AuthenticateWorker(profileDownloadSession).authenticate();
 

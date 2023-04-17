@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -59,7 +60,7 @@ import com.infineon.esim.util.Log;
 final public class ProfileListActivity extends AppCompatActivity {
     private static final String TAG = ProfileListActivity.class.getName();
 
-    private Boolean allowBackButtonPress = true;
+    private Boolean allowBackButtonPress = false;
 
     private AlertDialog progressDialog;
 
@@ -72,6 +73,8 @@ final public class ProfileListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.debug(TAG, "Created activity.");
+
+        getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
 
         Log.debug(TAG, "Setting live data observer.");
         // Get the ViewModel
@@ -95,6 +98,18 @@ final public class ProfileListActivity extends AppCompatActivity {
             viewModel.connectIdentiveEuiccInterface();
         }
     }
+
+    OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if(allowBackButtonPress) {
+                Log.debug(TAG, "Processing backpress.");
+                finish();
+            } else {
+                Log.debug(TAG, "Ignoring backpress.");
+            }
+        }
+    };
 
     @Override
     protected void onPause() {
@@ -124,14 +139,6 @@ final public class ProfileListActivity extends AppCompatActivity {
         Log.debug(TAG, "Destroying activity.");
 
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Only allow back button press when not busy
-        if (allowBackButtonPress) {
-            super.onBackPressed();
-        }
     }
 
     @Override

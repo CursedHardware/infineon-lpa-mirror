@@ -92,6 +92,7 @@ import com.infineon.esim.lpa.core.es10.Es10Interface;
 import com.infineon.esim.lpa.core.es10.base.SegmentedBoundProfilePackage;
 import com.infineon.esim.lpa.core.es9plus.Es9PlusInterface;
 import com.infineon.esim.lpa.core.es9plus.messages.response.base.FunctionExecutionStatus;
+import com.infineon.esim.messages.RspVersion;
 import com.infineon.esim.util.Log;
 
 @SuppressWarnings({"unused", "FieldCanBeLocal"})
@@ -101,11 +102,13 @@ public class ProfileDownloadSession {
     private final Es10Interface es10Interface;
     private final Es9PlusInterface es9PlusInterface;
 
+
     private final BerUTF8String matchingId;
     private final BerUTF8String smdpAddress;
-    private final DeviceInfo deviceInfo;
     private final String smdpAddressUrl;
 
+    private DeviceInfo deviceInfo;
+    private RspVersion rspVersion;
     private ProfileDownloadSessionState state;
 
     // Error handling
@@ -155,12 +158,11 @@ public class ProfileDownloadSession {
     private EuiccCancelSessionSigned euiccCancelSessionSigned;
     private BerOctetString euiccCancelSessionSignature;
 
-    public ProfileDownloadSession(ActivationCode activationCode, DeviceInfo deviceInfo, Es10Interface es10Interface, Es9PlusInterface es9PlusInterface) {
+    public ProfileDownloadSession(ActivationCode activationCode, Es10Interface es10Interface, Es9PlusInterface es9PlusInterface) {
         this.smdpAddressUrl = activationCode.getSmdpServer();
         this.state = ProfileDownloadSessionState.INITIAL;
         this.matchingId = new BerUTF8String(activationCode.getMatchingId());
         this.smdpAddress = new BerUTF8String(activationCode.getSmdpServer());
-        this.deviceInfo = deviceInfo;
         this.lastError = new RemoteError();
 
         this.es10Interface = es10Interface;
@@ -202,6 +204,9 @@ public class ProfileDownloadSession {
 
     public void es10_processEuiccInfo1(EUICCInfo1 euiccInfo1) {
         this.euiccInfo1 = euiccInfo1;
+        // TODO: Check if there is a better way to obtain the session RSP version (server selection?)
+        this.rspVersion = new RspVersion(euiccInfo1);
+        this.deviceInfo = DeviceInformation.getDeviceInfo(euiccInfo1);
     }
 
     public void es10_processEuiccChallenge(GetEuiccChallengeResponse getEuiccChallengeResponse) {
@@ -214,6 +219,11 @@ public class ProfileDownloadSession {
         initiateAuthenticationRequest.setSmdpAddress(smdpAddress);
         initiateAuthenticationRequest.setEuiccChallenge(euiccChallenge);
         initiateAuthenticationRequest.setEuiccInfo1(euiccInfo1);
+
+        // #SupportedFromV3.0.0#
+        if(rspVersion.isFrom3_0_0()) {
+            initiateAuthenticationRequest.setLpaRspCapability(LpaInformation.getLpaRspCapability());
+        }
 
         updateState(INITIATE_AUTHENTICATION_STARTED);
         Log.verbose(TAG, "ES9+: InitiateAuthenticationRequest: " + initiateAuthenticationRequest);
@@ -290,7 +300,7 @@ public class ProfileDownloadSession {
         this.euiccSigned1 = authenticateResponseOk.getEuiccSigned1();
         this.euiccSignature1 = authenticateResponseOk.getEuiccSignature1();
         this.euiccCertificate = authenticateResponseOk.getEuiccCertificate();
-        this.eumCertificate = authenticateResponseOk.getEumCertificate();
+        this.eumCertificate = authenticateResponseOk.getNextCertInChain();
 
         updateState(AUTHENTICATE_SERVER_FINISHED);
     }
@@ -321,7 +331,7 @@ public class ProfileDownloadSession {
         }
 
         AuthenticateClientOk authenticateClientOk = authenticateClientResponseEs9.getAuthenticateClientOk();
-        this.profileMetaData = authenticateClientOk.getProfileMetaData();
+        this.profileMetaData = authenticateClientOk.getProfileMetadata();
         this.smdpSigned2 = authenticateClientOk.getSmdpSigned2();
         this.smdpSignature2 = authenticateClientOk.getSmdpSignature2();
         this.smdpCertificate = authenticateClientOk.getSmdpCertificate();

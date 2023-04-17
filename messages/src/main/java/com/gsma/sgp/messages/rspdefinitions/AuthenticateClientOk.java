@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,7 +32,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 
 	public byte[] code = null;
 	private TransactionId transactionId = null;
-	private StoreMetadataRequest profileMetaData = null;
+	private StoreMetadataRequest profileMetadata = null;
 	private SmdpSigned2 smdpSigned2 = null;
 	private BerOctetString smdpSignature2 = null;
 	private Certificate smdpCertificate = null;
@@ -51,12 +52,12 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		return transactionId;
 	}
 
-	public void setProfileMetaData(StoreMetadataRequest profileMetaData) {
-		this.profileMetaData = profileMetaData;
+	public void setProfileMetadata(StoreMetadataRequest profileMetadata) {
+		this.profileMetadata = profileMetadata;
 	}
 
-	public StoreMetadataRequest getProfileMetaData() {
-		return profileMetaData;
+	public StoreMetadataRequest getProfileMetadata() {
+		return profileMetadata;
 	}
 
 	public void setSmdpSigned2(SmdpSigned2 smdpSigned2) {
@@ -110,7 +111,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		
 		codeLength += smdpSigned2.encode(reverseOS, true);
 		
-		codeLength += profileMetaData.encode(reverseOS, false);
+		codeLength += profileMetadata.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 37
 		reverseOS.write(0x25);
 		reverseOS.write(0xBF);
@@ -161,8 +162,8 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
-			profileMetaData = new StoreMetadataRequest();
-			subCodeLength += profileMetaData.decode(is, false);
+			profileMetadata = new StoreMetadataRequest();
+			subCodeLength += profileMetadata.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -229,12 +230,12 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (profileMetaData != null) {
-			sb.append("profileMetaData: ");
-			profileMetaData.appendAsString(sb, indentLevel + 1);
+		if (profileMetadata != null) {
+			sb.append("profileMetadata: ");
+			profileMetadata.appendAsString(sb, indentLevel + 1);
 		}
 		else {
-			sb.append("profileMetaData: <empty-required-field>");
+			sb.append("profileMetadata: <empty-required-field>");
 		}
 		
 		sb.append(",\n");

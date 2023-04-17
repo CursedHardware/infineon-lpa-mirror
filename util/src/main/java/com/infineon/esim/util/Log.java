@@ -53,6 +53,10 @@ final public class Log {
         android.util.Log.w(tag, msg);
     }
 
+    public static void warn(final String tag, final String msg, final Throwable error) {
+        android.util.Log.w(tag, msg, error);
+    }
+
     public static void error(final String msg) {
         android.util.Log.e("", msg);
     }

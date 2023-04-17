@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -30,8 +31,9 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 	public byte[] code = null;
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64);
 
-	private AuthenticateClientOkEs11 authenticateClientOk = null;
+	private AuthenticateClientOkEs11V2 authenticateClientOk = null;
 	private BerInteger authenticateClientError = null;
+	private AuthenticateClientOkEs11V3 authenticateClientOkV3 = null;
 	
 	public AuthenticateClientResponseEs11() {
 	}
@@ -40,11 +42,11 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public void setAuthenticateClientOk(AuthenticateClientOkEs11 authenticateClientOk) {
+	public void setAuthenticateClientOk(AuthenticateClientOkEs11V2 authenticateClientOk) {
 		this.authenticateClientOk = authenticateClientOk;
 	}
 
-	public AuthenticateClientOkEs11 getAuthenticateClientOk() {
+	public AuthenticateClientOkEs11V2 getAuthenticateClientOk() {
 		return authenticateClientOk;
 	}
 
@@ -54,6 +56,14 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 
 	public BerInteger getAuthenticateClientError() {
 		return authenticateClientError;
+	}
+
+	public void setAuthenticateClientOkV3(AuthenticateClientOkEs11V3 authenticateClientOkV3) {
+		this.authenticateClientOkV3 = authenticateClientOkV3;
+	}
+
+	public AuthenticateClientOkEs11V3 getAuthenticateClientOkV3() {
+		return authenticateClientOkV3;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -73,6 +83,18 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (authenticateClientOkV3 != null) {
+			codeLength += authenticateClientOkV3.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+			reverseOS.write(0xA2);
+			codeLength += 1;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
 		if (authenticateClientError != null) {
 			codeLength += authenticateClientError.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
@@ -117,7 +139,7 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 		codeLength += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-			authenticateClientOk = new AuthenticateClientOkEs11();
+			authenticateClientOk = new AuthenticateClientOkEs11V2();
 			codeLength += authenticateClientOk.decode(is, false);
 			return codeLength;
 		}
@@ -125,6 +147,12 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			authenticateClientError = new BerInteger();
 			codeLength += authenticateClientError.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			authenticateClientOkV3 = new AuthenticateClientOkEs11V3();
+			codeLength += authenticateClientOkV3.decode(is, false);
 			return codeLength;
 		}
 
@@ -153,6 +181,12 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 
 		if (authenticateClientError != null) {
 			sb.append("authenticateClientError: ").append(authenticateClientError);
+			return;
+		}
+
+		if (authenticateClientOkV3 != null) {
+			sb.append("authenticateClientOkV3: ");
+			authenticateClientOkV3.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -29,6 +30,9 @@ public class CtxParams1 implements BerType, Serializable {
 
 	public byte[] code = null;
 	private CtxParamsForCommonAuthentication ctxParamsForCommonAuthentication = null;
+	private CtxParamsForDeviceChange ctxParamsForDeviceChange = null;
+	private CtxParamsForProfileRecovery ctxParamsForProfileRecovery = null;
+	private CtxParamsForPushServiceRegistration ctxParamsForPushServiceRegistration = null;
 	
 	public CtxParams1() {
 	}
@@ -45,6 +49,30 @@ public class CtxParams1 implements BerType, Serializable {
 		return ctxParamsForCommonAuthentication;
 	}
 
+	public void setCtxParamsForDeviceChange(CtxParamsForDeviceChange ctxParamsForDeviceChange) {
+		this.ctxParamsForDeviceChange = ctxParamsForDeviceChange;
+	}
+
+	public CtxParamsForDeviceChange getCtxParamsForDeviceChange() {
+		return ctxParamsForDeviceChange;
+	}
+
+	public void setCtxParamsForProfileRecovery(CtxParamsForProfileRecovery ctxParamsForProfileRecovery) {
+		this.ctxParamsForProfileRecovery = ctxParamsForProfileRecovery;
+	}
+
+	public CtxParamsForProfileRecovery getCtxParamsForProfileRecovery() {
+		return ctxParamsForProfileRecovery;
+	}
+
+	public void setCtxParamsForPushServiceRegistration(CtxParamsForPushServiceRegistration ctxParamsForPushServiceRegistration) {
+		this.ctxParamsForPushServiceRegistration = ctxParamsForPushServiceRegistration;
+	}
+
+	public CtxParamsForPushServiceRegistration getCtxParamsForPushServiceRegistration() {
+		return ctxParamsForPushServiceRegistration;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
@@ -55,6 +83,30 @@ public class CtxParams1 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (ctxParamsForPushServiceRegistration != null) {
+			codeLength += ctxParamsForPushServiceRegistration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
+			reverseOS.write(0xA3);
+			codeLength += 1;
+			return codeLength;
+		}
+		
+		if (ctxParamsForProfileRecovery != null) {
+			codeLength += ctxParamsForProfileRecovery.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+			reverseOS.write(0xA2);
+			codeLength += 1;
+			return codeLength;
+		}
+		
+		if (ctxParamsForDeviceChange != null) {
+			codeLength += ctxParamsForDeviceChange.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+			reverseOS.write(0xA1);
+			codeLength += 1;
+			return codeLength;
+		}
+		
 		if (ctxParamsForCommonAuthentication != null) {
 			codeLength += ctxParamsForCommonAuthentication.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
@@ -86,6 +138,24 @@ public class CtxParams1 implements BerType, Serializable {
 			return codeLength;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			ctxParamsForDeviceChange = new CtxParamsForDeviceChange();
+			codeLength += ctxParamsForDeviceChange.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			ctxParamsForProfileRecovery = new CtxParamsForProfileRecovery();
+			codeLength += ctxParamsForProfileRecovery.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			ctxParamsForPushServiceRegistration = new CtxParamsForPushServiceRegistration();
+			codeLength += ctxParamsForPushServiceRegistration.decode(is, false);
+			return codeLength;
+		}
+
 		if (passedTag != null) {
 			return 0;
 		}
@@ -110,6 +180,24 @@ public class CtxParams1 implements BerType, Serializable {
 		if (ctxParamsForCommonAuthentication != null) {
 			sb.append("ctxParamsForCommonAuthentication: ");
 			ctxParamsForCommonAuthentication.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (ctxParamsForDeviceChange != null) {
+			sb.append("ctxParamsForDeviceChange: ");
+			ctxParamsForDeviceChange.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (ctxParamsForProfileRecovery != null) {
+			sb.append("ctxParamsForProfileRecovery: ");
+			ctxParamsForProfileRecovery.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (ctxParamsForPushServiceRegistration != null) {
+			sb.append("ctxParamsForPushServiceRegistration: ");
+			ctxParamsForPushServiceRegistration.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

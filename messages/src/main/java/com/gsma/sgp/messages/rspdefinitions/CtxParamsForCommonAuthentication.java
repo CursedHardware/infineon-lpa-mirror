@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -32,6 +33,10 @@ public class CtxParamsForCommonAuthentication implements BerType, Serializable {
 	public byte[] code = null;
 	private BerUTF8String matchingId = null;
 	private DeviceInfo deviceInfo = null;
+	private OperationType operationType = null;
+	private Iccid iccid = null;
+	private MatchingIdSource matchingIdSource = null;
+	private VendorSpecificExtension vendorSpecificExtension = null;
 	
 	public CtxParamsForCommonAuthentication() {
 	}
@@ -56,6 +61,38 @@ public class CtxParamsForCommonAuthentication implements BerType, Serializable {
 		return deviceInfo;
 	}
 
+	public void setOperationType(OperationType operationType) {
+		this.operationType = operationType;
+	}
+
+	public OperationType getOperationType() {
+		return operationType;
+	}
+
+	public void setIccid(Iccid iccid) {
+		this.iccid = iccid;
+	}
+
+	public Iccid getIccid() {
+		return iccid;
+	}
+
+	public void setMatchingIdSource(MatchingIdSource matchingIdSource) {
+		this.matchingIdSource = matchingIdSource;
+	}
+
+	public MatchingIdSource getMatchingIdSource() {
+		return matchingIdSource;
+	}
+
+	public void setVendorSpecificExtension(VendorSpecificExtension vendorSpecificExtension) {
+		this.vendorSpecificExtension = vendorSpecificExtension;
+	}
+
+	public VendorSpecificExtension getVendorSpecificExtension() {
+		return vendorSpecificExtension;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -73,6 +110,35 @@ public class CtxParamsForCommonAuthentication implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
+		if (vendorSpecificExtension != null) {
+			codeLength += vendorSpecificExtension.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
+			reverseOS.write(0xA4);
+			codeLength += 1;
+		}
+		
+		if (matchingIdSource != null) {
+			sublength = matchingIdSource.encode(reverseOS);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
+			reverseOS.write(0xA3);
+			codeLength += 1;
+		}
+		
+		if (iccid != null) {
+			codeLength += iccid.encode(reverseOS, true);
+		}
+		
+		if (operationType != null) {
+			codeLength += operationType.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
+			reverseOS.write(0x82);
+			codeLength += 1;
+		}
+		
 		codeLength += deviceInfo.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
 		reverseOS.write(0xA1);
@@ -127,6 +193,46 @@ public class CtxParamsForCommonAuthentication implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
+			operationType = new OperationType();
+			subCodeLength += operationType.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(Iccid.tag)) {
+			iccid = new Iccid();
+			subCodeLength += iccid.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			subCodeLength += length.decode(is);
+			matchingIdSource = new MatchingIdSource();
+			subCodeLength += matchingIdSource.decode(is, null);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			vendorSpecificExtension = new VendorSpecificExtension();
+			subCodeLength += vendorSpecificExtension.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -170,6 +276,40 @@ public class CtxParamsForCommonAuthentication implements BerType, Serializable {
 		}
 		else {
 			sb.append("deviceInfo: <empty-required-field>");
+		}
+		
+		if (operationType != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("operationType: ").append(operationType);
+		}
+		
+		if (iccid != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("iccid: ").append(iccid);
+		}
+		
+		if (matchingIdSource != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("matchingIdSource: ");
+			matchingIdSource.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (vendorSpecificExtension != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("vendorSpecificExtension: ");
+			vendorSpecificExtension.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

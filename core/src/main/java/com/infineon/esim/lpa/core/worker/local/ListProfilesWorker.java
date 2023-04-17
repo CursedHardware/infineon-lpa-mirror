@@ -49,7 +49,9 @@ public class ListProfilesWorker {
         List<ProfileMetadata> profileMetadataList = new ArrayList<>();
 
         for (ProfileInfo profileInfo : profileInfoListResponse.getProfileInfoListOk().getProfileInfo()) {
-            profileMetadataList.add(new ProfileMetadata(profileInfo));
+            if(profileInfo.getIccid() != null) {
+                profileMetadataList.add(new ProfileMetadata(profileInfo));
+            }
         }
 
         return profileMetadataList;

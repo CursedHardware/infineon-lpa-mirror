@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -34,6 +35,8 @@ public class ServerSigned1 implements BerType, Serializable {
 	private Octet16 euiccChallenge = null;
 	private BerUTF8String serverAddress = null;
 	private Octet16 serverChallenge = null;
+	private SessionContext sessionContext = null;
+	private ServerRspCapability serverRspCapability = null;
 	
 	public ServerSigned1() {
 	}
@@ -74,6 +77,22 @@ public class ServerSigned1 implements BerType, Serializable {
 		return serverChallenge;
 	}
 
+	public void setSessionContext(SessionContext sessionContext) {
+		this.sessionContext = sessionContext;
+	}
+
+	public SessionContext getSessionContext() {
+		return sessionContext;
+	}
+
+	public void setServerRspCapability(ServerRspCapability serverRspCapability) {
+		this.serverRspCapability = serverRspCapability;
+	}
+
+	public ServerRspCapability getServerRspCapability() {
+		return serverRspCapability;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -91,6 +110,20 @@ public class ServerSigned1 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (serverRspCapability != null) {
+			codeLength += serverRspCapability.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
+			reverseOS.write(0x86);
+			codeLength += 1;
+		}
+		
+		if (sessionContext != null) {
+			codeLength += sessionContext.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
+			reverseOS.write(0xA5);
+			codeLength += 1;
+		}
+		
 		codeLength += serverChallenge.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 4
 		reverseOS.write(0x84);
@@ -174,6 +207,27 @@ public class ServerSigned1 implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			sessionContext = new SessionContext();
+			subCodeLength += sessionContext.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
+			serverRspCapability = new ServerRspCapability();
+			subCodeLength += serverRspCapability.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -237,6 +291,23 @@ public class ServerSigned1 implements BerType, Serializable {
 		}
 		else {
 			sb.append("serverChallenge: <empty-required-field>");
+		}
+		
+		if (sessionContext != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("sessionContext: ");
+			sessionContext.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (serverRspCapability != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("serverRspCapability: ").append(serverRspCapability);
 		}
 		
 		sb.append("\n");

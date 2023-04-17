@@ -30,6 +30,7 @@ import com.beanit.jasn1.ber.types.BerBoolean;
 import com.beanit.jasn1.ber.types.BerInteger;
 import com.beanit.jasn1.ber.types.BerOctetString;
 import com.beanit.jasn1.ber.types.string.BerUTF8String;
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 import com.gsma.sgp.messages.rspdefinitions.AuthenticateServerRequest;
@@ -47,8 +48,9 @@ import com.gsma.sgp.messages.rspdefinitions.DisableProfileResponse;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo1;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
 import com.gsma.sgp.messages.rspdefinitions.EnableProfileResponse;
-import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredAddressesResponse;
+import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredDataResponse;
 import com.gsma.sgp.messages.rspdefinitions.EuiccMemoryResetResponse;
+import com.gsma.sgp.messages.rspdefinitions.EuiccRspCapability;
 import com.gsma.sgp.messages.rspdefinitions.GetEuiccChallengeResponse;
 import com.gsma.sgp.messages.rspdefinitions.GetEuiccDataResponse;
 import com.gsma.sgp.messages.rspdefinitions.GetRatResponse;
@@ -65,19 +67,18 @@ import com.gsma.sgp.messages.rspdefinitions.ProfileInfoListResponse;
 import com.gsma.sgp.messages.rspdefinitions.ProfileInstallationResult;
 import com.gsma.sgp.messages.rspdefinitions.ProfileInstallationResultData;
 import com.gsma.sgp.messages.rspdefinitions.RetrieveNotificationsListResponse;
-import com.gsma.sgp.messages.rspdefinitions.RspCapability;
 import com.gsma.sgp.messages.rspdefinitions.ServerSigned1;
 import com.gsma.sgp.messages.rspdefinitions.SetDefaultDpAddressResponse;
 import com.gsma.sgp.messages.rspdefinitions.SetNicknameResponse;
 import com.gsma.sgp.messages.rspdefinitions.SmdpSigned2;
 import com.gsma.sgp.messages.rspdefinitions.TransactionId;
-import com.gsma.sgp.messages.rspdefinitions.UICCCapability;
 import com.gsma.sgp.messages.rspdefinitions.VersionType;
 import com.infineon.esim.lpa.core.dtos.DeviceInformation;
 import com.infineon.esim.lpa.core.dtos.enums.CancelSessionReasons;
 import com.infineon.esim.lpa.core.es10.base.SegmentedBoundProfilePackage;
 import com.infineon.esim.lpa.core.es10.definitions.ResetOptions;
 import com.infineon.esim.messages.Ber;
+import com.infineon.esim.messages.RspVersion;
 import com.infineon.esim.util.Bytes;
 import com.infineon.esim.util.Log;
 
@@ -111,7 +112,7 @@ public class Es10InterfaceTest {
     public void es10a_getEuiccConfiguredAddresses() throws Exception {
         this.mockReaderChannel.setResponseApdus(Arrays.asList("BF3C32801974657374736D6470706C75732E696E66696E656F6E2E636F6D811574657374726F6F74736D64732E67736D612E636F6D9000"));
 
-        EuiccConfiguredAddressesResponse actualResponse = es10Interface.es10a_getEuiccConfiguredAddresses();
+        EuiccConfiguredDataResponse actualResponse = es10Interface.es10a_getEuiccConfiguredAddresses();
 
         // Check request commands
         List<String> expectedCommands = Arrays.asList("81E2910003BF3C00");
@@ -121,7 +122,7 @@ public class Es10InterfaceTest {
         // Check response BER object
         BerUTF8String defaultDpAddress = new BerUTF8String("testsmdpplus.infineon.com");
         BerUTF8String rootDsAddress = new BerUTF8String("testrootsmds.gsma.com");
-        EuiccConfiguredAddressesResponse expectedResponse = new EuiccConfiguredAddressesResponse();
+        EuiccConfiguredDataResponse expectedResponse = new EuiccConfiguredDataResponse();
         expectedResponse.setDefaultDpAddress(defaultDpAddress);
         expectedResponse.setRootDsAddress(rootDsAddress);
         assertEquals(expectedResponse.toString(), actualResponse.toString());
@@ -261,7 +262,7 @@ public class Es10InterfaceTest {
         EUICCInfo1.EuiccCiPKIdListForVerification euiccCiPKIdListForVerification = Ber.createFromEncodedByteArray(EUICCInfo1.EuiccCiPKIdListForVerification.class, euiccCiPKIdList);
 
         EUICCInfo1 expectedResponse = new EUICCInfo1();
-        expectedResponse.setSvn(new VersionType(Bytes.decodeHexString("020200")));
+        expectedResponse.setLowestSvn(new VersionType(Bytes.decodeHexString("020200")));
         expectedResponse.setEuiccCiPKIdListForVerification(euiccCiPKIdListForVerification);
         expectedResponse.setEuiccCiPKIdListForSigning(euiccCiPKIdListForSigning);
         assertEquals(expectedResponse.toString(), actualResponse.toString());
@@ -296,14 +297,14 @@ public class Es10InterfaceTest {
         certificationDataObject.setDiscoveryBaseURL(new BerUTF8String("https://mycompany.com/myDLOARegistrar"));
 
         EUICCInfo2 expectedResponse = new EUICCInfo2();
-        expectedResponse.setProfileVersion(new VersionType(Bytes.decodeHexString("020301")));
-        expectedResponse.setSvn(new VersionType(Bytes.decodeHexString("020202")));
-        expectedResponse.setEuiccFirmwareVer(new VersionType(Bytes.decodeHexString("202000")));
+        expectedResponse.setBaseProfilePackageVersion(new VersionType(Bytes.decodeHexString("020301")));
+        expectedResponse.setLowestSvn(new VersionType(Bytes.decodeHexString("020202")));
+        expectedResponse.setEuiccFirmwareVersion(new VersionType(Bytes.decodeHexString("202000")));
         expectedResponse.setExtCardResource(new BerOctetString(Bytes.decodeHexString("8101008204000B967A8304000022AA")));
         expectedResponse.setUiccCapability(new UICCCapability(Bytes.decodeBinaryStringToBooleanArray("0111111100110110110010111")));
         expectedResponse.setTs102241Version(new VersionType(Bytes.decodeHexString("090200")));
         expectedResponse.setGlobalplatformVersion(new VersionType(Bytes.decodeHexString("020300")));
-        expectedResponse.setRspCapability(new RspCapability(Bytes.decodeBinaryStringToBooleanArray("1001001")));
+        expectedResponse.setEuiccRspCapability(new EuiccRspCapability(Bytes.decodeBinaryStringToBooleanArray("1001001")));
         expectedResponse.setEuiccCiPKIdListForSigning(euiccCiPKIdListForSigning);
         expectedResponse.setEuiccCiPKIdListForVerification(euiccCiPKIdListForVerification);
         expectedResponse.setForbiddenProfilePolicyRules(new PprIds(Bytes.decodeBinaryStringToBooleanArray("11")));
@@ -380,7 +381,10 @@ public class Es10InterfaceTest {
         Certificate serverCertificate = Ber.createFromEncodedBase64String(Certificate.class, serverCertificateBase64);
         BerOctetString serverSignature1 = Ber.createSignatureFromEncodedBase64String(serverSignature1Base64);
 
-        DeviceInfo deviceInfo = DeviceInformation.getDeviceInformation();
+        EUICCInfo1 euiccInfo1 = new EUICCInfo1();
+        euiccInfo1.setLowestSvn(RspVersion.V2_2_0);
+
+        DeviceInfo deviceInfo = DeviceInformation.getDeviceInfo(euiccInfo1);
 
         CtxParamsForCommonAuthentication ctxParamsForCommonAuthentication = new CtxParamsForCommonAuthentication();
         ctxParamsForCommonAuthentication.setMatchingId(new BerUTF8String(matchingId));

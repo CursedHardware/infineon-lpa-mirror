@@ -40,8 +40,8 @@ import com.gsma.sgp.messages.rspdefinitions.EUICCInfo1;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
 import com.gsma.sgp.messages.rspdefinitions.EnableProfileRequest;
 import com.gsma.sgp.messages.rspdefinitions.EnableProfileResponse;
-import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredAddressesRequest;
-import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredAddressesResponse;
+import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredDataRequest;
+import com.gsma.sgp.messages.rspdefinitions.EuiccConfiguredDataResponse;
 import com.gsma.sgp.messages.rspdefinitions.EuiccMemoryResetRequest;
 import com.gsma.sgp.messages.rspdefinitions.EuiccMemoryResetResponse;
 import com.gsma.sgp.messages.rspdefinitions.GetEuiccChallengeRequest;
@@ -92,11 +92,11 @@ public class Es10Interface {
 
     // ES10a
 
-    public EuiccConfiguredAddressesResponse es10a_getEuiccConfiguredAddresses() throws Exception {
-        EuiccConfiguredAddressesRequest euiccConfiguredAddressesRequest = new EuiccConfiguredAddressesRequest();
+    public EuiccConfiguredDataResponse es10a_getEuiccConfiguredAddresses() throws Exception {
+        EuiccConfiguredDataRequest euiccConfiguredAddressesRequest = new EuiccConfiguredDataRequest();
 
         Log.debug(TAG, "ES10 -> : " + euiccConfiguredAddressesRequest);
-        EuiccConfiguredAddressesResponse euiccConfiguredAddressesResponse = sendCommand(euiccConfiguredAddressesRequest, EuiccConfiguredAddressesResponse.class);
+        EuiccConfiguredDataResponse euiccConfiguredAddressesResponse = sendCommand(euiccConfiguredAddressesRequest, EuiccConfiguredDataResponse.class);
         Log.debug(TAG, "ES10 <- : " + euiccConfiguredAddressesResponse);
 
         return euiccConfiguredAddressesResponse;

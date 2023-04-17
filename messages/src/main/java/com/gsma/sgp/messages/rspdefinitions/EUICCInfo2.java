@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -279,7 +280,7 @@ public class EUICCInfo2 implements BerType, Serializable {
 
 	}
 
-	public static class AdditionalEuiccProfilePackageVersions implements BerType, Serializable {
+	public static class AdditionalProfilePackageVersions implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -287,11 +288,11 @@ public class EUICCInfo2 implements BerType, Serializable {
 		public byte[] code = null;
 		private List<VersionType> seqOf = null;
 
-		public AdditionalEuiccProfilePackageVersions() {
+		public AdditionalProfilePackageVersions() {
 			seqOf = new ArrayList<VersionType>();
 		}
 
-		public AdditionalEuiccProfilePackageVersions(byte[] code) {
+		public AdditionalProfilePackageVersions(byte[] code) {
 			this.code = code;
 		}
 
@@ -405,17 +406,143 @@ public class EUICCInfo2 implements BerType, Serializable {
 
 	}
 
+	public static class EuiccCiPKIdListForSigningV3 implements BerType, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		public byte[] code = null;
+		private List<SubjectKeyIdentifier> seqOf = null;
+
+		public EuiccCiPKIdListForSigningV3() {
+			seqOf = new ArrayList<SubjectKeyIdentifier>();
+		}
+
+		public EuiccCiPKIdListForSigningV3(byte[] code) {
+			this.code = code;
+		}
+
+		public List<SubjectKeyIdentifier> getSubjectKeyIdentifier() {
+			if (seqOf == null) {
+				seqOf = new ArrayList<SubjectKeyIdentifier>();
+			}
+			return seqOf;
+		}
+
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
+		}
+
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					reverseOS.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(reverseOS) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			for (int i = (seqOf.size() - 1); i >= 0; i--) {
+				codeLength += seqOf.get(i).encode(reverseOS, true);
+			}
+
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+
+			return codeLength;
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+			int totalLength = length.val;
+
+			while (subCodeLength < totalLength) {
+				SubjectKeyIdentifier element = new SubjectKeyIdentifier();
+				subCodeLength += element.decode(is, true);
+				seqOf.add(element);
+			}
+			if (subCodeLength != totalLength) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+			}
+			codeLength += subCodeLength;
+
+			return codeLength;
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (seqOf == null) {
+				sb.append("null");
+			}
+			else {
+				Iterator<SubjectKeyIdentifier> it = seqOf.iterator();
+				if (it.hasNext()) {
+					sb.append(it.next());
+					while (it.hasNext()) {
+						sb.append(",\n");
+						for (int i = 0; i < indentLevel + 1; i++) {
+							sb.append("\t");
+						}
+						sb.append(it.next());
+					}
+				}
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
+
+	}
+
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34);
 
 	public byte[] code = null;
-	private VersionType profileVersion = null;
-	private VersionType svn = null;
-	private VersionType euiccFirmwareVer = null;
+	private VersionType baseProfilePackageVersion = null;
+	private VersionType lowestSvn = null;
+	private VersionType euiccFirmwareVersion = null;
 	private BerOctetString extCardResource = null;
 	private UICCCapability uiccCapability = null;
 	private VersionType ts102241Version = null;
 	private VersionType globalplatformVersion = null;
-	private RspCapability rspCapability = null;
+	private EuiccRspCapability euiccRspCapability = null;
 	private EuiccCiPKIdListForVerification euiccCiPKIdListForVerification = null;
 	private EuiccCiPKIdListForSigning euiccCiPKIdListForSigning = null;
 	private BerInteger euiccCategory = null;
@@ -425,7 +552,12 @@ public class EUICCInfo2 implements BerType, Serializable {
 	private CertificationDataObject certificationDataObject = null;
 	private BerBitString treProperties = null;
 	private BerUTF8String treProductReference = null;
-	private AdditionalEuiccProfilePackageVersions additionalEuiccProfilePackageVersions = null;
+	private AdditionalProfilePackageVersions additionalProfilePackageVersions = null;
+	private LpaMode lpaMode = null;
+	private EuiccCiPKIdListForSigningV3 euiccCiPKIdListForSigningV3 = null;
+	private BerOctetString additionalEuiccInfo = null;
+	private VersionType highestSvn = null;
+	private IoTSpecificInfo iotSpecificInfo = null;
 	
 	public EUICCInfo2() {
 	}
@@ -434,28 +566,28 @@ public class EUICCInfo2 implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public void setProfileVersion(VersionType profileVersion) {
-		this.profileVersion = profileVersion;
+	public void setBaseProfilePackageVersion(VersionType baseProfilePackageVersion) {
+		this.baseProfilePackageVersion = baseProfilePackageVersion;
 	}
 
-	public VersionType getProfileVersion() {
-		return profileVersion;
+	public VersionType getBaseProfilePackageVersion() {
+		return baseProfilePackageVersion;
 	}
 
-	public void setSvn(VersionType svn) {
-		this.svn = svn;
+	public void setLowestSvn(VersionType lowestSvn) {
+		this.lowestSvn = lowestSvn;
 	}
 
-	public VersionType getSvn() {
-		return svn;
+	public VersionType getLowestSvn() {
+		return lowestSvn;
 	}
 
-	public void setEuiccFirmwareVer(VersionType euiccFirmwareVer) {
-		this.euiccFirmwareVer = euiccFirmwareVer;
+	public void setEuiccFirmwareVersion(VersionType euiccFirmwareVersion) {
+		this.euiccFirmwareVersion = euiccFirmwareVersion;
 	}
 
-	public VersionType getEuiccFirmwareVer() {
-		return euiccFirmwareVer;
+	public VersionType getEuiccFirmwareVersion() {
+		return euiccFirmwareVersion;
 	}
 
 	public void setExtCardResource(BerOctetString extCardResource) {
@@ -490,12 +622,12 @@ public class EUICCInfo2 implements BerType, Serializable {
 		return globalplatformVersion;
 	}
 
-	public void setRspCapability(RspCapability rspCapability) {
-		this.rspCapability = rspCapability;
+	public void setEuiccRspCapability(EuiccRspCapability euiccRspCapability) {
+		this.euiccRspCapability = euiccRspCapability;
 	}
 
-	public RspCapability getRspCapability() {
-		return rspCapability;
+	public EuiccRspCapability getEuiccRspCapability() {
+		return euiccRspCapability;
 	}
 
 	public void setEuiccCiPKIdListForVerification(EuiccCiPKIdListForVerification euiccCiPKIdListForVerification) {
@@ -570,12 +702,52 @@ public class EUICCInfo2 implements BerType, Serializable {
 		return treProductReference;
 	}
 
-	public void setAdditionalEuiccProfilePackageVersions(AdditionalEuiccProfilePackageVersions additionalEuiccProfilePackageVersions) {
-		this.additionalEuiccProfilePackageVersions = additionalEuiccProfilePackageVersions;
+	public void setAdditionalProfilePackageVersions(AdditionalProfilePackageVersions additionalProfilePackageVersions) {
+		this.additionalProfilePackageVersions = additionalProfilePackageVersions;
 	}
 
-	public AdditionalEuiccProfilePackageVersions getAdditionalEuiccProfilePackageVersions() {
-		return additionalEuiccProfilePackageVersions;
+	public AdditionalProfilePackageVersions getAdditionalProfilePackageVersions() {
+		return additionalProfilePackageVersions;
+	}
+
+	public void setLpaMode(LpaMode lpaMode) {
+		this.lpaMode = lpaMode;
+	}
+
+	public LpaMode getLpaMode() {
+		return lpaMode;
+	}
+
+	public void setEuiccCiPKIdListForSigningV3(EuiccCiPKIdListForSigningV3 euiccCiPKIdListForSigningV3) {
+		this.euiccCiPKIdListForSigningV3 = euiccCiPKIdListForSigningV3;
+	}
+
+	public EuiccCiPKIdListForSigningV3 getEuiccCiPKIdListForSigningV3() {
+		return euiccCiPKIdListForSigningV3;
+	}
+
+	public void setAdditionalEuiccInfo(BerOctetString additionalEuiccInfo) {
+		this.additionalEuiccInfo = additionalEuiccInfo;
+	}
+
+	public BerOctetString getAdditionalEuiccInfo() {
+		return additionalEuiccInfo;
+	}
+
+	public void setHighestSvn(VersionType highestSvn) {
+		this.highestSvn = highestSvn;
+	}
+
+	public VersionType getHighestSvn() {
+		return highestSvn;
+	}
+
+	public void setIotSpecificInfo(IoTSpecificInfo iotSpecificInfo) {
+		this.iotSpecificInfo = iotSpecificInfo;
+	}
+
+	public IoTSpecificInfo getIotSpecificInfo() {
+		return iotSpecificInfo;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -595,8 +767,43 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		if (additionalEuiccProfilePackageVersions != null) {
-			codeLength += additionalEuiccProfilePackageVersions.encode(reverseOS, false);
+		if (iotSpecificInfo != null) {
+			codeLength += iotSpecificInfo.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 20
+			reverseOS.write(0xB4);
+			codeLength += 1;
+		}
+		
+		if (highestSvn != null) {
+			codeLength += highestSvn.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 19
+			reverseOS.write(0x93);
+			codeLength += 1;
+		}
+		
+		if (additionalEuiccInfo != null) {
+			codeLength += additionalEuiccInfo.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 18
+			reverseOS.write(0x92);
+			codeLength += 1;
+		}
+		
+		if (euiccCiPKIdListForSigningV3 != null) {
+			codeLength += euiccCiPKIdListForSigningV3.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
+			reverseOS.write(0xB1);
+			codeLength += 1;
+		}
+		
+		if (lpaMode != null) {
+			codeLength += lpaMode.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 16
+			reverseOS.write(0x90);
+			codeLength += 1;
+		}
+		
+		if (additionalProfilePackageVersions != null) {
+			codeLength += additionalProfilePackageVersions.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
 			reverseOS.write(0xAF);
 			codeLength += 1;
@@ -651,7 +858,7 @@ public class EUICCInfo2 implements BerType, Serializable {
 		reverseOS.write(0xA9);
 		codeLength += 1;
 		
-		codeLength += rspCapability.encode(reverseOS, false);
+		codeLength += euiccRspCapability.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 8
 		reverseOS.write(0x88);
 		codeLength += 1;
@@ -680,17 +887,17 @@ public class EUICCInfo2 implements BerType, Serializable {
 		reverseOS.write(0x84);
 		codeLength += 1;
 		
-		codeLength += euiccFirmwareVer.encode(reverseOS, false);
+		codeLength += euiccFirmwareVersion.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 3
 		reverseOS.write(0x83);
 		codeLength += 1;
 		
-		codeLength += svn.encode(reverseOS, false);
+		codeLength += lowestSvn.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
 		reverseOS.write(0x82);
 		codeLength += 1;
 		
-		codeLength += profileVersion.encode(reverseOS, false);
+		codeLength += baseProfilePackageVersion.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
 		reverseOS.write(0x81);
 		codeLength += 1;
@@ -726,8 +933,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 
 		subCodeLength += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
-			profileVersion = new VersionType();
-			subCodeLength += profileVersion.decode(is, false);
+			baseProfilePackageVersion = new VersionType();
+			subCodeLength += baseProfilePackageVersion.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -735,8 +942,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-			svn = new VersionType();
-			subCodeLength += svn.decode(is, false);
+			lowestSvn = new VersionType();
+			subCodeLength += lowestSvn.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -744,8 +951,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
-			euiccFirmwareVer = new VersionType();
-			subCodeLength += euiccFirmwareVer.decode(is, false);
+			euiccFirmwareVersion = new VersionType();
+			subCodeLength += euiccFirmwareVersion.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -783,8 +990,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 8)) {
-			rspCapability = new RspCapability();
-			subCodeLength += rspCapability.decode(is, false);
+			euiccRspCapability = new EuiccRspCapability();
+			subCodeLength += euiccRspCapability.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		else {
@@ -870,8 +1077,53 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
-			additionalEuiccProfilePackageVersions = new AdditionalEuiccProfilePackageVersions();
-			subCodeLength += additionalEuiccProfilePackageVersions.decode(is, false);
+			additionalProfilePackageVersions = new AdditionalProfilePackageVersions();
+			subCodeLength += additionalProfilePackageVersions.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 16)) {
+			lpaMode = new LpaMode();
+			subCodeLength += lpaMode.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+			euiccCiPKIdListForSigningV3 = new EuiccCiPKIdListForSigningV3();
+			subCodeLength += euiccCiPKIdListForSigningV3.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 18)) {
+			additionalEuiccInfo = new BerOctetString();
+			subCodeLength += additionalEuiccInfo.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 19)) {
+			highestSvn = new VersionType();
+			subCodeLength += highestSvn.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+			iotSpecificInfo = new IoTSpecificInfo();
+			subCodeLength += iotSpecificInfo.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -900,33 +1152,33 @@ public class EUICCInfo2 implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (profileVersion != null) {
-			sb.append("profileVersion: ").append(profileVersion);
+		if (baseProfilePackageVersion != null) {
+			sb.append("baseProfilePackageVersion: ").append(baseProfilePackageVersion);
 		}
 		else {
-			sb.append("profileVersion: <empty-required-field>");
+			sb.append("baseProfilePackageVersion: <empty-required-field>");
 		}
 		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (svn != null) {
-			sb.append("svn: ").append(svn);
+		if (lowestSvn != null) {
+			sb.append("lowestSvn: ").append(lowestSvn);
 		}
 		else {
-			sb.append("svn: <empty-required-field>");
+			sb.append("lowestSvn: <empty-required-field>");
 		}
 		
 		sb.append(",\n");
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (euiccFirmwareVer != null) {
-			sb.append("euiccFirmwareVer: ").append(euiccFirmwareVer);
+		if (euiccFirmwareVersion != null) {
+			sb.append("euiccFirmwareVersion: ").append(euiccFirmwareVersion);
 		}
 		else {
-			sb.append("euiccFirmwareVer: <empty-required-field>");
+			sb.append("euiccFirmwareVersion: <empty-required-field>");
 		}
 		
 		sb.append(",\n");
@@ -971,11 +1223,11 @@ public class EUICCInfo2 implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (rspCapability != null) {
-			sb.append("rspCapability: ").append(rspCapability);
+		if (euiccRspCapability != null) {
+			sb.append("euiccRspCapability: ").append(euiccRspCapability);
 		}
 		else {
-			sb.append("rspCapability: <empty-required-field>");
+			sb.append("euiccRspCapability: <empty-required-field>");
 		}
 		
 		sb.append(",\n");
@@ -1065,13 +1317,55 @@ public class EUICCInfo2 implements BerType, Serializable {
 			sb.append("treProductReference: ").append(treProductReference);
 		}
 		
-		if (additionalEuiccProfilePackageVersions != null) {
+		if (additionalProfilePackageVersions != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("additionalEuiccProfilePackageVersions: ");
-			additionalEuiccProfilePackageVersions.appendAsString(sb, indentLevel + 1);
+			sb.append("additionalProfilePackageVersions: ");
+			additionalProfilePackageVersions.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (lpaMode != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lpaMode: ").append(lpaMode);
+		}
+		
+		if (euiccCiPKIdListForSigningV3 != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("euiccCiPKIdListForSigningV3: ");
+			euiccCiPKIdListForSigningV3.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (additionalEuiccInfo != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("additionalEuiccInfo: ").append(additionalEuiccInfo);
+		}
+		
+		if (highestSvn != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("highestSvn: ").append(highestSvn);
+		}
+		
+		if (iotSpecificInfo != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("iotSpecificInfo: ");
+			iotSpecificInfo.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

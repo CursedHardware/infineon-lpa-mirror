@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -32,6 +33,7 @@ public class AuthenticateClientRequest implements BerType, Serializable {
 	public byte[] code = null;
 	private TransactionId transactionId = null;
 	private AuthenticateServerResponse authenticateServerResponse = null;
+	private DeleteNotificationForDc deleteNotificationForDc = null;
 	
 	public AuthenticateClientRequest() {
 	}
@@ -56,6 +58,14 @@ public class AuthenticateClientRequest implements BerType, Serializable {
 		return authenticateServerResponse;
 	}
 
+	public void setDeleteNotificationForDc(DeleteNotificationForDc deleteNotificationForDc) {
+		this.deleteNotificationForDc = deleteNotificationForDc;
+	}
+
+	public DeleteNotificationForDc getDeleteNotificationForDc() {
+		return deleteNotificationForDc;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -73,6 +83,10 @@ public class AuthenticateClientRequest implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (deleteNotificationForDc != null) {
+			codeLength += deleteNotificationForDc.encode(reverseOS, true);
+		}
+		
 		codeLength += authenticateServerResponse.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 56
 		reverseOS.write(0x38);
@@ -129,6 +143,18 @@ public class AuthenticateClientRequest implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(DeleteNotificationForDc.tag)) {
+			deleteNotificationForDc = new DeleteNotificationForDc();
+			subCodeLength += deleteNotificationForDc.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -171,6 +197,15 @@ public class AuthenticateClientRequest implements BerType, Serializable {
 		}
 		else {
 			sb.append("authenticateServerResponse: <empty-required-field>");
+		}
+		
+		if (deleteNotificationForDc != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deleteNotificationForDc: ");
+			deleteNotificationForDc.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

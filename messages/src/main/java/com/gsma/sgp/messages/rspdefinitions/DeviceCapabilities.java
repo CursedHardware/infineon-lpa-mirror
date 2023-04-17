@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -41,6 +42,10 @@ public class DeviceCapabilities implements BerType, Serializable {
 	private VersionType nrEpcSupportedRelease = null;
 	private VersionType nr5gcSupportedRelease = null;
 	private VersionType eutran5gcSupportedRelease = null;
+	private VersionType lpaSvn = null;
+	private CatSupportedClasses catSupportedClasses = null;
+	private EuiccFormFactorType euiccFormFactorType = null;
+	private DeviceAdditionalFeatureSupport deviceAdditionalFeatureSupport = null;
 	
 	public DeviceCapabilities() {
 	}
@@ -137,6 +142,38 @@ public class DeviceCapabilities implements BerType, Serializable {
 		return eutran5gcSupportedRelease;
 	}
 
+	public void setLpaSvn(VersionType lpaSvn) {
+		this.lpaSvn = lpaSvn;
+	}
+
+	public VersionType getLpaSvn() {
+		return lpaSvn;
+	}
+
+	public void setCatSupportedClasses(CatSupportedClasses catSupportedClasses) {
+		this.catSupportedClasses = catSupportedClasses;
+	}
+
+	public CatSupportedClasses getCatSupportedClasses() {
+		return catSupportedClasses;
+	}
+
+	public void setEuiccFormFactorType(EuiccFormFactorType euiccFormFactorType) {
+		this.euiccFormFactorType = euiccFormFactorType;
+	}
+
+	public EuiccFormFactorType getEuiccFormFactorType() {
+		return euiccFormFactorType;
+	}
+
+	public void setDeviceAdditionalFeatureSupport(DeviceAdditionalFeatureSupport deviceAdditionalFeatureSupport) {
+		this.deviceAdditionalFeatureSupport = deviceAdditionalFeatureSupport;
+	}
+
+	public DeviceAdditionalFeatureSupport getDeviceAdditionalFeatureSupport() {
+		return deviceAdditionalFeatureSupport;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -154,6 +191,34 @@ public class DeviceCapabilities implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (deviceAdditionalFeatureSupport != null) {
+			codeLength += deviceAdditionalFeatureSupport.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
+			reverseOS.write(0xAE);
+			codeLength += 1;
+		}
+		
+		if (euiccFormFactorType != null) {
+			codeLength += euiccFormFactorType.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 13
+			reverseOS.write(0x8D);
+			codeLength += 1;
+		}
+		
+		if (catSupportedClasses != null) {
+			codeLength += catSupportedClasses.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 12
+			reverseOS.write(0x8C);
+			codeLength += 1;
+		}
+		
+		if (lpaSvn != null) {
+			codeLength += lpaSvn.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 11
+			reverseOS.write(0x8B);
+			codeLength += 1;
+		}
+		
 		if (eutran5gcSupportedRelease != null) {
 			codeLength += eutran5gcSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 10
@@ -360,6 +425,42 @@ public class DeviceCapabilities implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 11)) {
+			lpaSvn = new VersionType();
+			subCodeLength += lpaSvn.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 12)) {
+			catSupportedClasses = new CatSupportedClasses();
+			subCodeLength += catSupportedClasses.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 13)) {
+			euiccFormFactorType = new EuiccFormFactorType();
+			subCodeLength += euiccFormFactorType.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
+			deviceAdditionalFeatureSupport = new DeviceAdditionalFeatureSupport();
+			subCodeLength += deviceAdditionalFeatureSupport.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -498,6 +599,51 @@ public class DeviceCapabilities implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("eutran5gcSupportedRelease: ").append(eutran5gcSupportedRelease);
+			firstSelectedElement = false;
+		}
+		
+		if (lpaSvn != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lpaSvn: ").append(lpaSvn);
+			firstSelectedElement = false;
+		}
+		
+		if (catSupportedClasses != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("catSupportedClasses: ").append(catSupportedClasses);
+			firstSelectedElement = false;
+		}
+		
+		if (euiccFormFactorType != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("euiccFormFactorType: ").append(euiccFormFactorType);
+			firstSelectedElement = false;
+		}
+		
+		if (deviceAdditionalFeatureSupport != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deviceAdditionalFeatureSupport: ");
+			deviceAdditionalFeatureSupport.appendAsString(sb, indentLevel + 1);
 			firstSelectedElement = false;
 		}
 		

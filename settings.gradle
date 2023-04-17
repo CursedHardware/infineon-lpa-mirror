@@ -21,6 +21,10 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
+// Enabling Gradle configuration cache for faster builds
+// See: https://docs.gradle.org/current/userguide/configuration_cache.html
+enableFeaturePreview "STABLE_CONFIGURATION_CACHE"
+
 rootProject.name='Infineon LPA'
 include ':app'
 include ':messages'

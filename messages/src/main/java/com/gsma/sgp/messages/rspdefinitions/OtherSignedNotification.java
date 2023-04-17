@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,9 +32,10 @@ public class OtherSignedNotification implements BerType, Serializable {
 
 	public byte[] code = null;
 	private NotificationMetadata tbsOtherNotification = null;
-	private BerOctetString euiccNotificationSignature = null;
+	private EuiccSign euiccNotificationSignature = null;
 	private Certificate euiccCertificate = null;
-	private Certificate eumCertificate = null;
+	private Certificate nextCertInChain = null;
+	private CertificateChain otherCertsInChain = null;
 	
 	public OtherSignedNotification() {
 	}
@@ -50,11 +52,11 @@ public class OtherSignedNotification implements BerType, Serializable {
 		return tbsOtherNotification;
 	}
 
-	public void setEuiccNotificationSignature(BerOctetString euiccNotificationSignature) {
+	public void setEuiccNotificationSignature(EuiccSign euiccNotificationSignature) {
 		this.euiccNotificationSignature = euiccNotificationSignature;
 	}
 
-	public BerOctetString getEuiccNotificationSignature() {
+	public EuiccSign getEuiccNotificationSignature() {
 		return euiccNotificationSignature;
 	}
 
@@ -66,12 +68,20 @@ public class OtherSignedNotification implements BerType, Serializable {
 		return euiccCertificate;
 	}
 
-	public void setEumCertificate(Certificate eumCertificate) {
-		this.eumCertificate = eumCertificate;
+	public void setNextCertInChain(Certificate nextCertInChain) {
+		this.nextCertInChain = nextCertInChain;
 	}
 
-	public Certificate getEumCertificate() {
-		return eumCertificate;
+	public Certificate getNextCertInChain() {
+		return nextCertInChain;
+	}
+
+	public void setOtherCertsInChain(CertificateChain otherCertsInChain) {
+		this.otherCertsInChain = otherCertsInChain;
+	}
+
+	public CertificateChain getOtherCertsInChain() {
+		return otherCertsInChain;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -91,15 +101,18 @@ public class OtherSignedNotification implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		codeLength += eumCertificate.encode(reverseOS, true);
+		if (otherCertsInChain != null) {
+			codeLength += otherCertsInChain.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+			reverseOS.write(0xA1);
+			codeLength += 1;
+		}
+		
+		codeLength += nextCertInChain.encode(reverseOS, true);
 		
 		codeLength += euiccCertificate.encode(reverseOS, true);
 		
-		codeLength += euiccNotificationSignature.encode(reverseOS, false);
-		// write tag: APPLICATION_CLASS, PRIMITIVE, 55
-		reverseOS.write(0x37);
-		reverseOS.write(0x5F);
-		codeLength += 2;
+		codeLength += euiccNotificationSignature.encode(reverseOS, true);
 		
 		codeLength += tbsOtherNotification.encode(reverseOS, true);
 		
@@ -142,8 +155,8 @@ public class OtherSignedNotification implements BerType, Serializable {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
-		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 55)) {
-			euiccNotificationSignature = new BerOctetString();
+		if (berTag.equals(EuiccSign.tag)) {
+			euiccNotificationSignature = new EuiccSign();
 			subCodeLength += euiccNotificationSignature.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
@@ -161,8 +174,20 @@ public class OtherSignedNotification implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(Certificate.tag)) {
-			eumCertificate = new Certificate();
-			subCodeLength += eumCertificate.decode(is, false);
+			nextCertInChain = new Certificate();
+			subCodeLength += nextCertInChain.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			otherCertsInChain = new CertificateChain();
+			subCodeLength += otherCertsInChain.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -226,12 +251,21 @@ public class OtherSignedNotification implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (eumCertificate != null) {
-			sb.append("eumCertificate: ");
-			eumCertificate.appendAsString(sb, indentLevel + 1);
+		if (nextCertInChain != null) {
+			sb.append("nextCertInChain: ");
+			nextCertInChain.appendAsString(sb, indentLevel + 1);
 		}
 		else {
-			sb.append("eumCertificate: <empty-required-field>");
+			sb.append("nextCertInChain: <empty-required-field>");
+		}
+		
+		if (otherCertsInChain != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("otherCertsInChain: ");
+			otherCertsInChain.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

@@ -41,7 +41,11 @@ public class ActivationCodeTest {
             "LPA:1$testsmdpplus.infineon.com$0000-0000-0000-0001",
             "LPA:1$testsmdpplus.infineon.com$0000-0000-0000-0001$2.999.10",
             "LPA:1$testsmdpplus.infineon.com$0000-0000-0000-0001$2.999.10$1",
-            "LPA:1$testsmdpplus.infineon.com$0000-0000-0000-0001$$1"
+            "LPA:1$testsmdpplus.infineon.com$0000-0000-0000-0001$$1",
+            "LPA:1$raspberrypi.fritz.box:4443$0000-0000-0000-0001",
+            "LPA:1$raspberrypi.fritz.box:4443$0000-0000-0000-0001$2.999.10",
+            "LPA:1$raspberrypi.fritz.box:4443$0000-0000-0000-0001$2.999.10$1",
+            "LPA:1$raspberrypi.fritz.box:4443$0000-0000-0000-0001$$1"
     })
     public void validActivationCodes(String barcode) {
         ActivationCode activationCode = new ActivationCode(barcode);
@@ -57,7 +61,11 @@ public class ActivationCodeTest {
             "LPA:1$$$",
             "LPA:1$$",
             "$$",
-            "LPA:1$testsmdpplus.infineon.com"
+            "LPA:1$testsmdpplus.infineon.com",
+            "LPA:2$testsmdpplus.infineon.com:4443$0000-0000-0000-0001",
+            "LPA:1$testsmdpplus.infineon.com:4443$0000-0000-0000-0001$$$1",
+            "LPA:1$testsmdpplus.infineon.com:4443$",
+            "LPA:1$testsmdpplus.infineon.com:4443"
     })
     public void invalidActivationCodes(String barcode) {
         ActivationCode activationCode = new ActivationCode(barcode);

@@ -87,7 +87,7 @@ public class AuthenticateClientResp extends ResponseMsgBody {
     public AuthenticateClientResponseEs9 getResponse() {
         AuthenticateClientOk authenticateClientOk = new AuthenticateClientOk();
         authenticateClientOk.setTransactionId(this.getTransactionIdParsed());
-        authenticateClientOk.setProfileMetaData(this.getProfileMetadataParsed());
+        authenticateClientOk.setProfileMetadata(this.getProfileMetadataParsed());
         authenticateClientOk.setSmdpSigned2(this.getSmdpSigned2Parsed());
         authenticateClientOk.setSmdpSignature2(this.getSmdpSignature2Parsed());
         authenticateClientOk.setSmdpCertificate(this.getSmdpCertificateParsed());
@@ -100,7 +100,7 @@ public class AuthenticateClientResp extends ResponseMsgBody {
 
     public void setResponse(AuthenticateClientResponseEs9 authenticateClientResponseEs9) {
         TransactionId transactionID = authenticateClientResponseEs9.getAuthenticateClientOk().getTransactionId();
-        StoreMetadataRequest profileMetadata = authenticateClientResponseEs9.getAuthenticateClientOk().getProfileMetaData();
+        StoreMetadataRequest profileMetadata = authenticateClientResponseEs9.getAuthenticateClientOk().getProfileMetadata();
         SmdpSigned2 smdpSigned2 = authenticateClientResponseEs9.getAuthenticateClientOk().getSmdpSigned2();
         BerOctetString smdpSignature2 = authenticateClientResponseEs9.getAuthenticateClientOk().getSmdpSignature2();
         Certificate smdpCertificate = authenticateClientResponseEs9.getAuthenticateClientOk().getSmdpCertificate();

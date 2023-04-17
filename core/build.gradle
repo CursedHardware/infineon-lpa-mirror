@@ -27,11 +27,11 @@ plugins {
 
 android {
     namespace 'com.infineon.esim.lpa.core'
-    compileSdk 33
+    compileSdk rootProject.ext.sdk_version
 
     defaultConfig {
         minSdk 26
-        targetSdk 33
+        targetSdk rootProject.ext.sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -62,7 +62,7 @@ dependencies {
     implementation project(path: ':util')
 
     // JSON parser
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10'
 
     // ASN1/BER codec
     implementation 'com.beanit:jasn1:1.11.3'
@@ -72,6 +72,6 @@ dependencies {
 
     // Testing
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.2"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.8.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.9.2"
 }

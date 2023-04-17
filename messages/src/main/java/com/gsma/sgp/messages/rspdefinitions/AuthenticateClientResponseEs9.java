@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -32,6 +33,9 @@ public class AuthenticateClientResponseEs9 implements BerType, Serializable {
 
 	private AuthenticateClientOk authenticateClientOk = null;
 	private BerInteger authenticateClientError = null;
+	private AuthenticateClientOkRpm authenticateClientOkRpm = null;
+	private AuthenticateClientOkDeviceChange authenticateClientOkDeviceChange = null;
+	private AuthenticateClientOkDelayedDeviceChange authenticateClientOkDelayedDeviceChange = null;
 	
 	public AuthenticateClientResponseEs9() {
 	}
@@ -56,6 +60,30 @@ public class AuthenticateClientResponseEs9 implements BerType, Serializable {
 		return authenticateClientError;
 	}
 
+	public void setAuthenticateClientOkRpm(AuthenticateClientOkRpm authenticateClientOkRpm) {
+		this.authenticateClientOkRpm = authenticateClientOkRpm;
+	}
+
+	public AuthenticateClientOkRpm getAuthenticateClientOkRpm() {
+		return authenticateClientOkRpm;
+	}
+
+	public void setAuthenticateClientOkDeviceChange(AuthenticateClientOkDeviceChange authenticateClientOkDeviceChange) {
+		this.authenticateClientOkDeviceChange = authenticateClientOkDeviceChange;
+	}
+
+	public AuthenticateClientOkDeviceChange getAuthenticateClientOkDeviceChange() {
+		return authenticateClientOkDeviceChange;
+	}
+
+	public void setAuthenticateClientOkDelayedDeviceChange(AuthenticateClientOkDelayedDeviceChange authenticateClientOkDelayedDeviceChange) {
+		this.authenticateClientOkDelayedDeviceChange = authenticateClientOkDelayedDeviceChange;
+	}
+
+	public AuthenticateClientOkDelayedDeviceChange getAuthenticateClientOkDelayedDeviceChange() {
+		return authenticateClientOkDelayedDeviceChange;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -73,6 +101,42 @@ public class AuthenticateClientResponseEs9 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (authenticateClientOkDelayedDeviceChange != null) {
+			codeLength += authenticateClientOkDelayedDeviceChange.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
+			reverseOS.write(0xA4);
+			codeLength += 1;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
+		if (authenticateClientOkDeviceChange != null) {
+			codeLength += authenticateClientOkDeviceChange.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
+			reverseOS.write(0xA3);
+			codeLength += 1;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
+		if (authenticateClientOkRpm != null) {
+			codeLength += authenticateClientOkRpm.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+			reverseOS.write(0xA2);
+			codeLength += 1;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
 		if (authenticateClientError != null) {
 			codeLength += authenticateClientError.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
@@ -128,6 +192,24 @@ public class AuthenticateClientResponseEs9 implements BerType, Serializable {
 			return codeLength;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			authenticateClientOkRpm = new AuthenticateClientOkRpm();
+			codeLength += authenticateClientOkRpm.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			authenticateClientOkDeviceChange = new AuthenticateClientOkDeviceChange();
+			codeLength += authenticateClientOkDeviceChange.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			authenticateClientOkDelayedDeviceChange = new AuthenticateClientOkDelayedDeviceChange();
+			codeLength += authenticateClientOkDelayedDeviceChange.decode(is, false);
+			return codeLength;
+		}
+
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
@@ -153,6 +235,24 @@ public class AuthenticateClientResponseEs9 implements BerType, Serializable {
 
 		if (authenticateClientError != null) {
 			sb.append("authenticateClientError: ").append(authenticateClientError);
+			return;
+		}
+
+		if (authenticateClientOkRpm != null) {
+			sb.append("authenticateClientOkRpm: ");
+			authenticateClientOkRpm.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (authenticateClientOkDeviceChange != null) {
+			sb.append("authenticateClientOkDeviceChange: ");
+			authenticateClientOkDeviceChange.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (authenticateClientOkDelayedDeviceChange != null) {
+			sb.append("authenticateClientOkDelayedDeviceChange: ");
+			authenticateClientOkDelayedDeviceChange.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

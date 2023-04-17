@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -35,6 +36,9 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 	private GetBoundProfilePackageResponse getBoundProfilePackageResponse = null;
 	private CancelSessionResponseEs9 cancelSessionResponseEs9 = null;
 	private AuthenticateClientResponseEs11 authenticateClientResponseEs11 = null;
+	private ConfirmDeviceChangeResponse confirmDeviceChangeResponse = null;
+	private CheckEventResponse checkEventResponse = null;
+	private CheckProgressResponse checkProgressResponse = null;
 	
 	public RemoteProfileProvisioningResponse() {
 	}
@@ -83,6 +87,30 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 		return authenticateClientResponseEs11;
 	}
 
+	public void setConfirmDeviceChangeResponse(ConfirmDeviceChangeResponse confirmDeviceChangeResponse) {
+		this.confirmDeviceChangeResponse = confirmDeviceChangeResponse;
+	}
+
+	public ConfirmDeviceChangeResponse getConfirmDeviceChangeResponse() {
+		return confirmDeviceChangeResponse;
+	}
+
+	public void setCheckEventResponse(CheckEventResponse checkEventResponse) {
+		this.checkEventResponse = checkEventResponse;
+	}
+
+	public CheckEventResponse getCheckEventResponse() {
+		return checkEventResponse;
+	}
+
+	public void setCheckProgressResponse(CheckProgressResponse checkProgressResponse) {
+		this.checkProgressResponse = checkProgressResponse;
+	}
+
+	public CheckProgressResponse getCheckProgressResponse() {
+		return checkProgressResponse;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -100,6 +128,45 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 		}
 
 		int codeLength = 0;
+		if (checkProgressResponse != null) {
+			codeLength += checkProgressResponse.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 97
+			reverseOS.write(0x61);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
+		if (checkEventResponse != null) {
+			codeLength += checkEventResponse.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 70
+			reverseOS.write(0x46);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
+		if (confirmDeviceChangeResponse != null) {
+			codeLength += confirmDeviceChangeResponse.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 76
+			reverseOS.write(0x4C);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+			return codeLength;
+		}
+		
 		if (authenticateClientResponseEs11 != null) {
 			codeLength += authenticateClientResponseEs11.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 64
@@ -214,6 +281,24 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 			return codeLength;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 76)) {
+			confirmDeviceChangeResponse = new ConfirmDeviceChangeResponse();
+			codeLength += confirmDeviceChangeResponse.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 70)) {
+			checkEventResponse = new CheckEventResponse();
+			codeLength += checkEventResponse.decode(is, false);
+			return codeLength;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 97)) {
+			checkProgressResponse = new CheckProgressResponse();
+			codeLength += checkProgressResponse.decode(is, false);
+			return codeLength;
+		}
+
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
@@ -258,6 +343,24 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 		if (authenticateClientResponseEs11 != null) {
 			sb.append("authenticateClientResponseEs11: ");
 			authenticateClientResponseEs11.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (confirmDeviceChangeResponse != null) {
+			sb.append("confirmDeviceChangeResponse: ");
+			confirmDeviceChangeResponse.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (checkEventResponse != null) {
+			sb.append("checkEventResponse: ");
+			checkEventResponse.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (checkProgressResponse != null) {
+			sb.append("checkProgressResponse: ");
+			checkProgressResponse.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

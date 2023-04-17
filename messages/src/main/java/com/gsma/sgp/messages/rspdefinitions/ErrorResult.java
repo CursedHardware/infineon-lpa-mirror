@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -32,7 +33,7 @@ public class ErrorResult implements BerType, Serializable {
 	public byte[] code = null;
 	private BppCommandId bppCommandId = null;
 	private ErrorReason errorReason = null;
-	private BerOctetString simaResponse = null;
+	private BerOctetString ppiResponse = null;
 	
 	public ErrorResult() {
 	}
@@ -57,12 +58,12 @@ public class ErrorResult implements BerType, Serializable {
 		return errorReason;
 	}
 
-	public void setSimaResponse(BerOctetString simaResponse) {
-		this.simaResponse = simaResponse;
+	public void setPpiResponse(BerOctetString ppiResponse) {
+		this.ppiResponse = ppiResponse;
 	}
 
-	public BerOctetString getSimaResponse() {
-		return simaResponse;
+	public BerOctetString getPpiResponse() {
+		return ppiResponse;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -82,8 +83,8 @@ public class ErrorResult implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		if (simaResponse != null) {
-			codeLength += simaResponse.encode(reverseOS, false);
+		if (ppiResponse != null) {
+			codeLength += ppiResponse.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
 			reverseOS.write(0x82);
 			codeLength += 1;
@@ -151,8 +152,8 @@ public class ErrorResult implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-			simaResponse = new BerOctetString();
-			subCodeLength += simaResponse.decode(is, false);
+			ppiResponse = new BerOctetString();
+			subCodeLength += ppiResponse.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -199,12 +200,12 @@ public class ErrorResult implements BerType, Serializable {
 			sb.append("errorReason: <empty-required-field>");
 		}
 		
-		if (simaResponse != null) {
+		if (ppiResponse != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("simaResponse: ").append(simaResponse);
+			sb.append("ppiResponse: ").append(ppiResponse);
 		}
 		
 		sb.append("\n");

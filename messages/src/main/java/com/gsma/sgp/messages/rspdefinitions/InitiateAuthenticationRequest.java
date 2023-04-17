@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -33,6 +34,7 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 	private Octet16 euiccChallenge = null;
 	private BerUTF8String smdpAddress = null;
 	private EUICCInfo1 euiccInfo1 = null;
+	private LpaRspCapability lpaRspCapability = null;
 	
 	public InitiateAuthenticationRequest() {
 	}
@@ -65,6 +67,14 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 		return euiccInfo1;
 	}
 
+	public void setLpaRspCapability(LpaRspCapability lpaRspCapability) {
+		this.lpaRspCapability = lpaRspCapability;
+	}
+
+	public LpaRspCapability getLpaRspCapability() {
+		return lpaRspCapability;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -82,6 +92,13 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (lpaRspCapability != null) {
+			codeLength += lpaRspCapability.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
+			reverseOS.write(0x85);
+			codeLength += 1;
+		}
+		
 		codeLength += euiccInfo1.encode(reverseOS, true);
 		
 		codeLength += smdpAddress.encode(reverseOS, false);
@@ -148,6 +165,18 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 5)) {
+			lpaRspCapability = new LpaRspCapability();
+			subCodeLength += lpaRspCapability.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -201,6 +230,14 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 		}
 		else {
 			sb.append("euiccInfo1: <empty-required-field>");
+		}
+		
+		if (lpaRspCapability != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lpaRspCapability: ").append(lpaRspCapability);
 		}
 		
 		sb.append("\n");

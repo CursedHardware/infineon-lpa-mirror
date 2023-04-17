@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -30,8 +31,8 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 	public static final BerTag tag = new BerTag(BerTag.PRIVATE_CLASS, BerTag.CONSTRUCTED, 0);
 
 	public byte[] code = null;
-	private VersionType svn = null;
-	private BerBitString lpaeSupport = null;
+	private VersionType lowestSvn = null;
+	private BerBitString euiccConfiguration = null;
 	
 	public ISDRProprietaryApplicationTemplate() {
 	}
@@ -40,20 +41,20 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 		this.code = code;
 	}
 
-	public void setSvn(VersionType svn) {
-		this.svn = svn;
+	public void setLowestSvn(VersionType lowestSvn) {
+		this.lowestSvn = lowestSvn;
 	}
 
-	public VersionType getSvn() {
-		return svn;
+	public VersionType getLowestSvn() {
+		return lowestSvn;
 	}
 
-	public void setLpaeSupport(BerBitString lpaeSupport) {
-		this.lpaeSupport = lpaeSupport;
+	public void setEuiccConfiguration(BerBitString euiccConfiguration) {
+		this.euiccConfiguration = euiccConfiguration;
 	}
 
-	public BerBitString getLpaeSupport() {
-		return lpaeSupport;
+	public BerBitString getEuiccConfiguration() {
+		return euiccConfiguration;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -73,11 +74,11 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 		}
 
 		int codeLength = 0;
-		if (lpaeSupport != null) {
-			codeLength += lpaeSupport.encode(reverseOS, true);
+		if (euiccConfiguration != null) {
+			codeLength += euiccConfiguration.encode(reverseOS, true);
 		}
 		
-		codeLength += svn.encode(reverseOS, false);
+		codeLength += lowestSvn.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
 		reverseOS.write(0x82);
 		codeLength += 1;
@@ -113,8 +114,8 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 
 		subCodeLength += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-			svn = new VersionType();
-			subCodeLength += svn.decode(is, false);
+			lowestSvn = new VersionType();
+			subCodeLength += lowestSvn.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -125,8 +126,8 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 		}
 		
 		if (berTag.equals(BerBitString.tag)) {
-			lpaeSupport = new BerBitString();
-			subCodeLength += lpaeSupport.decode(is, false);
+			euiccConfiguration = new BerBitString();
+			subCodeLength += euiccConfiguration.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -155,19 +156,19 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (svn != null) {
-			sb.append("svn: ").append(svn);
+		if (lowestSvn != null) {
+			sb.append("lowestSvn: ").append(lowestSvn);
 		}
 		else {
-			sb.append("svn: <empty-required-field>");
+			sb.append("lowestSvn: <empty-required-field>");
 		}
 		
-		if (lpaeSupport != null) {
+		if (euiccConfiguration != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("lpaeSupport: ").append(lpaeSupport);
+			sb.append("euiccConfiguration: ").append(euiccConfiguration);
 		}
 		
 		sb.append("\n");

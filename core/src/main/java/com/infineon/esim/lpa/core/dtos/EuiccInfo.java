@@ -26,7 +26,6 @@ package com.infineon.esim.lpa.core.dtos;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
 import com.gsma.sgp.messages.rspdefinitions.VersionType;
-import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,9 @@ public class EuiccInfo {
 
     public EuiccInfo(String eid, EUICCInfo2 euiccInfo2) {
         this.eid = eid;
-        this.profileVersion = versionTypeToString(euiccInfo2.getProfileVersion());
-        this.svn = versionTypeToString(euiccInfo2.getSvn());
-        this.euiccFirmwareVer = versionTypeToString(euiccInfo2.getEuiccFirmwareVer());
+        this.profileVersion = versionTypeToString(euiccInfo2.getBaseProfilePackageVersion());
+        this.svn = versionTypeToString(euiccInfo2.getLowestSvn());
+        this.euiccFirmwareVer = versionTypeToString(euiccInfo2.getEuiccFirmwareVersion());
         this.globalplatformVersion = versionTypeToString(euiccInfo2.getGlobalplatformVersion());
 
         this.sasAcreditationNumber = euiccInfo2.getSasAcreditationNumber().toString();
@@ -94,6 +93,10 @@ public class EuiccInfo {
     public String getPkiIdsAsString(){
         StringBuilder sb = new StringBuilder();
 
+        if(pkiIds.isEmpty()) {
+            return "";
+        }
+
         for(String pkiId : pkiIds) {
             sb.append(pkiId);
             sb.append("\n");
@@ -104,15 +107,7 @@ public class EuiccInfo {
 
     private static String versionTypeToString(VersionType versionType) {
         if(versionType != null) {
-            String vts = versionType.toString();
-            Log.debug(TAG, "Raw version number: \"" + vts + "\"." );
-            if (vts.length() == 6) {
-                int major = Integer.parseInt(vts.substring(0, 2));
-                int middle = Integer.parseInt(vts.substring(2, 4));
-                int minor = Integer.parseInt(vts.substring(4, 6));
-
-                return major + "." + middle + "." + minor;
-            }
+            return versionType.toString();
         }
 
         return "N/A";

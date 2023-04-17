@@ -31,6 +31,7 @@ import com.infineon.esim.lpa.core.dtos.result.remote.HandleNotificationsResult;
 import com.infineon.esim.lpa.lpa.LocalProfileAssistant;
 import com.infineon.esim.util.Log;
 
+import java.net.ConnectException;
 import java.util.concurrent.Callable;
 
 public class ProfileActionTask implements Callable<Void> {
@@ -89,8 +90,9 @@ public class ProfileActionTask implements Callable<Void> {
                 Log.error(TAG, "HandleNotifications failed: " + handleNotificationsResult.getErrorDetails());
                 throw new Exception("HandleNotifications failed: " + handleNotificationsResult.getErrorDetails());
             }
-        } catch (Exception e) {
+        } catch (ConnectException e) {
             // Ignore exceptions (E.g. no internet connection) and retry later
+            // TODO: Show toast on fail?
         }
 
         return null;

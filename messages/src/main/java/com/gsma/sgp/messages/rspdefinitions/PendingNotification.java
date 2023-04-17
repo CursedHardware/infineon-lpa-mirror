@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -30,6 +31,7 @@ public class PendingNotification implements BerType, Serializable {
 	public byte[] code = null;
 	private ProfileInstallationResult profileInstallationResult = null;
 	private OtherSignedNotification otherSignedNotification = null;
+	private LoadRpmPackageResultSigned loadRpmPackageResultSigned = null;
 	
 	public PendingNotification() {
 	}
@@ -54,6 +56,14 @@ public class PendingNotification implements BerType, Serializable {
 		return otherSignedNotification;
 	}
 
+	public void setLoadRpmPackageResultSigned(LoadRpmPackageResultSigned loadRpmPackageResultSigned) {
+		this.loadRpmPackageResultSigned = loadRpmPackageResultSigned;
+	}
+
+	public LoadRpmPackageResultSigned getLoadRpmPackageResultSigned() {
+		return loadRpmPackageResultSigned;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
@@ -64,6 +74,14 @@ public class PendingNotification implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (loadRpmPackageResultSigned != null) {
+			codeLength += loadRpmPackageResultSigned.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+			reverseOS.write(0xA1);
+			codeLength += 1;
+			return codeLength;
+		}
+		
 		if (otherSignedNotification != null) {
 			codeLength += otherSignedNotification.encode(reverseOS, true);
 			return codeLength;
@@ -107,6 +125,12 @@ public class PendingNotification implements BerType, Serializable {
 			return codeLength;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			loadRpmPackageResultSigned = new LoadRpmPackageResultSigned();
+			codeLength += loadRpmPackageResultSigned.decode(is, false);
+			return codeLength;
+		}
+
 		if (passedTag != null) {
 			return 0;
 		}
@@ -137,6 +161,12 @@ public class PendingNotification implements BerType, Serializable {
 		if (otherSignedNotification != null) {
 			sb.append("otherSignedNotification: ");
 			otherSignedNotification.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (loadRpmPackageResultSigned != null) {
+			sb.append("loadRpmPackageResultSigned: ");
+			loadRpmPackageResultSigned.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

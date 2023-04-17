@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -33,6 +34,7 @@ public class EUICCSigned2 implements BerType, Serializable {
 	private TransactionId transactionId = null;
 	private BerOctetString euiccOtpk = null;
 	private Octet32 hashCc = null;
+	private VendorSpecificExtension additionalInformation = null;
 	
 	public EUICCSigned2() {
 	}
@@ -65,6 +67,14 @@ public class EUICCSigned2 implements BerType, Serializable {
 		return hashCc;
 	}
 
+	public void setAdditionalInformation(VendorSpecificExtension additionalInformation) {
+		this.additionalInformation = additionalInformation;
+	}
+
+	public VendorSpecificExtension getAdditionalInformation() {
+		return additionalInformation;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -82,6 +92,10 @@ public class EUICCSigned2 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (additionalInformation != null) {
+			codeLength += additionalInformation.encode(reverseOS, true);
+		}
+		
 		if (hashCc != null) {
 			codeLength += hashCc.encode(reverseOS, true);
 		}
@@ -154,6 +168,15 @@ public class EUICCSigned2 implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(VendorSpecificExtension.tag)) {
+			additionalInformation = new VendorSpecificExtension();
+			subCodeLength += additionalInformation.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -203,6 +226,15 @@ public class EUICCSigned2 implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("hashCc: ").append(hashCc);
+		}
+		
+		if (additionalInformation != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("additionalInformation: ");
+			additionalInformation.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

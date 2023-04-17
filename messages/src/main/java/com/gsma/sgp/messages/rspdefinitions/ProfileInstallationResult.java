@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,7 +32,7 @@ public class ProfileInstallationResult implements BerType, Serializable {
 
 	public byte[] code = null;
 	private ProfileInstallationResultData profileInstallationResultData = null;
-	private EuiccSignPIR euiccSignPIR = null;
+	private EuiccSign euiccSignPIR = null;
 	
 	public ProfileInstallationResult() {
 	}
@@ -48,11 +49,11 @@ public class ProfileInstallationResult implements BerType, Serializable {
 		return profileInstallationResultData;
 	}
 
-	public void setEuiccSignPIR(EuiccSignPIR euiccSignPIR) {
+	public void setEuiccSignPIR(EuiccSign euiccSignPIR) {
 		this.euiccSignPIR = euiccSignPIR;
 	}
 
-	public EuiccSignPIR getEuiccSignPIR() {
+	public EuiccSign getEuiccSignPIR() {
 		return euiccSignPIR;
 	}
 
@@ -120,8 +121,8 @@ public class ProfileInstallationResult implements BerType, Serializable {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
-		if (berTag.equals(EuiccSignPIR.tag)) {
-			euiccSignPIR = new EuiccSignPIR();
+		if (berTag.equals(EuiccSign.tag)) {
+			euiccSignPIR = new EuiccSign();
 			subCodeLength += euiccSignPIR.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;

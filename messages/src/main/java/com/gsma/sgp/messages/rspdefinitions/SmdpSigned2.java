@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -33,6 +34,7 @@ public class SmdpSigned2 implements BerType, Serializable {
 	private TransactionId transactionId = null;
 	private BerBoolean ccRequiredFlag = null;
 	private BerOctetString bppEuiccOtpk = null;
+	private BerNull rpmPending = null;
 	
 	public SmdpSigned2() {
 	}
@@ -65,6 +67,14 @@ public class SmdpSigned2 implements BerType, Serializable {
 		return bppEuiccOtpk;
 	}
 
+	public void setRpmPending(BerNull rpmPending) {
+		this.rpmPending = rpmPending;
+	}
+
+	public BerNull getRpmPending() {
+		return rpmPending;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -82,6 +92,10 @@ public class SmdpSigned2 implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (rpmPending != null) {
+			codeLength += rpmPending.encode(reverseOS, true);
+		}
+		
 		if (bppEuiccOtpk != null) {
 			codeLength += bppEuiccOtpk.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 73
@@ -154,6 +168,15 @@ public class SmdpSigned2 implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerNull.tag)) {
+			rpmPending = new BerNull();
+			subCodeLength += rpmPending.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -203,6 +226,14 @@ public class SmdpSigned2 implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("bppEuiccOtpk: ").append(bppEuiccOtpk);
+		}
+		
+		if (rpmPending != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("rpmPending: ").append(rpmPending);
 		}
 		
 		sb.append("\n");

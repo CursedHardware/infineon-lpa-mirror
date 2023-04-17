@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -167,6 +168,14 @@ public class StoreMetadataRequest implements BerType, Serializable {
 	private PprIds profilePolicyRules = null;
 	private VendorSpecificExtension serviceSpecificDataStoredInEuicc = null;
 	private VendorSpecificExtension serviceSpecificDataNotStoredInEuicc = null;
+	private RpmConfiguration rpmConfiguration = null;
+	private BerUTF8String hriServerAddress = null;
+	private LocalisedTextMessage serviceProviderMessage = null;
+	private LprConfiguration lprConfiguration = null;
+	private EnterpriseConfiguration enterpriseConfiguration = null;
+	private ServiceDescription serviceDescription = null;
+	private DeviceChangeConfiguration deviceChangeConfiguration = null;
+	private BerInteger estimatedProfileSize = null;
 	private Bf76Tag bf76Tag = null;
 	
 	public StoreMetadataRequest() {
@@ -264,6 +273,70 @@ public class StoreMetadataRequest implements BerType, Serializable {
 		return serviceSpecificDataNotStoredInEuicc;
 	}
 
+	public void setRpmConfiguration(RpmConfiguration rpmConfiguration) {
+		this.rpmConfiguration = rpmConfiguration;
+	}
+
+	public RpmConfiguration getRpmConfiguration() {
+		return rpmConfiguration;
+	}
+
+	public void setHriServerAddress(BerUTF8String hriServerAddress) {
+		this.hriServerAddress = hriServerAddress;
+	}
+
+	public BerUTF8String getHriServerAddress() {
+		return hriServerAddress;
+	}
+
+	public void setServiceProviderMessage(LocalisedTextMessage serviceProviderMessage) {
+		this.serviceProviderMessage = serviceProviderMessage;
+	}
+
+	public LocalisedTextMessage getServiceProviderMessage() {
+		return serviceProviderMessage;
+	}
+
+	public void setLprConfiguration(LprConfiguration lprConfiguration) {
+		this.lprConfiguration = lprConfiguration;
+	}
+
+	public LprConfiguration getLprConfiguration() {
+		return lprConfiguration;
+	}
+
+	public void setEnterpriseConfiguration(EnterpriseConfiguration enterpriseConfiguration) {
+		this.enterpriseConfiguration = enterpriseConfiguration;
+	}
+
+	public EnterpriseConfiguration getEnterpriseConfiguration() {
+		return enterpriseConfiguration;
+	}
+
+	public void setServiceDescription(ServiceDescription serviceDescription) {
+		this.serviceDescription = serviceDescription;
+	}
+
+	public ServiceDescription getServiceDescription() {
+		return serviceDescription;
+	}
+
+	public void setDeviceChangeConfiguration(DeviceChangeConfiguration deviceChangeConfiguration) {
+		this.deviceChangeConfiguration = deviceChangeConfiguration;
+	}
+
+	public DeviceChangeConfiguration getDeviceChangeConfiguration() {
+		return deviceChangeConfiguration;
+	}
+
+	public void setEstimatedProfileSize(BerInteger estimatedProfileSize) {
+		this.estimatedProfileSize = estimatedProfileSize;
+	}
+
+	public BerInteger getEstimatedProfileSize() {
+		return estimatedProfileSize;
+	}
+
 	public void setBf76Tag(Bf76Tag bf76Tag) {
 		this.bf76Tag = bf76Tag;
 	}
@@ -289,12 +362,75 @@ public class StoreMetadataRequest implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
 		if (bf76Tag != null) {
 			codeLength += bf76Tag.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 118
 			reverseOS.write(0x76);
 			reverseOS.write(0xBF);
 			codeLength += 2;
+		}
+		
+		if (estimatedProfileSize != null) {
+			codeLength += estimatedProfileSize.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 33
+			reverseOS.write(0x21);
+			reverseOS.write(0x9F);
+			codeLength += 2;
+		}
+		
+		if (deviceChangeConfiguration != null) {
+			sublength = deviceChangeConfiguration.encode(reverseOS);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 32
+			reverseOS.write(0x20);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+		}
+		
+		if (serviceDescription != null) {
+			codeLength += serviceDescription.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 31
+			reverseOS.write(0x1F);
+			reverseOS.write(0x9F);
+			codeLength += 2;
+		}
+		
+		if (enterpriseConfiguration != null) {
+			codeLength += enterpriseConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
+			reverseOS.write(0xBD);
+			codeLength += 1;
+		}
+		
+		if (lprConfiguration != null) {
+			codeLength += lprConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
+			reverseOS.write(0xBC);
+			codeLength += 1;
+		}
+		
+		if (serviceProviderMessage != null) {
+			codeLength += serviceProviderMessage.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 30
+			reverseOS.write(0xBE);
+			codeLength += 1;
+		}
+		
+		if (hriServerAddress != null) {
+			codeLength += hriServerAddress.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 27
+			reverseOS.write(0x9B);
+			codeLength += 1;
+		}
+		
+		if (rpmConfiguration != null) {
+			codeLength += rpmConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
+			reverseOS.write(0xBA);
+			codeLength += 1;
 		}
 		
 		if (serviceSpecificDataNotStoredInEuicc != null) {
@@ -499,6 +635,79 @@ public class StoreMetadataRequest implements BerType, Serializable {
 			subCodeLength += berTag.decode(is);
 		}
 		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			rpmConfiguration = new RpmConfiguration();
+			subCodeLength += rpmConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 27)) {
+			hriServerAddress = new BerUTF8String();
+			subCodeLength += hriServerAddress.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+			serviceProviderMessage = new LocalisedTextMessage();
+			subCodeLength += serviceProviderMessage.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			lprConfiguration = new LprConfiguration();
+			subCodeLength += lprConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			enterpriseConfiguration = new EnterpriseConfiguration();
+			subCodeLength += enterpriseConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 31)) {
+			serviceDescription = new ServiceDescription();
+			subCodeLength += serviceDescription.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			subCodeLength += length.decode(is);
+			deviceChangeConfiguration = new DeviceChangeConfiguration();
+			subCodeLength += deviceChangeConfiguration.decode(is, null);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 33)) {
+			estimatedProfileSize = new BerInteger();
+			subCodeLength += estimatedProfileSize.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 118)) {
 			bf76Tag = new Bf76Tag();
 			subCodeLength += bf76Tag.decode(is, false);
@@ -625,6 +834,75 @@ public class StoreMetadataRequest implements BerType, Serializable {
 			}
 			sb.append("serviceSpecificDataNotStoredInEuicc: ");
 			serviceSpecificDataNotStoredInEuicc.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (rpmConfiguration != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("rpmConfiguration: ");
+			rpmConfiguration.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (hriServerAddress != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("hriServerAddress: ").append(hriServerAddress);
+		}
+		
+		if (serviceProviderMessage != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("serviceProviderMessage: ");
+			serviceProviderMessage.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (lprConfiguration != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lprConfiguration: ");
+			lprConfiguration.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (enterpriseConfiguration != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("enterpriseConfiguration: ");
+			enterpriseConfiguration.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (serviceDescription != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("serviceDescription: ").append(serviceDescription);
+		}
+		
+		if (deviceChangeConfiguration != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deviceChangeConfiguration: ");
+			deviceChangeConfiguration.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (estimatedProfileSize != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("estimatedProfileSize: ").append(estimatedProfileSize);
 		}
 		
 		if (bf76Tag != null) {

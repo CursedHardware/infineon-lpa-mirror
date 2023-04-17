@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,7 +32,7 @@ public class SuccessResult implements BerType, Serializable {
 
 	public byte[] code = null;
 	private BerOctetString aid = null;
-	private BerOctetString simaResponse = null;
+	private BerOctetString ppiResponse = null;
 	
 	public SuccessResult() {
 	}
@@ -48,12 +49,12 @@ public class SuccessResult implements BerType, Serializable {
 		return aid;
 	}
 
-	public void setSimaResponse(BerOctetString simaResponse) {
-		this.simaResponse = simaResponse;
+	public void setPpiResponse(BerOctetString ppiResponse) {
+		this.ppiResponse = ppiResponse;
 	}
 
-	public BerOctetString getSimaResponse() {
-		return simaResponse;
+	public BerOctetString getPpiResponse() {
+		return ppiResponse;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -73,7 +74,7 @@ public class SuccessResult implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		codeLength += simaResponse.encode(reverseOS, true);
+		codeLength += ppiResponse.encode(reverseOS, true);
 		
 		codeLength += aid.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
@@ -120,8 +121,8 @@ public class SuccessResult implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerOctetString.tag)) {
-			simaResponse = new BerOctetString();
-			subCodeLength += simaResponse.decode(is, false);
+			ppiResponse = new BerOctetString();
+			subCodeLength += ppiResponse.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -161,11 +162,11 @@ public class SuccessResult implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (simaResponse != null) {
-			sb.append("simaResponse: ").append(simaResponse);
+		if (ppiResponse != null) {
+			sb.append("ppiResponse: ").append(ppiResponse);
 		}
 		else {
-			sb.append("simaResponse: <empty-required-field>");
+			sb.append("ppiResponse: <empty-required-field>");
 		}
 		
 		sb.append("\n");

@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -170,6 +171,14 @@ public class ProfileInfo implements BerType, Serializable {
 	private DpProprietaryData dpProprietaryData = null;
 	private PprIds profilePolicyRules = null;
 	private VendorSpecificExtension serviceSpecificDataStoredInEuicc = null;
+	private RpmConfiguration rpmConfiguration = null;
+	private BerUTF8String hriServerAddress = null;
+	private LprConfiguration lprConfiguration = null;
+	private EnterpriseConfiguration enterpriseConfiguration = null;
+	private ServiceDescription serviceDescription = null;
+	private DeviceChangeConfiguration deviceChangeConfiguration = null;
+	private BerInteger enabledOnEsimPort = null;
+	private BerInteger profileSize = null;
 	
 	public ProfileInfo() {
 	}
@@ -290,6 +299,70 @@ public class ProfileInfo implements BerType, Serializable {
 		return serviceSpecificDataStoredInEuicc;
 	}
 
+	public void setRpmConfiguration(RpmConfiguration rpmConfiguration) {
+		this.rpmConfiguration = rpmConfiguration;
+	}
+
+	public RpmConfiguration getRpmConfiguration() {
+		return rpmConfiguration;
+	}
+
+	public void setHriServerAddress(BerUTF8String hriServerAddress) {
+		this.hriServerAddress = hriServerAddress;
+	}
+
+	public BerUTF8String getHriServerAddress() {
+		return hriServerAddress;
+	}
+
+	public void setLprConfiguration(LprConfiguration lprConfiguration) {
+		this.lprConfiguration = lprConfiguration;
+	}
+
+	public LprConfiguration getLprConfiguration() {
+		return lprConfiguration;
+	}
+
+	public void setEnterpriseConfiguration(EnterpriseConfiguration enterpriseConfiguration) {
+		this.enterpriseConfiguration = enterpriseConfiguration;
+	}
+
+	public EnterpriseConfiguration getEnterpriseConfiguration() {
+		return enterpriseConfiguration;
+	}
+
+	public void setServiceDescription(ServiceDescription serviceDescription) {
+		this.serviceDescription = serviceDescription;
+	}
+
+	public ServiceDescription getServiceDescription() {
+		return serviceDescription;
+	}
+
+	public void setDeviceChangeConfiguration(DeviceChangeConfiguration deviceChangeConfiguration) {
+		this.deviceChangeConfiguration = deviceChangeConfiguration;
+	}
+
+	public DeviceChangeConfiguration getDeviceChangeConfiguration() {
+		return deviceChangeConfiguration;
+	}
+
+	public void setEnabledOnEsimPort(BerInteger enabledOnEsimPort) {
+		this.enabledOnEsimPort = enabledOnEsimPort;
+	}
+
+	public BerInteger getEnabledOnEsimPort() {
+		return enabledOnEsimPort;
+	}
+
+	public void setProfileSize(BerInteger profileSize) {
+		this.profileSize = profileSize;
+	}
+
+	public BerInteger getProfileSize() {
+		return profileSize;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -307,6 +380,70 @@ public class ProfileInfo implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
+		if (profileSize != null) {
+			codeLength += profileSize.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 37
+			reverseOS.write(0x25);
+			reverseOS.write(0x9F);
+			codeLength += 2;
+		}
+		
+		if (enabledOnEsimPort != null) {
+			codeLength += enabledOnEsimPort.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 36
+			reverseOS.write(0x24);
+			reverseOS.write(0x9F);
+			codeLength += 2;
+		}
+		
+		if (deviceChangeConfiguration != null) {
+			sublength = deviceChangeConfiguration.encode(reverseOS);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 32
+			reverseOS.write(0x20);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+		}
+		
+		if (serviceDescription != null) {
+			codeLength += serviceDescription.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 31
+			reverseOS.write(0x1F);
+			reverseOS.write(0x9F);
+			codeLength += 2;
+		}
+		
+		if (enterpriseConfiguration != null) {
+			codeLength += enterpriseConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
+			reverseOS.write(0xBD);
+			codeLength += 1;
+		}
+		
+		if (lprConfiguration != null) {
+			codeLength += lprConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
+			reverseOS.write(0xBC);
+			codeLength += 1;
+		}
+		
+		if (hriServerAddress != null) {
+			codeLength += hriServerAddress.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 27
+			reverseOS.write(0x9B);
+			codeLength += 1;
+		}
+		
+		if (rpmConfiguration != null) {
+			codeLength += rpmConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
+			reverseOS.write(0xBA);
+			codeLength += 1;
+		}
+		
 		if (serviceSpecificDataStoredInEuicc != null) {
 			codeLength += serviceSpecificDataStoredInEuicc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 34
@@ -560,6 +697,79 @@ public class ProfileInfo implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			rpmConfiguration = new RpmConfiguration();
+			subCodeLength += rpmConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 27)) {
+			hriServerAddress = new BerUTF8String();
+			subCodeLength += hriServerAddress.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			lprConfiguration = new LprConfiguration();
+			subCodeLength += lprConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			enterpriseConfiguration = new EnterpriseConfiguration();
+			subCodeLength += enterpriseConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 31)) {
+			serviceDescription = new ServiceDescription();
+			subCodeLength += serviceDescription.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			subCodeLength += length.decode(is);
+			deviceChangeConfiguration = new DeviceChangeConfiguration();
+			subCodeLength += deviceChangeConfiguration.decode(is, null);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 36)) {
+			enabledOnEsimPort = new BerInteger();
+			subCodeLength += enabledOnEsimPort.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 37)) {
+			profileSize = new BerInteger();
+			subCodeLength += profileSize.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -735,6 +945,98 @@ public class ProfileInfo implements BerType, Serializable {
 			}
 			sb.append("serviceSpecificDataStoredInEuicc: ");
 			serviceSpecificDataStoredInEuicc.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (rpmConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("rpmConfiguration: ");
+			rpmConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (hriServerAddress != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("hriServerAddress: ").append(hriServerAddress);
+			firstSelectedElement = false;
+		}
+		
+		if (lprConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lprConfiguration: ");
+			lprConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (enterpriseConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("enterpriseConfiguration: ");
+			enterpriseConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (serviceDescription != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("serviceDescription: ").append(serviceDescription);
+			firstSelectedElement = false;
+		}
+		
+		if (deviceChangeConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deviceChangeConfiguration: ");
+			deviceChangeConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (enabledOnEsimPort != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("enabledOnEsimPort: ").append(enabledOnEsimPort);
+			firstSelectedElement = false;
+		}
+		
+		if (profileSize != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("profileSize: ").append(profileSize);
 			firstSelectedElement = false;
 		}
 		

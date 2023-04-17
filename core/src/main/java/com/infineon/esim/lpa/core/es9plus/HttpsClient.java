@@ -31,6 +31,7 @@ import com.infineon.esim.util.Strings;
 import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -53,7 +54,7 @@ public class HttpsClient {
                         final String body,
                         final String domain,
                         final String path,
-                        final boolean propagateException) {
+                        final boolean propagateException) throws ConnectException {
 
         HttpResponse httpResponse = new HttpResponse();
 
@@ -105,9 +106,11 @@ public class HttpsClient {
             bufferedWriter.close();
             httpsURLConnection.disconnect();
 
+        } catch (ConnectException ce) {
+            Log.warn(TAG,"Error while connecting to SM-DP+: " + endpoint, ce);
+            throw ce;
         } catch(Exception e) {
             Log.error(TAG,"Error while sending request to SM-DP+: " + endpoint, e);
-            Log.error(TAG,"Error while sending request to SM-DP+: " + e);
             e.printStackTrace();
             if(propagateException) {
                 throw new RuntimeException("Error while sending request to SM-DP+: " + endpoint);

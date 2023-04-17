@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -81,12 +82,14 @@ final public class DownloadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // retrieve the data passed using caller's intent
-
         if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU) {
             this.activationCode = getIntent().getParcelableExtra(Application.INTENT_EXTRA_ACTIVATION_CODE, ActivationCode.class);
         } else {
+
             this.activationCode = getIntent().getParcelableExtra(Application.INTENT_EXTRA_ACTIVATION_CODE);
         }
+
+        getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
 
         this.authenticateResult = null;
         this.downloadResult = null;
@@ -102,21 +105,22 @@ final public class DownloadActivity extends AppCompatActivity {
         startProfileDownload();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!allowBackButtonPress) {
-            DialogHelper.showErrorDialog(this,
-                    R.string.error_back_press_disabled_heading,
-                    R.string.error_back_press_disabled_body,
-                    false);
-        } else {
-            super.onBackPressed();
+    OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if(allowBackButtonPress) {
+                Log.debug(TAG, "Processing backpress.");
+                finish();
+            } else {
+                Log.debug(TAG, "Ignoring backpress.");
+            }
         }
-    }
+    };
 
     @Override
     protected void onPause() {
         Log.debug(TAG, "Pausing activity.");
+        dismissProgressDialog();
         super.onPause();
     }
 
@@ -410,6 +414,7 @@ final public class DownloadActivity extends AppCompatActivity {
         public void onClick(View view) {
             if((authenticateResult != null) && authenticateResult.getSuccess()) {
                 viewModel.enableProfile(authenticateResult.getProfileMetadata());
+                finish();
             }
         }
     };

@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -31,6 +32,7 @@ public class SetDefaultDpAddressRequest implements BerType, Serializable {
 
 	public byte[] code = null;
 	private BerUTF8String defaultDpAddress = null;
+	private SubjectKeyIdentifier allowedCiPKId = null;
 	
 	public SetDefaultDpAddressRequest() {
 	}
@@ -45,6 +47,14 @@ public class SetDefaultDpAddressRequest implements BerType, Serializable {
 
 	public BerUTF8String getDefaultDpAddress() {
 		return defaultDpAddress;
+	}
+
+	public void setAllowedCiPKId(SubjectKeyIdentifier allowedCiPKId) {
+		this.allowedCiPKId = allowedCiPKId;
+	}
+
+	public SubjectKeyIdentifier getAllowedCiPKId() {
+		return allowedCiPKId;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -64,6 +74,13 @@ public class SetDefaultDpAddressRequest implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (allowedCiPKId != null) {
+			codeLength += allowedCiPKId.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
+			reverseOS.write(0x81);
+			codeLength += 1;
+		}
+		
 		codeLength += defaultDpAddress.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
 		reverseOS.write(0x80);
@@ -105,6 +122,18 @@ public class SetDefaultDpAddressRequest implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			allowedCiPKId = new SubjectKeyIdentifier();
+			subCodeLength += allowedCiPKId.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -135,6 +164,14 @@ public class SetDefaultDpAddressRequest implements BerType, Serializable {
 		}
 		else {
 			sb.append("defaultDpAddress: <empty-required-field>");
+		}
+		
+		if (allowedCiPKId != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("allowedCiPKId: ").append(allowedCiPKId);
 		}
 		
 		sb.append("\n");

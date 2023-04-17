@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -26,6 +27,132 @@ import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 public class UpdateMetadataRequest implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	public static class NotificationConfigurationInfo implements BerType, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		public byte[] code = null;
+		private List<NotificationConfigurationInformation> seqOf = null;
+
+		public NotificationConfigurationInfo() {
+			seqOf = new ArrayList<NotificationConfigurationInformation>();
+		}
+
+		public NotificationConfigurationInfo(byte[] code) {
+			this.code = code;
+		}
+
+		public List<NotificationConfigurationInformation> getNotificationConfigurationInformation() {
+			if (seqOf == null) {
+				seqOf = new ArrayList<NotificationConfigurationInformation>();
+			}
+			return seqOf;
+		}
+
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
+		}
+
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					reverseOS.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(reverseOS) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			for (int i = (seqOf.size() - 1); i >= 0; i--) {
+				codeLength += seqOf.get(i).encode(reverseOS, true);
+			}
+
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+
+			return codeLength;
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+			int totalLength = length.val;
+
+			while (subCodeLength < totalLength) {
+				NotificationConfigurationInformation element = new NotificationConfigurationInformation();
+				subCodeLength += element.decode(is, true);
+				seqOf.add(element);
+			}
+			if (subCodeLength != totalLength) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+			}
+			codeLength += subCodeLength;
+
+			return codeLength;
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (seqOf == null) {
+				sb.append("null");
+			}
+			else {
+				Iterator<NotificationConfigurationInformation> it = seqOf.iterator();
+				if (it.hasNext()) {
+					it.next().appendAsString(sb, indentLevel + 1);
+					while (it.hasNext()) {
+						sb.append(",\n");
+						for (int i = 0; i < indentLevel + 1; i++) {
+							sb.append("\t");
+						}
+						it.next().appendAsString(sb, indentLevel + 1);
+					}
+				}
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
+
+	}
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 42);
 
@@ -36,6 +163,13 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 	private BerOctetString icon = null;
 	private PprIds profilePolicyRules = null;
 	private VendorSpecificExtension serviceSpecificDataStoredInEuicc = null;
+	private NotificationConfigurationInfo notificationConfigurationInfo = null;
+	private BerOctetString tagsForDeletion = null;
+	private RpmConfiguration rpmConfiguration = null;
+	private BerUTF8String hriServerAddress = null;
+	private LprConfiguration lprConfiguration = null;
+	private EnterpriseConfiguration enterpriseConfiguration = null;
+	private DeviceChangeConfiguration deviceChangeConfiguration = null;
 	
 	public UpdateMetadataRequest() {
 	}
@@ -92,6 +226,62 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 		return serviceSpecificDataStoredInEuicc;
 	}
 
+	public void setNotificationConfigurationInfo(NotificationConfigurationInfo notificationConfigurationInfo) {
+		this.notificationConfigurationInfo = notificationConfigurationInfo;
+	}
+
+	public NotificationConfigurationInfo getNotificationConfigurationInfo() {
+		return notificationConfigurationInfo;
+	}
+
+	public void setTagsForDeletion(BerOctetString tagsForDeletion) {
+		this.tagsForDeletion = tagsForDeletion;
+	}
+
+	public BerOctetString getTagsForDeletion() {
+		return tagsForDeletion;
+	}
+
+	public void setRpmConfiguration(RpmConfiguration rpmConfiguration) {
+		this.rpmConfiguration = rpmConfiguration;
+	}
+
+	public RpmConfiguration getRpmConfiguration() {
+		return rpmConfiguration;
+	}
+
+	public void setHriServerAddress(BerUTF8String hriServerAddress) {
+		this.hriServerAddress = hriServerAddress;
+	}
+
+	public BerUTF8String getHriServerAddress() {
+		return hriServerAddress;
+	}
+
+	public void setLprConfiguration(LprConfiguration lprConfiguration) {
+		this.lprConfiguration = lprConfiguration;
+	}
+
+	public LprConfiguration getLprConfiguration() {
+		return lprConfiguration;
+	}
+
+	public void setEnterpriseConfiguration(EnterpriseConfiguration enterpriseConfiguration) {
+		this.enterpriseConfiguration = enterpriseConfiguration;
+	}
+
+	public EnterpriseConfiguration getEnterpriseConfiguration() {
+		return enterpriseConfiguration;
+	}
+
+	public void setDeviceChangeConfiguration(DeviceChangeConfiguration deviceChangeConfiguration) {
+		this.deviceChangeConfiguration = deviceChangeConfiguration;
+	}
+
+	public DeviceChangeConfiguration getDeviceChangeConfiguration() {
+		return deviceChangeConfiguration;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -109,6 +299,60 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
+		if (deviceChangeConfiguration != null) {
+			sublength = deviceChangeConfiguration.encode(reverseOS);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 32
+			reverseOS.write(0x20);
+			reverseOS.write(0xBF);
+			codeLength += 2;
+		}
+		
+		if (enterpriseConfiguration != null) {
+			codeLength += enterpriseConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
+			reverseOS.write(0xBD);
+			codeLength += 1;
+		}
+		
+		if (lprConfiguration != null) {
+			codeLength += lprConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
+			reverseOS.write(0xBC);
+			codeLength += 1;
+		}
+		
+		if (hriServerAddress != null) {
+			codeLength += hriServerAddress.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 27
+			reverseOS.write(0x9B);
+			codeLength += 1;
+		}
+		
+		if (rpmConfiguration != null) {
+			codeLength += rpmConfiguration.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
+			reverseOS.write(0xBA);
+			codeLength += 1;
+		}
+		
+		if (tagsForDeletion != null) {
+			codeLength += tagsForDeletion.encode(reverseOS, false);
+			// write tag: APPLICATION_CLASS, PRIMITIVE, 28
+			reverseOS.write(0x5C);
+			codeLength += 1;
+		}
+		
+		if (notificationConfigurationInfo != null) {
+			codeLength += notificationConfigurationInfo.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
+			reverseOS.write(0xB6);
+			codeLength += 1;
+		}
+		
 		if (serviceSpecificDataStoredInEuicc != null) {
 			codeLength += serviceSpecificDataStoredInEuicc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 34
@@ -236,6 +480,70 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+			notificationConfigurationInfo = new NotificationConfigurationInfo();
+			subCodeLength += notificationConfigurationInfo.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 28)) {
+			tagsForDeletion = new BerOctetString();
+			subCodeLength += tagsForDeletion.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			rpmConfiguration = new RpmConfiguration();
+			subCodeLength += rpmConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 27)) {
+			hriServerAddress = new BerUTF8String();
+			subCodeLength += hriServerAddress.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			lprConfiguration = new LprConfiguration();
+			subCodeLength += lprConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			enterpriseConfiguration = new EnterpriseConfiguration();
+			subCodeLength += enterpriseConfiguration.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			subCodeLength += length.decode(is);
+			deviceChangeConfiguration = new DeviceChangeConfiguration();
+			subCodeLength += deviceChangeConfiguration.decode(is, null);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -320,6 +628,88 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 			}
 			sb.append("serviceSpecificDataStoredInEuicc: ");
 			serviceSpecificDataStoredInEuicc.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (notificationConfigurationInfo != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("notificationConfigurationInfo: ");
+			notificationConfigurationInfo.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (tagsForDeletion != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("tagsForDeletion: ").append(tagsForDeletion);
+			firstSelectedElement = false;
+		}
+		
+		if (rpmConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("rpmConfiguration: ");
+			rpmConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (hriServerAddress != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("hriServerAddress: ").append(hriServerAddress);
+			firstSelectedElement = false;
+		}
+		
+		if (lprConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lprConfiguration: ");
+			lprConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (enterpriseConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("enterpriseConfiguration: ");
+			enterpriseConfiguration.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+		
+		if (deviceChangeConfiguration != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deviceChangeConfiguration: ");
+			deviceChangeConfiguration.appendAsString(sb, indentLevel + 1);
 			firstSelectedElement = false;
 		}
 		

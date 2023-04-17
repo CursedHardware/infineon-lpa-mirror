@@ -18,6 +18,7 @@ import com.beanit.jasn1.ber.*;
 import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
+import com.gsma.sgp.messages.pedefinitions.UICCCapability;
 import com.gsma.sgp.messages.pkix1explicit88.Certificate;
 import com.gsma.sgp.messages.pkix1explicit88.CertificateList;
 import com.gsma.sgp.messages.pkix1explicit88.Time;
@@ -27,12 +28,141 @@ public class DeviceInfo implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static class PreferredLanguages implements BerType, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		public byte[] code = null;
+		private List<BerUTF8String> seqOf = null;
+
+		public PreferredLanguages() {
+			seqOf = new ArrayList<BerUTF8String>();
+		}
+
+		public PreferredLanguages(byte[] code) {
+			this.code = code;
+		}
+
+		public List<BerUTF8String> getBerUTF8String() {
+			if (seqOf == null) {
+				seqOf = new ArrayList<BerUTF8String>();
+			}
+			return seqOf;
+		}
+
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
+		}
+
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					reverseOS.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(reverseOS) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			for (int i = (seqOf.size() - 1); i >= 0; i--) {
+				codeLength += seqOf.get(i).encode(reverseOS, true);
+			}
+
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+
+			return codeLength;
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+			int totalLength = length.val;
+
+			while (subCodeLength < totalLength) {
+				BerUTF8String element = new BerUTF8String();
+				subCodeLength += element.decode(is, true);
+				seqOf.add(element);
+			}
+			if (subCodeLength != totalLength) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+			}
+			codeLength += subCodeLength;
+
+			return codeLength;
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (seqOf == null) {
+				sb.append("null");
+			}
+			else {
+				Iterator<BerUTF8String> it = seqOf.iterator();
+				if (it.hasNext()) {
+					sb.append(it.next());
+					while (it.hasNext()) {
+						sb.append(",\n");
+						for (int i = 0; i < indentLevel + 1; i++) {
+							sb.append("\t");
+						}
+						sb.append(it.next());
+					}
+				}
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
+
+	}
+
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
 	public byte[] code = null;
 	private Octet4 tac = null;
 	private DeviceCapabilities deviceCapabilities = null;
 	private Octet8 imei = null;
+	private PreferredLanguages preferredLanguages = null;
+	private BerNull deviceTestMode = null;
+	private LpaRspCapability lpaRspCapability = null;
 	
 	public DeviceInfo() {
 	}
@@ -65,6 +195,30 @@ public class DeviceInfo implements BerType, Serializable {
 		return imei;
 	}
 
+	public void setPreferredLanguages(PreferredLanguages preferredLanguages) {
+		this.preferredLanguages = preferredLanguages;
+	}
+
+	public PreferredLanguages getPreferredLanguages() {
+		return preferredLanguages;
+	}
+
+	public void setDeviceTestMode(BerNull deviceTestMode) {
+		this.deviceTestMode = deviceTestMode;
+	}
+
+	public BerNull getDeviceTestMode() {
+		return deviceTestMode;
+	}
+
+	public void setLpaRspCapability(LpaRspCapability lpaRspCapability) {
+		this.lpaRspCapability = lpaRspCapability;
+	}
+
+	public LpaRspCapability getLpaRspCapability() {
+		return lpaRspCapability;
+	}
+
 	public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
@@ -82,6 +236,27 @@ public class DeviceInfo implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (lpaRspCapability != null) {
+			codeLength += lpaRspCapability.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
+			reverseOS.write(0x85);
+			codeLength += 1;
+		}
+		
+		if (deviceTestMode != null) {
+			codeLength += deviceTestMode.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
+			reverseOS.write(0x84);
+			codeLength += 1;
+		}
+		
+		if (preferredLanguages != null) {
+			codeLength += preferredLanguages.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
+			reverseOS.write(0xA3);
+			codeLength += 1;
+		}
+		
 		if (imei != null) {
 			codeLength += imei.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
@@ -156,6 +331,33 @@ public class DeviceInfo implements BerType, Serializable {
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			preferredLanguages = new PreferredLanguages();
+			subCodeLength += preferredLanguages.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
+			deviceTestMode = new BerNull();
+			subCodeLength += deviceTestMode.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 5)) {
+			lpaRspCapability = new LpaRspCapability();
+			subCodeLength += lpaRspCapability.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -206,6 +408,31 @@ public class DeviceInfo implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("imei: ").append(imei);
+		}
+		
+		if (preferredLanguages != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("preferredLanguages: ");
+			preferredLanguages.appendAsString(sb, indentLevel + 1);
+		}
+		
+		if (deviceTestMode != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("deviceTestMode: ").append(deviceTestMode);
+		}
+		
+		if (lpaRspCapability != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("lpaRspCapability: ").append(lpaRspCapability);
 		}
 		
 		sb.append("\n");
