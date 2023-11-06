@@ -43,7 +43,8 @@ final public class IdentiveEuiccInterface implements EuiccInterface {
     public static final List<String> READER_NAMES = new ArrayList<>(Arrays.asList(
             "SCR3500 A Contact Reader",
             "Identive CLOUD 4700 F Dual Interface Reader",
-            "Identiv uTrust 4701 F Dual Interface Reader"
+            "Identiv uTrust 4701 F Dual Interface Reader",
+            "CLOUD 2700 R Smart Card Reader"
     ));
 
     private final EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler;
