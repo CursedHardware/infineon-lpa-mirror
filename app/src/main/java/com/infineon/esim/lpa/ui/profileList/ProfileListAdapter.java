@@ -96,7 +96,12 @@ final public class ProfileListAdapter extends ArrayAdapter<ProfileMetadata> {
 
         // Set convertView to new content according to position in list
         listViewElementViewHolder.status.setText(profileList.get(position).getState());
-        listViewElementViewHolder.provider.setText(profileList.get(position).getNickname());
+        if((profileList.get(position).getNickname() != null) && (profileList.get(position).getNickname().length() > 0)) {
+            listViewElementViewHolder.provider.setText(profileList.get(position).getNickname());
+        } else {
+            listViewElementViewHolder.provider.setText(profileList.get(position).getProvider());
+        }
+
 
         if(profileList.get(position).getIcon() != null) {
             listViewElementViewHolder.profileIcon.setImageIcon(profileList.get(position).getIcon());
