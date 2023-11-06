@@ -21,7 +21,7 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
-package com.infineon.esim.lpa.euicc.identive;
+package com.infineon.esim.lpa.euicc.usbreader.identive;
 
 import static com.identive.libs.WinDefs.SCARD_SPECIFIC;
 

@@ -92,7 +92,7 @@ final public class ProfileListActivity extends AppCompatActivity {
         }
 
         if(usbDevice != null) {
-            viewModel.connectIdentiveEuiccInterface();
+            viewModel.connectUSBEuiccInterface();
         }
     }
 

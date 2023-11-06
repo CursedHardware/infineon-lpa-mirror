@@ -21,7 +21,7 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
-package com.infineon.esim.lpa.euicc.identive;
+package com.infineon.esim.lpa.euicc.usbreader.identive;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

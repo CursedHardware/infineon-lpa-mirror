@@ -21,24 +21,22 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
-package com.infineon.esim.lpa.euicc.identive;
+package com.infineon.esim.lpa.euicc.usbreader.identive;
 
 import android.content.Context;
 
-import com.infineon.esim.lpa.Application;
 import com.infineon.esim.lpa.euicc.base.EuiccConnection;
-import com.infineon.esim.lpa.euicc.base.EuiccInterface;
 import com.infineon.esim.lpa.euicc.base.EuiccInterfaceStatusChangeHandler;
+import com.infineon.esim.lpa.euicc.usbreader.USBReaderConnectionBroadcastReceiver;
+import com.infineon.esim.lpa.euicc.usbreader.USBReaderInterface;
 import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-final public class IdentiveEuiccInterface implements EuiccInterface {
-    private static final String TAG = IdentiveEuiccInterface.class.getName();
-
-    public static final String INTERFACE_TAG = "USB";
+final public class IdentiveUSBReaderInterface implements USBReaderInterface {
+    private static final String TAG = IdentiveUSBReaderInterface.class.getName();
 
     public static final List<String> READER_NAMES = new ArrayList<>(Arrays.asList(
             "SCR3500 A Contact Reader",
@@ -47,46 +45,36 @@ final public class IdentiveEuiccInterface implements EuiccInterface {
             "CLOUD 2700 R Smart Card Reader"
     ));
 
-    private final EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler;
     private final IdentiveService identiveService;
     private final List<String> euiccNames;
 
     private EuiccConnection euiccConnection;
 
-    public IdentiveEuiccInterface(Context context, EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler) {
+    public IdentiveUSBReaderInterface(Context context, EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler) {
         Log.debug(TAG, "Constructor of IdentiveReader.");
 
         this.identiveService = new IdentiveService(context);
         this.euiccNames = new ArrayList<>();
-
-        this.euiccInterfaceStatusChangeHandler = euiccInterfaceStatusChangeHandler;
-
-        // Create BroadcastReceiver for USB attached/detached events
-        IdentiveConnectionBroadcastReceiver identiveConnectionBroadcastReceiver = new IdentiveConnectionBroadcastReceiver(Application.getAppContext(), onDisconnectCallback);
-        identiveConnectionBroadcastReceiver.registerReceiver();
     }
 
-    @Override
-    public String getTag() {
-        return INTERFACE_TAG;
-    }
+    public boolean checkDevice(String name)
+    {
+        for(String validReaderName : READER_NAMES) {
+            if (name.equals(validReaderName)) {
+                return true;
+            }
+        }
 
-    @Override
-    public boolean isAvailable() {
-        boolean isAvailable = IdentiveConnectionBroadcastReceiver.isDeviceAttached();
-
-        Log.debug(TAG, "Checking if Identive eUICC interface is available: " + isAvailable);
-
-        return isAvailable;
+        return false;
     }
 
     @Override
     public boolean isInterfaceConnected() {
         boolean isConnected = false;
-        if(isAvailable()) {
-            isConnected = identiveService.isConnected();
-        }
+
+        isConnected = identiveService.isConnected();
         Log.debug(TAG, "Is Identive interface connected: " + isConnected);
+
         return isConnected;
     }
 
@@ -94,10 +82,6 @@ final public class IdentiveEuiccInterface implements EuiccInterface {
     public boolean connectInterface() throws Exception {
         Log.debug(TAG, "Connecting Identive interface.");
         identiveService.connect();
-
-        if(identiveService.isConnected()) {
-            euiccInterfaceStatusChangeHandler.onEuiccInterfaceConnected(INTERFACE_TAG);
-        }
 
         return identiveService.isConnected();
     }
@@ -159,7 +143,7 @@ final public class IdentiveEuiccInterface implements EuiccInterface {
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final IdentiveConnectionBroadcastReceiver.OnDisconnectCallback onDisconnectCallback = new IdentiveConnectionBroadcastReceiver.OnDisconnectCallback() {
+    private final USBReaderConnectionBroadcastReceiver.OnDisconnectCallback onDisconnectCallback = new USBReaderConnectionBroadcastReceiver.OnDisconnectCallback() {
         @Override
         public void onDisconnect() {
             Log.debug(TAG, "Identive reader has been disconnected.");
@@ -169,8 +153,6 @@ final public class IdentiveEuiccInterface implements EuiccInterface {
             } catch (Exception e) {
                 Log.error(TAG, "Catched exception during disconnecting interface.", e);
             }
-
-            euiccInterfaceStatusChangeHandler.onEuiccInterfaceDisconnected(INTERFACE_TAG);
         }
     };
 }

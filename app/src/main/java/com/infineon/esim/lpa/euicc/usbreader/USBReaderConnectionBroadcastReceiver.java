@@ -21,7 +21,7 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
-package com.infineon.esim.lpa.euicc.identive;
+package com.infineon.esim.lpa.euicc.usbreader;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,18 +36,19 @@ import com.infineon.esim.util.Log;
 
 import java.util.HashMap;
 
-public class IdentiveConnectionBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = IdentiveConnectionBroadcastReceiver.class.getName();
+public class USBReaderConnectionBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = USBReaderConnectionBroadcastReceiver.class.getName();
 
     private final Context context;
     private final OnDisconnectCallback onDisconnectCallback;
-
+    private static USBReaderEuiccInterface usbif;
     private static boolean hasBeenFreshlyAttached = false;
     private static String lastReaderName;
 
-    public IdentiveConnectionBroadcastReceiver(Context context, OnDisconnectCallback onDisconnectCallback) {
+    public USBReaderConnectionBroadcastReceiver(Context context, OnDisconnectCallback onDisconnectCallback,USBReaderEuiccInterface usbif) {
         this.context = context;
         this.onDisconnectCallback = onDisconnectCallback;
+        this.usbif = usbif;
     }
 
     @Override
@@ -93,7 +94,7 @@ public class IdentiveConnectionBroadcastReceiver extends BroadcastReceiver {
     public static Boolean hasBeenFreshlyAttached() throws Exception {
         if(hasBeenFreshlyAttached) {
             hasBeenFreshlyAttached = false;
-            if(isValidReaderName(lastReaderName)) {
+            if(usbif.checkDevice(lastReaderName)) {
                 return true;
             } else {
                 throw new Exception("Reader \"" + lastReaderName + "\" not supported.");
@@ -110,7 +111,7 @@ public class IdentiveConnectionBroadcastReceiver extends BroadcastReceiver {
         for (UsbDevice device : deviceList.values()) {
             Log.debug(TAG, "USB device attached: " + device.getProductName());
 
-            return isValidReaderName(device.getProductName());
+            return usbif.checkDevice(device.getProductName());
         }
 
         return false;
@@ -118,15 +119,5 @@ public class IdentiveConnectionBroadcastReceiver extends BroadcastReceiver {
 
     public interface OnDisconnectCallback {
         void onDisconnect();
-    }
-
-    private static boolean isValidReaderName(String readerName) {
-        for(String validReaderName : IdentiveEuiccInterface.READER_NAMES) {
-            if (readerName.equals(validReaderName)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

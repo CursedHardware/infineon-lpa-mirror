@@ -21,7 +21,7 @@
  * (C)Copyright INFINEON TECHNOLOGIES All rights reserved
  */
 
-package com.infineon.esim.lpa.euicc.identive;
+package com.infineon.esim.lpa.euicc.usbreader.identive;
 
 
 import com.infineon.esim.lpa.euicc.EuiccConnectionSettings;

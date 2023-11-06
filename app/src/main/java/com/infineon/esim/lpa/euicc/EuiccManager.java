@@ -38,7 +38,7 @@ import com.infineon.esim.lpa.euicc.base.task.ConnectInterfaceTask;
 import com.infineon.esim.lpa.euicc.base.task.DisconnectReaderTask;
 import com.infineon.esim.lpa.euicc.base.task.RefreshEuiccNamesTask;
 import com.infineon.esim.lpa.euicc.base.task.SwitchEuiccTask;
-import com.infineon.esim.lpa.euicc.identive.IdentiveEuiccInterface;
+import com.infineon.esim.lpa.euicc.usbreader.USBReaderEuiccInterface;
 import com.infineon.esim.lpa.euicc.se.SeEuiccInterface;
 import com.infineon.esim.lpa.ui.generic.ActionStatus;
 import com.infineon.esim.lpa.ui.generic.AsyncActionStatus;
@@ -84,7 +84,7 @@ public class EuiccManager implements EuiccInterfaceStatusChangeHandler {
 
         euiccInterfaces = new ArrayList<>();
         euiccInterfaces.add(new SeEuiccInterface(context, this));
-        euiccInterfaces.add(new IdentiveEuiccInterface(context, this));
+        euiccInterfaces.add(new USBReaderEuiccInterface(context, this));
     }
 
     public LiveData<String> getCurrentEuiccLiveData() {
@@ -112,7 +112,7 @@ public class EuiccManager implements EuiccInterfaceStatusChangeHandler {
         // Connect the SE interface
         for(EuiccInterface euiccInterface : euiccInterfaces) {
             if(euiccInterface.getTag().equals(SeEuiccInterface.INTERFACE_TAG)
-            || euiccInterface.getTag().equals(IdentiveEuiccInterface.INTERFACE_TAG)) {
+            || euiccInterface.getTag().equals(USBReaderEuiccInterface.INTERFACE_TAG)) {
                 if (euiccInterface.isAvailable()) {
                     atLeastOneInterfaceIsAvailable = true;
                     startConnectingEuiccInterface(euiccInterface, true);

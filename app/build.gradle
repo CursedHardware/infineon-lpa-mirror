@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         applicationId "com.infineon.esim.lpa"
-        minSdkVersion 28
+        minSdkVersion 26
         targetSdkVersion 33
         versionCode 40003
         versionName "4.0.3"
@@ -170,6 +170,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:2.6.1"
     // optional - ReactiveStreams support for LiveData
     implementation "androidx.lifecycle:lifecycle-reactivestreams:2.6.1"
+    implementation files('lib/acssmc-1.1.5.jar')
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Testing

@@ -28,8 +28,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.infineon.esim.lpa.core.dtos.profile.ProfileList;
 import com.infineon.esim.lpa.data.DataModel;
-import com.infineon.esim.lpa.euicc.identive.IdentiveConnectionBroadcastReceiver;
-import com.infineon.esim.lpa.euicc.identive.IdentiveEuiccInterface;
+import com.infineon.esim.lpa.euicc.usbreader.USBReaderConnectionBroadcastReceiver;
+import com.infineon.esim.lpa.euicc.usbreader.USBReaderEuiccInterface;
 import com.infineon.esim.lpa.ui.generic.AsyncActionStatus;
 import com.infineon.esim.lpa.ui.generic.Error;
 import com.infineon.esim.lpa.util.android.OneTimeEvent;
@@ -47,18 +47,18 @@ public class ProfileListViewModel extends ViewModel {
     public void selectFreshlyAttachedUsbReader() {
         // Check if USB reader really has been freshly attached
         try {
-            if (IdentiveConnectionBroadcastReceiver.hasBeenFreshlyAttached()) {
+            if (USBReaderConnectionBroadcastReceiver.hasBeenFreshlyAttached()) {
                 Log.debug(TAG, "USB reader is freshly attached.");
-                connectIdentiveEuiccInterface();
+                connectUSBEuiccInterface();
             }
         } catch (Exception e) {
             dataModel.onError(new Error("Exception during switching to freshly attached USB reader.", e.getMessage()));
         }
     }
 
-    public void connectIdentiveEuiccInterface() {
-        Log.debug(TAG,"Connecting Identive eUICC interface...");
-        dataModel.startConnectingEuiccInterface(IdentiveEuiccInterface.INTERFACE_TAG);
+    public void connectUSBEuiccInterface() {
+        Log.debug(TAG,"Connecting USB eUICC interface...");
+        dataModel.startConnectingEuiccInterface(USBReaderEuiccInterface.INTERFACE_TAG);
     }
 
     public LiveData<String> getEuiccNameLiveData() {
