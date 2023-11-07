@@ -23,7 +23,11 @@
 
 package com.infineon.esim.lpa.euicc.usbreader.acs;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 
 import com.acs.smartcard.Reader;
 
@@ -32,17 +36,24 @@ import java.util.List;
 
 public class ACSCard {
     private static final String TAG = ACSCard.class.getName();
-
-    private static final long SCARD_E_NO_READERS_AVAILABLE = -2146435026L;
-
+    private Context context;
+    private UsbManager mManager;
     private Reader mReader;
 
     public ACSCard(Context context) {
-
+        this.context = context;
+        mManager = (UsbManager)context.getSystemService(Context.USB_SERVICE);
+        mReader = new Reader(mManager);
     }
 
     List<String> getReaderNames() {
         List<String> euiccNames = new ArrayList<>();
+
+        for (UsbDevice device : mManager.getDeviceList().values()) {
+            if (mReader.isSupported(device)) {
+                euiccNames.add(device.getDeviceName());
+            }
+        }
 
         return euiccNames;
     }
@@ -58,6 +69,10 @@ public class ACSCard {
     }
 
     void connectCard(String cardName) throws Exception {
+//        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(
+//                ACTION_USB_PERMISSION), 0);
+//        UsbDevice mDevice = mManager.getDeviceList().get(cardName);
+//        mManager.requestPermission(mDevice, mPermissionIntent);
     }
 
     void disconnectCard() throws Exception {

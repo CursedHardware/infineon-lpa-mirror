@@ -50,8 +50,8 @@ final public class USBReaderEuiccInterface implements EuiccInterface {
 
         this.euiccInterfaceStatusChangeHandler = euiccInterfaceStatusChangeHandler;
 
-        usbReaderInterfaces.add(new IdentiveUSBReaderInterface(context, euiccInterfaceStatusChangeHandler));
-        usbReaderInterfaces.add(new ACSUSBReaderInterface(context, euiccInterfaceStatusChangeHandler));
+        usbReaderInterfaces.add(new IdentiveUSBReaderInterface(context));
+        usbReaderInterfaces.add(new ACSUSBReaderInterface(context));
 
         // Create BroadcastReceiver for USB attached/detached events
         USBReaderConnectionBroadcastReceiver USBReaderConnectionBroadcastReceiver = new USBReaderConnectionBroadcastReceiver(Application.getAppContext(), onDisconnectCallback, this);

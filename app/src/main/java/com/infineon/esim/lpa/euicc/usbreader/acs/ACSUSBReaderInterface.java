@@ -42,19 +42,16 @@ final public class ACSUSBReaderInterface implements USBReaderInterface {
             "CCID USB Reader"
     ));
 
-    private final EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler;
     private final ACSService acsService;
     private final List<String> euiccNames;
 
     private EuiccConnection euiccConnection;
 
-    public ACSUSBReaderInterface(Context context, EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler) {
+    public ACSUSBReaderInterface(Context context) {
         Log.debug(TAG, "Constructor of ACSReader.");
 
         this.acsService = new ACSService(context);
         this.euiccNames = new ArrayList<>();
-
-        this.euiccInterfaceStatusChangeHandler = euiccInterfaceStatusChangeHandler;
     }
 
     public boolean checkDevice(String name)

@@ -50,7 +50,7 @@ final public class IdentiveUSBReaderInterface implements USBReaderInterface {
 
     private EuiccConnection euiccConnection;
 
-    public IdentiveUSBReaderInterface(Context context, EuiccInterfaceStatusChangeHandler euiccInterfaceStatusChangeHandler) {
+    public IdentiveUSBReaderInterface(Context context) {
         Log.debug(TAG, "Constructor of IdentiveReader.");
 
         this.identiveService = new IdentiveService(context);
@@ -141,18 +141,4 @@ final public class IdentiveUSBReaderInterface implements USBReaderInterface {
             return !euiccConnection.getEuiccName().equals(euiccName);
         }
     }
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private final USBReaderConnectionBroadcastReceiver.OnDisconnectCallback onDisconnectCallback = new USBReaderConnectionBroadcastReceiver.OnDisconnectCallback() {
-        @Override
-        public void onDisconnect() {
-            Log.debug(TAG, "Identive reader has been disconnected.");
-
-            try {
-                disconnectInterface();
-            } catch (Exception e) {
-                Log.error(TAG, "Catched exception during disconnecting interface.", e);
-            }
-        }
-    };
 }
