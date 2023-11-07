@@ -114,7 +114,7 @@ public class ACSEuiccConnection implements EuiccConnection, ISO7816Channel.ApduT
     }
 
     @Override
-    public byte[] transmit(byte[] command) {
+    public byte[] transmit(byte[] command) throws Exception {
         return ACSCard.transmitToCard(command);
     }
 

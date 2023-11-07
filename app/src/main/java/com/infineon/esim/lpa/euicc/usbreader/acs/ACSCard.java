@@ -23,15 +23,16 @@
 
 package com.infineon.esim.lpa.euicc.usbreader.acs;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 
 import com.acs.smartcard.Reader;
+import com.infineon.esim.lpa.euicc.base.generic.Atr;
+import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ACSCard {
@@ -39,11 +40,13 @@ public class ACSCard {
     private Context context;
     private UsbManager mManager;
     private Reader mReader;
+    private String currentCardName;
 
     public ACSCard(Context context) {
         this.context = context;
         mManager = (UsbManager)context.getSystemService(Context.USB_SERVICE);
         mReader = new Reader(mManager);
+        currentCardName = null;
     }
 
     List<String> getReaderNames() {
@@ -59,7 +62,7 @@ public class ACSCard {
     }
 
     boolean isConnected() {
-        return false;
+        return (currentCardName != null);
     }
 
     void establishContext() throws Exception {
@@ -69,20 +72,50 @@ public class ACSCard {
     }
 
     void connectCard(String cardName) throws Exception {
-//        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(
-//                ACTION_USB_PERMISSION), 0);
-//        UsbDevice mDevice = mManager.getDeviceList().get(cardName);
-//        mManager.requestPermission(mDevice, mPermissionIntent);
+        byte[] atr;
+
+        try {
+            mReader.open(mManager.getDeviceList().get(cardName));
+            mReader.getNumSlots();
+            atr = mReader.power(0, Reader.CARD_COLD_RESET);
+            mReader.setProtocol(0, Reader.PROTOCOL_UNDEFINED | Reader.PROTOCOL_T0);
+        } catch (Exception e) {
+            throw new Exception(TAG + e.getClass().getName());
+        }
+
+        if (!Atr.isAtrValid(atr)) {
+            disconnectCard();
+            Log.error(TAG, "eUICC not allowed!");
+            throw new Exception("eUICC not allowed!");
+        }
+
+        currentCardName = cardName;
     }
 
     void disconnectCard() throws Exception {
+        mReader.close();
+        currentCardName = null;
     }
 
     void resetCard() throws Exception {
+        String cardName;
+
+        if (currentCardName == null) {
+            return;
+        }
+
+        cardName = currentCardName;
+        disconnectCard();
+        connectCard(cardName);
     }
 
-    byte[] transmitToCard(byte[] command) {
+    byte[] transmitToCard(byte[] command) throws Exception {
+        byte[] rxbuf = new byte[264];
         byte[] response = null;
+        int responseLen = 0;
+
+        responseLen = mReader.transmit(0, command, command.length, rxbuf, rxbuf.length);
+        response = Arrays.copyOf(rxbuf, responseLen);
 
         return response;
     }
