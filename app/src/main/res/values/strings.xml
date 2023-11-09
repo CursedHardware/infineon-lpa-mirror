@@ -197,6 +197,12 @@
     <string name="error_wifi_not_connected_heading">Connect to a Wi-Fi network</string>
     <string name="error_wifi_not_connected_body">You can\'t add a profile unless you first connect to a Wi-Fi network.</string>
     <string name="error_wifi_not_connected_positive_button">Connect to Wi-Fi network</string>
+    <string name="error_network_disabled_heading">Network Connectivity Is Unavailable</string>
+    <string name="error_network_disabled_body">Please connect to an available network to proceed with eSIM profile download.</string>
+    <string name="error_network_disabled_positive_button">Network Setting</string>
+    <string name="error_network_not_connected_heading">Connect to network</string>
+    <string name="error_network_not_connected_body">Please connect to an available network to proceed with eSIM profile download.</string>
+    <string name="error_network_not_connected_positive_button">Network Setting</string>
     <string name="error_back_press_disabled_heading">Back Press Disabled</string>
     <string name="error_back_press_disabled_body">The back button is disabled while downloading.</string>
     <string name="error_camera_permission_request_finally_denied_header">Camera permission finally denied!</string>
