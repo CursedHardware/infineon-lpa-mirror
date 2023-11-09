@@ -21,13 +21,15 @@
   ~
   ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
   -->
-
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="30dp">
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -106,6 +108,109 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_firmware_version_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+
+    <TextView
+        android:id="@+id/text_firmware_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_firmware_version_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_ext_card_resource_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_extCardResource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_ext_card_resource_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+    <TextView
+        android:id="@+id/text_extCardResource_memory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_ext_card_resource_memory_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_sas_accreditation_number_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textIsSelectable="true"
+        />
+
+
+    <TextView
+        android:id="@+id/text_sas_accreditation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_sas_accreditation_number_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textIsSelectable="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_forbiddenProfilePolicyRules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_example"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="true"
+        />
+
+    <Space
+        android:layout_height="20dp"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:text="@string/euicc_info_pki_ids_title"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
@@ -123,4 +228,5 @@
         android:textIsSelectable="true"
         />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

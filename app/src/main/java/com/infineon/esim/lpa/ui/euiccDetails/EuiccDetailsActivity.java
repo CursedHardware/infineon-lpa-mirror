@@ -37,6 +37,9 @@ import com.infineon.esim.lpa.ui.generic.AsyncActionStatus;
 import com.infineon.esim.lpa.util.android.DialogHelper;
 import com.infineon.esim.util.Log;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class EuiccDetailsActivity extends AppCompatActivity {
     private static final String TAG = EuiccDetailsActivity.class.getName();
 
@@ -46,6 +49,11 @@ public class EuiccDetailsActivity extends AppCompatActivity {
     private TextView textViewGsmaVersion;
     private TextView textViewTcaVersion;
     private TextView textViewPkiIds;
+    private TextView textViewFirmwareVer;
+    private TextView textViewSasAccreditationNumber;
+    private TextView textViewForbiddenProfilePolicyRules;
+    private TextView textViewExtCardResource;
+    private TextView textViewExtCardResource_memory;
 
     private AlertDialog progressDialog;
 
@@ -90,24 +98,66 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewGsmaVersion = findViewById(R.id.text_gsma_version);
         textViewTcaVersion = findViewById(R.id.text_tca_version);
         textViewPkiIds = findViewById(R.id.text_pki_ids);
+        textViewFirmwareVer = findViewById(R.id.text_firmware_version);
+        textViewSasAccreditationNumber = findViewById(R.id.text_sas_accreditation);
+        textViewForbiddenProfilePolicyRules = findViewById(R.id.text_forbiddenProfilePolicyRules);
+        textViewExtCardResource = findViewById(R.id.text_extCardResource);
+        textViewExtCardResource_memory = findViewById(R.id.text_extCardResource_memory);
 
         textViewEid.setText("");
         textViewGsmaVersion.setText("");
         textViewTcaVersion.setText("");
         textViewPkiIds.setText("");
+        textViewFirmwareVer.setText("");
+        textViewSasAccreditationNumber.setText("");
+        textViewForbiddenProfilePolicyRules.setText("");
+        textViewExtCardResource.setText("");
+        textViewExtCardResource_memory.setText("");
     }
 
     private void setEuiccInfo(EuiccInfo euiccInfo) {
+        String extCardResource = euiccInfo.getExtCardResource();
+        ArrayList<String> memoryData = parseMemoryData(extCardResource);
         textViewEid.setText(euiccInfo.getEid());
         textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewTcaVersion.setText(euiccInfo.getProfileVersion());
         textViewPkiIds.setText(euiccInfo.getPkiIdsAsString());
+        textViewFirmwareVer.setText(euiccInfo.getEuiccFirmwareVer());
+        textViewSasAccreditationNumber.setText(euiccInfo.getSasAcreditationNumber());
+        textViewForbiddenProfilePolicyRules.setText(euiccInfo.getForbiddenProfilePolicyRules());
+        textViewExtCardResource.setText(extCardResource);
+        textViewExtCardResource_memory.setText(getString(R.string.euicc_info_ext_card_resource_memory_example, memoryData.get(0), memoryData.get(1)));
     }
 
     private void dismissProgressDialog() {
         if(progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+    private static ArrayList<String> parseMemoryData(String hexData) {
+        String str = hexData;
+        String[] tags2 = {"82", "83"};
+        ArrayList<String> memoryDataList = new ArrayList<>();
+        int i = 0;
+        while (i < tags2.length) {
+            String tag = tags2[i];
+            int tagIndex = str.indexOf(tag);
+            if (tagIndex != -1) {
+                int dataSizeIndex = tagIndex + 2;
+                int dataSize = Integer.parseInt(str.substring(dataSizeIndex, dataSizeIndex + 2), 16);
+                int dataStartIndex = dataSizeIndex + 2;
+                int dataEndIndex = (dataSize * 2) + dataStartIndex;
+                String dataHex = str.substring(dataStartIndex, dataEndIndex);
+                long dataValue = Long.parseLong(dataHex, 16);
+                double dataKB = dataValue / 1024.0d;
+                memoryDataList.add(String.format(Locale.US,"%.2f",dataKB));
+            } else {
+                memoryDataList.add("Not Found");
+            }
+            i++;
+            str = hexData;
+        }
+        return memoryDataList;
     }
 
     final Observer<AsyncActionStatus> actionStatusObserver = actionStatus -> {

@@ -23,6 +23,8 @@
 
 package com.infineon.esim.lpa.core.dtos;
 
+import com.beanit.jasn1.ber.types.BerOctetString;
+import com.gsma.sgp.messages.rspdefinitions.PprIds;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
 import com.gsma.sgp.messages.rspdefinitions.VersionType;
@@ -41,6 +43,8 @@ public class EuiccInfo {
     private final String globalplatformVersion;
     private final String sasAcreditationNumber;
     private final List<String> pkiIds;
+    private final PprIds forbiddenProfilePolicyRules;
+    private final BerOctetString extCardResource;
 
     public EuiccInfo(EUICCInfo2 euiccInfo2) {
         this(null, euiccInfo2);
@@ -56,6 +60,10 @@ public class EuiccInfo {
         this.sasAcreditationNumber = euiccInfo2.getSasAcreditationNumber().toString();
 
         this.pkiIds = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForSigning());
+
+        this.forbiddenProfilePolicyRules = euiccInfo2.getForbiddenProfilePolicyRules();
+
+        this.extCardResource = euiccInfo2.getExtCardResource();
     }
 
     public void setEid(String eid) {
@@ -100,6 +108,13 @@ public class EuiccInfo {
         }
 
         return sb.subSequence(0, sb.length() - 1).toString();
+    }
+    public String getForbiddenProfilePolicyRules() {
+        return forbiddenProfilePolicyRules.toString();
+    }
+
+    public String getExtCardResource() {
+        return extCardResource.toString();
     }
 
     private static String versionTypeToString(VersionType versionType) {
