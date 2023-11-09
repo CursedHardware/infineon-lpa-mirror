@@ -73,6 +73,7 @@ public class ProfileListFragment extends Fragment {
         // Set Swipe Refresh Layout
         swipeRefreshLayout = view.findViewById(R.id.profile_list_container);
         swipeRefreshLayout.setOnRefreshListener(() -> viewModel.refreshProfileList());
+        swipeRefreshLayout.setEnabled(false);
 
         listViewSelectedProfile = view.findViewById(R.id.list_selected_profile);
         listViewSelectedProfile.setOnItemClickListener(null);
