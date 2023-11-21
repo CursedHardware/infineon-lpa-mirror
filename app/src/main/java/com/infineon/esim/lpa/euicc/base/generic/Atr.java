@@ -54,6 +54,57 @@ public class Atr {
                     return true;
                 }
             }
+
+            boolean support_euicc = false;
+            int i = 1;
+            int pn = 1;
+
+            byte TDi = atr[i];
+            while (i < atr.length) {
+                int TAiC = ((TDi | 0xEF) & 0xFF);
+                int TBiC = ((TDi | 0xDF) & 0xFF);
+                int TCiC = ((TDi | 0xBF) & 0xFF);
+                int TDiC = ((TDi | 0x7F) & 0xFF);
+
+//                Log.verbose(TAG,"TDi: " + String.format("%02X", TDi & 0xFF) + " length: " + atr.length);
+//                Log.verbose(TAG,"TAi check: " + String.format("%02X", (TAiC)) +
+//                    " TBi check: " + String.format("%02X", (TBiC)) +
+//                    " TCi check: " + String.format("%02X", (TCiC)) +
+//                    " TDi check: " + String.format("%02X", (TDiC))
+//                );
+
+                // TAi
+                if ( TAiC == 0xFF) {
+                    i += 1;
+//                    Log.verbose(TAG,"TAi: " + String.format("%02X", atr[i] & 0xFF));
+                }
+                // TBi
+                if (TBiC == 0xFF) {
+                    i += 1;
+                    int T = TDi & 0xF;
+                    int TBi = atr[i] & 0xFF;
+
+                    if (pn > 2 && T == 15 && TBi == 0x82) {
+                        support_euicc = true;
+                        Log.verbose(TAG,"Found euicc support but not in list");
+                    }
+//                    Log.verbose(TAG,"TBi: " + String.format("%02X", TBi));
+                }
+                // TCi
+                if (TCiC == 0xFF) {
+                    i += 1;
+//                    Log.verbose(TAG,"TCi: " + String.format("%02X", atr[i] & 0xFF));
+                }
+                // TDi
+                if (TDiC == 0xFF) {
+                    i += 1;
+                    TDi = atr[i];
+//                    Log.verbose(TAG,"New TDi: " + String.format("%02X", atr[i] & 0xFF));
+                    pn += 1;
+                }
+                else break;
+            }
+            if (support_euicc) return true;
         }
         return false;
     }
