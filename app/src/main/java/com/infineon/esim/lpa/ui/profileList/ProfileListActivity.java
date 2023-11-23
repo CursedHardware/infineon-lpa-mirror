@@ -53,7 +53,6 @@ import com.infineon.esim.lpa.ui.scanBarcode.ScanBarcodeActivity;
 import com.infineon.esim.lpa.util.android.DialogHelper;
 import com.infineon.esim.lpa.util.android.EventObserver;
 import com.infineon.esim.lpa.util.android.NetworkStatus;
-import com.infineon.esim.lpa.util.android.WifiStatus;
 import com.infineon.esim.util.Log;
 
 final public class ProfileListActivity extends AppCompatActivity {
@@ -244,28 +243,16 @@ final public class ProfileListActivity extends AppCompatActivity {
 
     // region Listener and observer
     final View.OnClickListener floatingButtonOnClickListener = (view) -> {
-        if(NetworkStatus.isNetworkAvailable() && WifiStatus.isWifiEnabled()) {
+        if(NetworkStatus.isNetworkAvailable()) {
             startActivity(new Intent(ProfileListActivity.this, ScanBarcodeActivity.class));
         } else {
-            if (!WifiStatus.isWifiEnabled()) {
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.error_wifi_disabled_heading)
-                        .setMessage(R.string.error_wifi_disabled_body)
+                        .setTitle(R.string.error_network_disabled_heading)
+                        .setMessage(R.string.error_network_disabled_body)
                         .setCancelable(true)
-                        .setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss())
-                        .setNeutralButton(R.string.error_wifi_disabled_positive_button, (dialog, id) -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)))
+                        .setNeutralButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss())
+                        .setNegativeButton(R.string.error_network_not_connected_positive_button, (dialog, id) -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)))
                         .show();
-            } else {
-                if (!NetworkStatus.isNetworkAvailable()) {
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.error_wifi_not_connected_heading)
-                            .setMessage(R.string.error_wifi_not_connected_body)
-                            .setCancelable(true)
-                            .setNegativeButton(android.R.string.cancel, (dialog, id) -> dialog.dismiss())
-                            .setNeutralButton(R.string.error_wifi_not_connected_positive_button, (dialog, id) -> startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)))
-                            .show();
-                }
-            }
         }
     };
 
