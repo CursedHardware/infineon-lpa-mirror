@@ -100,6 +100,11 @@ dependencies {
     implementation fileTree(dir: 'libs/identiv/lib', include: ['*.jar'])
 
     // ---------------------------------------------------------------------------------------------
+    // ACS reader library
+    // ---------------------------------------------------------------------------------------------
+    implementation fileTree(dir: 'libs/acs', include: ['*.jar'])
+
+    // ---------------------------------------------------------------------------------------------
     // Google libraries
     // ---------------------------------------------------------------------------------------------
     // Open source license plugin (see: https://developers.google.com/android/guides/opensource)
