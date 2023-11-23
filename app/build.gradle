@@ -72,20 +72,6 @@ task printVersionName {
     }
 }
 
-// Gradle tasks to automatically download Identiv Smartcard SDK dependency
-task downloadIdentivAndroidSdkZipFile(type: Download) {
-    src 'https://files.identiv.com/products/smart-card-readers/developer-tools/Android_Smartcard_SDK_v1.2.zip'
-    dest new File(buildDir, 'resources/libs/com.identiv.android.sdk.1.2.zip')
-    overwrite false
-}
-task resolveIdentivAndroidSdkDependency(dependsOn: downloadIdentivAndroidSdkZipFile, type: Copy) {
-    outputs.file('libs/identiv/lib/androidSCardV1.2.jar')
-    from zipTree(downloadIdentivAndroidSdkZipFile.dest)
-    into "libs/identiv"
-}
-
-preBuild.dependsOn resolveIdentivAndroidSdkDependency
-
 dependencies {
     // ---------------------------------------------------------------------------------------------
     // Module dependencies
@@ -97,7 +83,7 @@ dependencies {
     // ---------------------------------------------------------------------------------------------
     // Identiv reader library
     // ---------------------------------------------------------------------------------------------
-    implementation fileTree(dir: 'libs/identiv/lib', include: ['*.jar'])
+    implementation fileTree(dir: 'libs/identiv', include: ['*.jar'])
 
     // ---------------------------------------------------------------------------------------------
     // ACS reader library
