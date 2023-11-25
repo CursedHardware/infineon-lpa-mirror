@@ -56,6 +56,13 @@
             android:summary="@string/pref_summary_trust_gsma_test_ci"
             android:defaultValue="@string/pref_def_value_trust_gsma_test_ci">
         </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:title="@string/pref_title_retry_when_fail"
+            android:key="@string/pref_key_retry_when_fail"
+            android:summary="@string/pref_summary_retry_when_fail"
+            android:defaultValue="@string/pref_def_value_trust_gsma_test_ci">
+        </CheckBoxPreference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_se_reader">
