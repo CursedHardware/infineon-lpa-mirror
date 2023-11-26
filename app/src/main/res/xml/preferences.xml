@@ -58,10 +58,17 @@
         </CheckBoxPreference>
 
         <CheckBoxPreference
+            android:title="@string/pref_title_anti_retry_spam"
+            android:key="@string/pref_key_anti_retry_spam"
+            android:summary="@string/pref_summary_anti_retry_spam"
+            android:defaultValue="@string/pref_def_value_anti_retry_spam">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
             android:title="@string/pref_title_retry_when_fail"
             android:key="@string/pref_key_retry_when_fail"
             android:summary="@string/pref_summary_retry_when_fail"
-            android:defaultValue="@string/pref_def_value_trust_gsma_test_ci">
+            android:defaultValue="@string/pref_def_value_retry_when_fail">
         </CheckBoxPreference>
     </PreferenceCategory>
 

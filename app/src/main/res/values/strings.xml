@@ -146,7 +146,8 @@
     <string name="pref_title_open_logical_channel">Open new logical channel</string>
     <string name="pref_title_trust_gsma_test_ci">Trust GSMA Test CI</string>
     <string name="pref_title_change_mtu">Request higher MTU</string>
-    <string name="pref_title_retry_when_fail">Retry when eSIM init Fail</string>
+    <string name="pref_title_retry_when_fail">Retry when eSIM init Failed</string>
+    <string name="pref_title_anti_retry_spam">Anti error spam</string>
 
     <string name="pref_key_select_se">com.infineon.esim.lpa.pref.select_se</string>
     <string name="pref_key_connect_ble_device">com.infineon.esim.lpa.pref.connect_ble_device</string>
@@ -158,6 +159,7 @@
     <string name="pref_key_trust_gsma_test_ci">com.infineon.esim.lpa.pref.trust_gsma_test_ci</string>
     <string name="pref_key_change_mtu">com.infineon.esim.lpa.pref.change_mtu</string>
     <string name="pref_key_retry_when_fail">com.infineon.esim.lpa.pref.retry_when_fail</string>
+    <string name="pref_key_anti_retry_spam">com.infineon.esim.lpa.pref.anti_retry_spam</string>
 
     <string name="pref_summary_select_se">Select the eSIM reader to be used.</string>
     <string name="pref_summary_euicc_profile_init_time">Set the duration needed for the profile initialization with an eSIM in the SIM slot.</string>
@@ -167,7 +169,8 @@
     <string name="pref_summary_trust_gsma_test_ci">Allow to connect with SM-DP+ profile servers using certificates from GSMA Test CI.</string>
     <string name="pref_summary_connect_ble_device">Connect or disconnect a BLE companion device for the hybrid LPA setup.</string>
     <string name="pref_summary_change_mtu">Set if this device should request a change to a higher MTU from the BLE device. Do not enable for Samsung devices.</string>
-    <string name="pref_summary_retry_when_fail">Retry once when eSIM initialization fail</string>
+    <string name="pref_summary_retry_when_fail">Retry once when eSIM initialization failed</string>
+    <string name="pref_summary_anti_retry_spam">Anti error spam when initialization failed</string>
 
     <string name="pref_def_value_select_se" tools:ignore="Typos">NONE</string>
     <string name="pref_def_value_euicc_profile_init_time">4000</string>
@@ -177,6 +180,7 @@
     <string name="pref_def_value_trust_gsma_test_ci">true</string>
     <string name="pref_def_value_change_mtu">true</string>
     <string name="pref_def_value_retry_when_fail">true</string>
+    <string name="pref_def_value_anti_retry_spam">true</string>
 
     <string name="pref_progress_refreshing_euicc_list">Refreshing reader list…</string>
     <string name="pref_progress_connecting_reader">Connecting %1$s reader…</string>
