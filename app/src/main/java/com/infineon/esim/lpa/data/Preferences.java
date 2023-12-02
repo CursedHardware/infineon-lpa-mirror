@@ -138,6 +138,12 @@ final public class Preferences implements SharedPreferences.OnSharedPreferenceCh
         return Application.getSharedPreferences().getBoolean(key, defaultValue);
     }
 
+    public static Boolean getAntiRetrySpam() {
+        String key = Application.getStringResource(R.string.pref_key_anti_retry_spam);
+        boolean defaultValue = Boolean.parseBoolean(Application.getStringResource(R.string.pref_def_value_anti_retry_spam));
+        return Application.getSharedPreferences().getBoolean(key, defaultValue);
+    }
+
     public static void setPermissionFinallyDenied(String permission) {
         String key = "com.infineon.esim.lpa.pref." + permission;
         Application.getSharedPreferences()

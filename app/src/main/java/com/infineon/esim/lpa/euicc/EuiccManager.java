@@ -276,10 +276,10 @@ public class EuiccManager implements EuiccInterfaceStatusChangeHandler {
 
         if (interfaceTag == null) {
             Log.error(TAG,"interfaceTAG is null");
-            if (Preferences.getRetryWhenFail()) refreshEuiccRetry = !refreshEuiccRetry;
+            if (Preferences.getRetryWhenFail() && Preferences.getAntiRetrySpam()) refreshEuiccRetry = !refreshEuiccRetry;
         }
 
-        if (interfaceTag != null | (Preferences.getRetryWhenFail() && refreshEuiccRetry)) {
+        if (interfaceTag != null | !Preferences.getAntiRetrySpam() | (Preferences.getRetryWhenFail() && refreshEuiccRetry)) {
             if (refreshEuiccRetry) Log.debug(TAG,"Retry when interfaceTAG is null");
             startRefreshingEuiccList();
         }
