@@ -56,56 +56,50 @@ public class Atr {
                 }
             }
 
-            boolean support_euicc = false;
+            boolean isEuicc = false;
             int i = 1;
             int pn = 1;
+            byte atrBytes = atr[i];
 
-            byte TDi = atr[i];
             while (i < atr.length) {
-                int TAiC = ((TDi | 0xEF) & 0xFF);
-                int TBiC = ((TDi | 0xDF) & 0xFF);
-                int TCiC = ((TDi | 0xBF) & 0xFF);
-                int TDiC = ((TDi | 0x7F) & 0xFF);
-
-//                Log.verbose(TAG,"TDi: " + String.format("%02X", TDi & 0xFF) + " length: " + atr.length);
-//                Log.verbose(TAG,"TAi check: " + String.format("%02X", (TAiC)) +
-//                    " TBi check: " + String.format("%02X", (TBiC)) +
-//                    " TCi check: " + String.format("%02X", (TCiC)) +
-//                    " TDi check: " + String.format("%02X", (TDiC))
-//                );
+//                Log.verbose(TAG,"atrBytes: " + String.format("%02X", atrBytes & 0xFF));
 
                 // TAi
-                if ( TAiC == 0xFF) {
+                if ((atrBytes & 0x10) != 0) {
                     i += 1;
-//                    Log.verbose(TAG,"TAi: " + String.format("%02X", atr[i] & 0xFF));
+                    int TAi = atr[i] & 0xFF;
+//                    Log.verbose(TAG,"TAi: " + String.format("%02X", TAi));
                 }
-                // TBi
-                if (TBiC == 0xFF) {
-                    i += 1;
-                    int T = TDi & 0xF;
-                    int TBi = atr[i] & 0xFF;
 
-                    if (pn > 2 && T == 15 && TBi == 0x82) {
-                        support_euicc = true;
-                        Log.verbose(TAG,"Found euicc support but not in list");
+                // TBi
+                if ((atrBytes & 0x20) != 0) {
+                    i += 1;
+                    int TBi = atr[i] & 0xFF;
+                    int protocol = atrBytes & 0xF;
+
+                    if (pn > 2 && protocol == 15 && (TBi & 0x82) == 0x82) {
+                        isEuicc = true;
+                        Log.verbose(TAG, "Found euicc support but not in list");
                     }
 //                    Log.verbose(TAG,"TBi: " + String.format("%02X", TBi));
                 }
+
                 // TCi
-                if (TCiC == 0xFF) {
+                if ((atrBytes & 0x40) != 0) {
                     i += 1;
-//                    Log.verbose(TAG,"TCi: " + String.format("%02X", atr[i] & 0xFF));
+                    int TCi = atr[i] & 0xFF;
+//                    Log.verbose(TAG,"TCi: " + String.format("%02X", TCi));
                 }
+
                 // TDi
-                if (TDiC == 0xFF) {
+                if ((atrBytes & 0x80) != 0) {
                     i += 1;
-                    TDi = atr[i];
-//                    Log.verbose(TAG,"New TDi: " + String.format("%02X", atr[i] & 0xFF));
+                    atrBytes = atr[i];
+//                    Log.verbose(TAG,"TDi: " + String.format("%02X", atrBytes & 0xFF));
                     pn += 1;
-                }
-                else break;
+                } else break;
             }
-            if (support_euicc) return true;
+            if (isEuicc) return true;
         }
         return false;
     }
