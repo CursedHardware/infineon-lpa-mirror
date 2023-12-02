@@ -132,6 +132,12 @@ final public class Preferences implements SharedPreferences.OnSharedPreferenceCh
         return Application.getSharedPreferences().getBoolean(key, defaultValue);
     }
 
+    public static Boolean getRetryWhenFail() {
+        String key = Application.getStringResource(R.string.pref_key_retry_when_fail);
+        boolean defaultValue = Boolean.parseBoolean(Application.getStringResource(R.string.pref_def_value_retry_when_fail));
+        return Application.getSharedPreferences().getBoolean(key, defaultValue);
+    }
+
     public static void setPermissionFinallyDenied(String permission) {
         String key = "com.infineon.esim.lpa.pref." + permission;
         Application.getSharedPreferences()
