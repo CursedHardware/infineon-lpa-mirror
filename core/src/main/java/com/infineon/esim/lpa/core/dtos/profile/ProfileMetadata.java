@@ -67,6 +67,11 @@ final public class ProfileMetadata implements Parcelable {
             newText.append(iccidRawString.charAt(i));
             i += 2;
         }
+
+        if (newText.charAt(newText.length() -1) == 'F') {
+            newText.deleteCharAt(newText.length() -1);
+        }
+
         return newText.toString();
     }
 
