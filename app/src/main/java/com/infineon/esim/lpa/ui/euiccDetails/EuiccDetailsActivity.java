@@ -39,6 +39,7 @@ import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class EuiccDetailsActivity extends AppCompatActivity {
     private static final String TAG = EuiccDetailsActivity.class.getName();
@@ -121,7 +122,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewEid.setText(euiccInfo.getEid());
         textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewTcaVersion.setText(euiccInfo.getProfileVersion());
-        if (euiccInfo.getPkiIdsForSignAsString() == euiccInfo.getPkiIdsForVerifyAsString()){
+        if (Objects.equals(euiccInfo.getPkiIdsForSignAsString(), euiccInfo.getPkiIdsForVerifyAsString())){
             textViewPkiIds.setText("Sign and Verify:\n"+euiccInfo.getPkiIdsForSignAsString());
         } else {
             textViewPkiIds.setText("Sign:\n" + euiccInfo.getPkiIdsForSignAsString()+"\nVerify:\n" + euiccInfo.getPkiIdsForVerifyAsString());
