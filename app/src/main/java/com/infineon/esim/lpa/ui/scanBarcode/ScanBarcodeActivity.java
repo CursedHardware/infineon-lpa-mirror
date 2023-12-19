@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.util.Size;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +67,7 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
     private final PermissionManager permissionManager = new PermissionManager(this);
 
     private PreviewView cameraPreviewView;
+    private LinearLayout cameraPreviewLayout;
     private TextView textViewBarCodeValue;
     private ActivationCode activationCode;
     private Button buttonUseThisCode;
@@ -257,6 +259,7 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
         Log.debug(TAG, "Attaching UI.");
 
         cameraPreviewView = findViewById(R.id.cameraPreviewView);
+        cameraPreviewLayout = findViewById(R.id.cameraPreviewLayout);
         textViewBarCodeValue = findViewById(R.id.text_barcode_value);
         buttonUseThisCode = findViewById(R.id.button_use_activation_code);
         buttonUseThisCode.setOnClickListener(useThisCodeButtonClickListener);
@@ -277,6 +280,8 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
                 if (buttonUseThisCode != null) {
                     buttonUseThisCode.setEnabled(true);
                     buttonUseThisCode.setVisibility(View.VISIBLE);
+                    cameraPreviewLayout.setVisibility(View.GONE);
+                    cameraPreviewView.setVisibility(View.GONE);
                 }
             }
         });
