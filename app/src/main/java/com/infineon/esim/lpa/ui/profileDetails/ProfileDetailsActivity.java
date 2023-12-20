@@ -175,6 +175,7 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
         ImageView imageViewProfileIcon = findViewById(R.id.imageViewProfileIcon);
         ImageView imageViewEditNicknameIcon = findViewById(R.id.imageViewNicknameEditIcon);
         TextView textViewIccidBody = findViewById(R.id.textViewIccidBody);
+        TextView textViewClassBody = findViewById(R.id.textViewClassBody);
         TextView textViewProviderBody = findViewById(R.id.textViewProviderBody);
         TextView textViewNicknameBody = findViewById(R.id.textViewNicknameBody);
 
@@ -187,9 +188,11 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
         }
 
         String iccidUserString = ProfileMetadata.formatIccidUserString((profileMetadata.getIccid()));
+        String profileclassString = ProfileMetadata.formatProfileClassString((profileMetadata.getProfileclass()));
         textViewIccidBody.setText(iccidUserString);
         textViewProviderBody.setText(profileMetadata.getProvider());
         textViewNicknameBody.setText(profileMetadata.getNickname());
+        textViewClassBody.setText(profileclassString);
 
         setProfileStatus(profileMetadata.isEnabled());
     }

@@ -76,6 +76,8 @@
     <string name="profile_details_provider_example">Telefon</string>
     <string name="profile_details_iccid_title">ICCID</string>
     <string name="profile_details_iccid_example">98000000000000002000</string>
+    <string name="profile_details_class_title">Profile Class</string>
+    <string name="profile_details_class_example">Testing</string>
     <string name="profile_details_status">Status</string>
     <string name="profile_details_status_enabled">Enabled</string>
     <string name="profile_details_status_disabled">Disabled</string>

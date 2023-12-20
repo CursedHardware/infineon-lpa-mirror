@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import com.beanit.jasn1.ber.types.BerOctetString;
 import com.beanit.jasn1.ber.types.string.BerUTF8String;
 import com.gsma.sgp.messages.rspdefinitions.Iccid;
+import com.gsma.sgp.messages.rspdefinitions.ProfileClass;
 import com.gsma.sgp.messages.rspdefinitions.ProfileInfo;
 import com.gsma.sgp.messages.rspdefinitions.ProfileState;
 import com.gsma.sgp.messages.rspdefinitions.StoreMetadataRequest;
@@ -49,6 +50,7 @@ final public class ProfileMetadata implements Parcelable {
 
     private static final String ICCID = "ICCID";
     private static final String STATE = "STATE";
+    private static final String PROFILECLASS = "CLASS";
     private static final String NAME = "NAME";
     private static final String PROVIDER_NAME = "PROVIDER_NAME";
     private static final String NICKNAME = "NICKNAME";
@@ -75,6 +77,30 @@ final public class ProfileMetadata implements Parcelable {
         return newText.toString();
     }
 
+    static public String formatProfileClassString(String profileclass) {
+        StringBuilder newText = new StringBuilder();
+        if (profileclass != null) {
+            switch (profileclass) {
+                case "0":
+                    newText.append("Testing");
+                    break;
+                case "1":
+                    newText.append("Provisioning");
+                    break;
+                case "2":
+                    newText.append("Operational");
+                    break;
+                default:
+                    newText.append("Unknown");
+                    break;
+            }
+        } else {
+            newText.append("Null");
+        }
+
+        return newText.toString();
+    }
+
     public ProfileMetadata(Map<String, String> profileMetadataMap) {
         this.profileMetadataMap = new HashMap<>(profileMetadataMap);
     }
@@ -83,32 +109,39 @@ final public class ProfileMetadata implements Parcelable {
                            @NonNull String profileState,
                            @NonNull String profileName,
                            @NonNull String serviceProviderName,
+                           @Nullable String profileclass,
                            @Nullable String profileNickname,
                            @Nullable String icon) {
         profileMetadataMap = new HashMap<>();
-        initialize(iccid, profileState, profileName, serviceProviderName, profileNickname, icon);
+        initialize(iccid, profileState, profileName, serviceProviderName, profileclass, profileNickname, icon);
     }
 
     public ProfileMetadata(@NonNull Iccid iccid,
                            @NonNull ProfileState profileState,
                            @NonNull BerUTF8String profileName,
                            @NonNull BerUTF8String serviceProviderName,
+                           @Nullable ProfileClass profileClass,
                            @Nullable BerUTF8String profileNickname,
                            @Nullable BerOctetString icon) {
         profileMetadataMap = new HashMap<>();
 
         String nicknameString = null;
         String iconString = null;
+        String profileClassString = null;
         if(profileNickname != null) {
             nicknameString = profileNickname.toString();
         }
         if(icon != null) {
             iconString = icon.toString();
         }
+        if(profileClass != null) {
+            profileClassString = profileClass.toString();
+        }
         initialize(iccid.toString(),
                 ProfileStates.getString(profileState),
                 profileName.toString(),
                 serviceProviderName.toString(),
+                profileClassString,
                 nicknameString,
                 iconString);
     }
@@ -118,6 +151,7 @@ final public class ProfileMetadata implements Parcelable {
                 profileInfo.getProfileState(),
                 profileInfo.getProfileName(),
                 profileInfo.getServiceProviderName(),
+                profileInfo.getProfileClass(),
                 profileInfo.getProfileNickname(),
                 profileInfo.getIcon());
     }
@@ -127,6 +161,7 @@ final public class ProfileMetadata implements Parcelable {
                 new ProfileState(0),
                 storeMetadataRequest.getProfileName(),
                 storeMetadataRequest.getServiceProviderName(),
+                storeMetadataRequest.getProfileClass(),
                 null,
                 null);
     }
@@ -135,6 +170,7 @@ final public class ProfileMetadata implements Parcelable {
                             @NonNull String state,
                             @NonNull String name,
                             @NonNull String provider,
+                            @Nullable String profileclass,
                             @Nullable String nickname,
                             @Nullable String icon) {
 
@@ -148,6 +184,9 @@ final public class ProfileMetadata implements Parcelable {
         }
         if(icon != null) {
             profileMetadataMap.put(ICON, icon);
+        }
+        if(profileclass != null){
+            profileMetadataMap.put(PROFILECLASS, profileclass);
         }
     }
 
@@ -179,6 +218,10 @@ final public class ProfileMetadata implements Parcelable {
         return profileMetadataMap.get(STATE);
     }
 
+    public String getProfileclass() {
+        return profileMetadataMap.get(PROFILECLASS);
+    }
+
     public String getProvider() {
         return profileMetadataMap.get(PROVIDER_NAME);
     }
@@ -205,6 +248,7 @@ final public class ProfileMetadata implements Parcelable {
         out.writeString(getName());
         out.writeString(getIccid());
         out.writeString(getState());
+        out.writeString(getProfileclass());
         out.writeString(getProvider());
         out.writeString(getNickname());
         out.writeString(getIconString());
@@ -225,6 +269,7 @@ final public class ProfileMetadata implements Parcelable {
         profileMetadataMap.put(NAME, in.readString());
         profileMetadataMap.put(ICCID, in.readString());
         profileMetadataMap.put(STATE, in.readString());
+        profileMetadataMap.put(PROFILECLASS, in.readString());
         profileMetadataMap.put(PROVIDER_NAME, in.readString());
         profileMetadataMap.put(NICKNAME, in.readString());
         profileMetadataMap.put(ICON, in.readString());
