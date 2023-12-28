@@ -170,7 +170,8 @@ public class ProfileInfo implements BerType, Serializable {
 	private DpProprietaryData dpProprietaryData = null;
 	private PprIds profilePolicyRules = null;
 	private VendorSpecificExtension serviceSpecificDataStoredInEuicc = null;
-	
+	private Bf76Tag refArDo = null;
+
 	public ProfileInfo() {
 	}
 
@@ -288,6 +289,14 @@ public class ProfileInfo implements BerType, Serializable {
 
 	public VendorSpecificExtension getServiceSpecificDataStoredInEuicc() {
 		return serviceSpecificDataStoredInEuicc;
+	}
+
+	public void setRefArDo(Bf76Tag refArDo) {
+		this.refArDo = refArDo;
+	}
+
+	public Bf76Tag getRefArDo() {
+		return refArDo;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -561,6 +570,14 @@ public class ProfileInfo implements BerType, Serializable {
 				return codeLength;
 			}
 		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 118)) {
+			refArDo = new Bf76Tag();
+			subCodeLength += refArDo.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
 		
@@ -737,7 +754,19 @@ public class ProfileInfo implements BerType, Serializable {
 			serviceSpecificDataStoredInEuicc.appendAsString(sb, indentLevel + 1);
 			firstSelectedElement = false;
 		}
-		
+
+		if (refArDo != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("refArDo: ");
+			refArDo.appendAsString(sb, indentLevel + 1);
+			firstSelectedElement = false;
+		}
+
 		sb.append("\n");
 		for (int i = 0; i < indentLevel; i++) {
 			sb.append("\t");
@@ -746,4 +775,3 @@ public class ProfileInfo implements BerType, Serializable {
 	}
 
 }
-
