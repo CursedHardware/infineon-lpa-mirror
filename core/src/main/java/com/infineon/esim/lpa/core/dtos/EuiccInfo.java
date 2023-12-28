@@ -107,23 +107,27 @@ public class EuiccInfo {
 
     public String getPkiIdsForSignAsString(){
         StringBuilder sb = new StringBuilder();
-
-        for(String pkiId : pkiIdsForSign) {
-            sb.append(pkiId);
-            sb.append("\n");
+        if (!pkiIdsForSign.isEmpty()) {
+            for(String pkiId : pkiIdsForSign) {
+                sb.append(pkiId);
+                sb.append("\n");
+            }
+        } else {
+            return "Not Found";
         }
-
         return sb.subSequence(0, sb.length() - 1).toString();
     }
 
     public String getPkiIdsForVerifyAsString(){
         StringBuilder sb = new StringBuilder();
-
-        for(String pkiId : pkiIdsForVerify) {
-            sb.append(pkiId);
-            sb.append("\n");
+        if (!pkiIdsForVerify.isEmpty()) {
+            for(String pkiId : pkiIdsForVerify) {
+                sb.append(pkiId);
+                sb.append("\n");
+            }
+        } else {
+            return "Not Found";
         }
-
         return sb.subSequence(0, sb.length() - 1).toString();
     }
 
