@@ -115,6 +115,7 @@
     <string name="scan_qr_button_use_this_code_text">Use this code</string>
     <string name="scan_qr_camera_permission_alert_dialog_title">Camera permission required!</string>
     <string name="scan_qr_camera_permission_alert_dialog_message">To download a new profile a QR code has to be scanned.\n\nWithout the camera permission this is not possible.\n\nThis is the last request for the camera permission. If denied, the profile download functionality will not be available. You can then grant the camera permission in the Android settings anytime.</string>
+    <string name="scan_qr_button_rescan_qrcode">Rescan QR Code</string>
 
     <!-- Download Profile Activity -->
     <string name="download_profile_title">Download Profile</string>

@@ -100,13 +100,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="10dp"
                 android:enabled="false"
                 android:minWidth="200dp"
                 android:text="@string/scan_qr_button_use_this_code_text"
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:visibility="gone" />
+
+            <Button
+                    android:id="@+id/button_rescan_qrcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:enabled="false"
+                    android:minWidth="200dp"
+                    android:text="@string/scan_qr_button_rescan_qrcode"
+                    android:textAllCaps="false"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </merge>

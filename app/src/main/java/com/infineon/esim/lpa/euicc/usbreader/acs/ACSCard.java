@@ -34,17 +34,18 @@ import com.infineon.esim.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ACSCard {
     private static final String TAG = ACSCard.class.getName();
-    private Context context;
-    private UsbManager mManager;
-    private Reader mReader;
+    private final Context context;
+    private final UsbManager mManager;
+    private final Reader mReader;
     private String currentCardName;
 
     public ACSCard(Context context) {
         this.context = context;
-        mManager = (UsbManager)context.getSystemService(Context.USB_SERVICE);
+        mManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         mReader = new Reader(mManager);
         currentCardName = null;
     }
@@ -54,7 +55,8 @@ public class ACSCard {
 
         for (UsbDevice device : mManager.getDeviceList().values()) {
             if (mReader.isSupported(device)) {
-                euiccNames.add(device.getDeviceName());
+                mReader.open(device);
+                euiccNames.add(mReader.getReaderName());
             }
         }
 
@@ -72,15 +74,20 @@ public class ACSCard {
     }
 
     void connectCard(String cardName) throws Exception {
-        byte[] atr;
+        byte[] atr = new byte[0];
 
         try {
-            mReader.open(mManager.getDeviceList().get(cardName));
-            mReader.getNumSlots();
-            atr = mReader.power(0, Reader.CARD_COLD_RESET);
-            mReader.setProtocol(0, Reader.PROTOCOL_UNDEFINED | Reader.PROTOCOL_T0);
+            for (UsbDevice device : mManager.getDeviceList().values())
+            {
+                mReader.open(device);
+                if (!Objects.equals(mReader.getReaderName(), mReader.getReaderName())) continue;
+                atr = mReader.power(0, Reader.CARD_COLD_RESET);
+                mReader.setProtocol(0, Reader.PROTOCOL_UNDEFINED | Reader.PROTOCOL_T0);
+            }
+
         } catch (Exception e) {
-            throw new Exception(TAG + e.getClass().getName());
+            if (e.getMessage() == null) throw new Exception(e.getClass().getName());
+            else throw e;
         }
 
         if (!Atr.isAtrValid(atr)) {

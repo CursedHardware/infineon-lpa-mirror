@@ -71,6 +71,7 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
     private TextView textViewBarCodeValue;
     private ActivationCode activationCode;
     private Button buttonUseThisCode;
+    private Button buttonRescanQrCode;
 
     private ScanBarcodeViewModel viewModel;
 
@@ -262,7 +263,9 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
         cameraPreviewLayout = findViewById(R.id.cameraPreviewLayout);
         textViewBarCodeValue = findViewById(R.id.text_barcode_value);
         buttonUseThisCode = findViewById(R.id.button_use_activation_code);
+        buttonRescanQrCode = findViewById(R.id.button_rescan_qrcode);
         buttonUseThisCode.setOnClickListener(useThisCodeButtonClickListener);
+        buttonRescanQrCode.setOnClickListener(rescanQRCodeButtonClickListener);
 
         String readerName = viewModel.getEuiccName();
         if (readerName != null) {
@@ -277,12 +280,13 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
             textViewBarCodeValue.setText(activationCode.toString());
 
             if (activationCode.isValid()) {
-                if (buttonUseThisCode != null) {
-                    buttonUseThisCode.setEnabled(true);
-                    buttonUseThisCode.setVisibility(View.VISIBLE);
-                    cameraPreviewLayout.setVisibility(View.GONE);
-                    cameraPreviewView.setVisibility(View.GONE);
-                }
+                buttonUseThisCode.setEnabled(true);
+                buttonUseThisCode.setVisibility(View.VISIBLE);
+                buttonRescanQrCode.setEnabled(true);
+                buttonRescanQrCode.setVisibility(View.VISIBLE);
+                cameraPreviewLayout.setVisibility(View.GONE);
+                cameraPreviewView.setVisibility(View.GONE);
+                finishBarcodeScanner();
             }
         });
     }
@@ -300,6 +304,22 @@ final public class ScanBarcodeActivity extends AppCompatActivity {
         Intent i = new Intent(ScanBarcodeActivity.this, DownloadActivity.class);
         i.putExtra(Application.INTENT_EXTRA_ACTIVATION_CODE, activationCode);
         startActivity(i);
+    };
+
+    private final View.OnClickListener rescanQRCodeButtonClickListener = v -> {
+        CameraSelector cameraSelector = getCamera();
+        Preview preview = initializePreview();
+        ImageAnalysis imageAnalysis = initializeBarcodeScanner();
+
+        cameraProvider.unbindAll();
+        cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
+        textViewBarCodeValue.setText(null);
+        buttonUseThisCode.setEnabled(false);
+        buttonUseThisCode.setVisibility(View.GONE);
+        buttonRescanQrCode.setEnabled(false);
+        buttonRescanQrCode.setVisibility(View.GONE);
+        cameraPreviewLayout.setVisibility(View.VISIBLE);
+        cameraPreviewView.setVisibility(View.VISIBLE);
     };
 
     // endregion
