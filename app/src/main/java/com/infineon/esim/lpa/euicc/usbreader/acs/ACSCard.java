@@ -56,7 +56,9 @@ public class ACSCard {
         for (UsbDevice device : mManager.getDeviceList().values()) {
             if (mReader.isSupported(device)) {
                 mReader.open(device);
-                euiccNames.add(mReader.getReaderName());
+                for (int i = 0; i < mReader.getNumSlots(); i++) {
+                    euiccNames.add(mReader.getReaderName() + " (" + device.getDeviceId() + ") [" + i + "]");
+                }
             }
         }
 
@@ -77,12 +79,16 @@ public class ACSCard {
         byte[] atr = new byte[0];
 
         try {
-            for (UsbDevice device : mManager.getDeviceList().values())
-            {
+            loop : for (UsbDevice device : mManager.getDeviceList().values()) {
+                if (!mReader.isSupported(device)) continue;
                 mReader.open(device);
-                if (!Objects.equals(mReader.getReaderName(), mReader.getReaderName())) continue;
-                atr = mReader.power(0, Reader.CARD_COLD_RESET);
-                mReader.setProtocol(0, Reader.PROTOCOL_UNDEFINED | Reader.PROTOCOL_T0);
+                for (int i = 0; i < mReader.getNumSlots(); i++) {
+                    if (!Objects.equals(mReader.getReaderName() + " (" + device.getDeviceId() + ") [" + i + "]", cardName)) continue;
+                    Thread.sleep(1);
+                    atr = mReader.power(i, Reader.CARD_COLD_RESET);
+                    mReader.setProtocol(i, Reader.PROTOCOL_UNDEFINED | Reader.PROTOCOL_T0);
+                    break loop;
+                }
             }
 
         } catch (Exception e) {
