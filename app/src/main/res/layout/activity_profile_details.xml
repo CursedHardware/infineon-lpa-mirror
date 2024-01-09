@@ -22,43 +22,85 @@
   ~ (C)Copyright INFINEON TECHNOLOGIES All rights reserved
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="30dp"
-    tools:context="com.infineon.esim.lpa.ui.profileDetails.ProfileDetailsActivity">
+    android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/imageViewProfileIcon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:padding="0dp"
-        android:background="@null"
-        android:src="@drawable/profile_default"
-        android:contentDescription="@string/profile_details_profile_icon_content_description" />
-
-    <Space
-        android:layout_height="50dp"
-        android:layout_width="match_parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_nickname_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        />
+        android:orientation="vertical"
+        android:padding="30dp"
+        tools:context="com.infineon.esim.lpa.ui.profileDetails.ProfileDetailsActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewProfileIcon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:padding="0dp"
+            android:background="@null"
+            android:src="@drawable/profile_default"
+            android:contentDescription="@string/profile_details_profile_icon_content_description" />
+
+        <Space
+            android:layout_height="50dp"
+            android:layout_width="match_parent" />
+
         <TextView
-            android:id="@+id/textViewNicknameBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_nickname_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textViewNicknameBody"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/profile_details_provider_example"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textIsSelectable="true"
+                />
+
+            <Space
+                android:layout_height="0dp"
+                android:layout_width="5dp" />
+
+            <ImageView
+                android:id="@+id/imageViewNicknameEditIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:padding="0dp"
+                android:background="@null"
+                android:src="@drawable/ic_baseline_edit_24"
+                android:contentDescription="@string/profile_details_nickname_edit_icon_content_description" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_height="10dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_provider_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/textViewProviderBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -68,122 +110,106 @@
             />
 
         <Space
-            android:layout_height="0dp"
-            android:layout_width="5dp" />
+            android:layout_height="10dp"
+            android:layout_width="match_parent" />
 
-        <ImageView
-            android:id="@+id/imageViewNicknameEditIcon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:padding="0dp"
-            android:background="@null"
-            android:src="@drawable/ic_baseline_edit_24"
-            android:contentDescription="@string/profile_details_nickname_edit_icon_content_description" />
-
-    </LinearLayout>
-
-    <Space
-        android:layout_height="10dp"
-        android:layout_width="match_parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_provider_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/textViewProviderBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_provider_example"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="true"
-        />
-
-    <Space
-        android:layout_height="10dp"
-        android:layout_width="match_parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_iccid_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/textViewIccidBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_iccid_example"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="true"
-        />
-
-    <Space
-        android:layout_height="10dp"
-        android:layout_width="match_parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_status"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        />
-
-    <TextView
-        android:id="@+id/textViewStatusBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/profile_details_status_enabled"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="true"
-        />
-
-    <Space
-        android:layout_height="30dp"
-        android:layout_width="match_parent" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <Button
-            android:id="@+id/button_enable_disable"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:text="@string/profile_details_button_enable_text"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_iccid_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textAllCaps="false" />
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/textViewIccidBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_iccid_example"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            />
 
         <Space
-            android:layout_height="match_parent"
-            android:layout_width="20dp" />
+            android:layout_height="10dp"
+            android:layout_width="match_parent" />
 
-        <Button
-            android:id="@+id/button_delete"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:text="@string/profile_details_button_delete_text"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_class_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textAllCaps="false" />
-    </LinearLayout>
+            android:textStyle="bold"
+            />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/textViewClassBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_class_example"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            />
+        <Space
+            android:layout_height="10dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_status"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/textViewStatusBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_status_enabled"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="30dp"
+            android:layout_width="match_parent" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <Button
+                android:id="@+id/button_enable_disable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="true"
+                android:text="@string/profile_details_button_enable_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAllCaps="false" />
+
+            <Space
+                android:layout_height="match_parent"
+                android:layout_width="20dp" />
+
+            <Button
+                android:id="@+id/button_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="true"
+                android:text="@string/profile_details_button_delete_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
