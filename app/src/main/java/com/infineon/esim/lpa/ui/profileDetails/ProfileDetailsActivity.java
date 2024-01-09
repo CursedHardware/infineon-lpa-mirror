@@ -178,6 +178,7 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
         TextView textViewClassBody = findViewById(R.id.textViewClassBody);
         TextView textViewProviderBody = findViewById(R.id.textViewProviderBody);
         TextView textViewNicknameBody = findViewById(R.id.textViewNicknameBody);
+        TextView textViewNameBody = findViewById(R.id.textViewNameBody);
 
         imageViewEditNicknameIcon.setOnClickListener(editNicknameOnClickListener);
 
@@ -192,6 +193,7 @@ final public class ProfileDetailsActivity extends AppCompatActivity {
         textViewIccidBody.setText(iccidUserString);
         textViewProviderBody.setText(profileMetadata.getProvider());
         textViewNicknameBody.setText(profileMetadata.getNickname());
+        textViewNameBody.setText(profileMetadata.getName());
         textViewClassBody.setText(profileclassString);
 
         setProfileStatus(profileMetadata.isEnabled());

@@ -117,6 +117,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:text="@string/profile_details_name_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/textViewNameBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/profile_details_name_example"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="10dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:text="@string/profile_details_iccid_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"

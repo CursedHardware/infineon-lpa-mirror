@@ -74,6 +74,8 @@
     <string name="profile_details_nickname_title">Nickname</string>
     <string name="profile_details_provider_title">Provider</string>
     <string name="profile_details_provider_example">Telefon</string>
+    <string name="profile_details_name_title">Name</string>
+    <string name="profile_details_name_example">Telefon</string>
     <string name="profile_details_iccid_title">ICCID</string>
     <string name="profile_details_iccid_example">98000000000000002000</string>
     <string name="profile_details_class_title">Profile Class</string>
