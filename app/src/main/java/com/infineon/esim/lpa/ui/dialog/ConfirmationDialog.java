@@ -42,7 +42,7 @@ public class ConfirmationDialog {
 
         String newProfileName = newEnabledProfile.getNickname();
         if (newEnabledProfile.getNickname() == null) {
-            newProfileName = newEnabledProfile.getName();
+            newProfileName = newEnabledProfile.getProvider();
         }
 
         if (currentEnabledProfile == null) {
@@ -55,7 +55,7 @@ public class ConfirmationDialog {
             buttonText = R.string.profile_details_button_switch_text;
             String currentProfileName = currentEnabledProfile.getNickname();
             if (currentEnabledProfile.getNickname() == null) {
-                currentProfileName = currentEnabledProfile.getName();
+                currentProfileName = currentEnabledProfile.getProvider();
             }
             String bodyFormat = parent.getString(R.string.profile_action_dialogue_switch_profile_body);
             bodyStr = String.format(bodyFormat, newProfileName, currentProfileName, currentProfileName);
