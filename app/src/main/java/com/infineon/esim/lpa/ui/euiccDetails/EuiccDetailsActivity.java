@@ -121,7 +121,11 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewEid.setText(euiccInfo.getEid());
         textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewTcaVersion.setText(euiccInfo.getProfileVersion());
-        textViewPkiIds.setText(euiccInfo.getPkiIdsAsString());
+        if (euiccInfo.getPkiIdsForSignAsString() == euiccInfo.getPkiIdsForVerifyAsString()){
+            textViewPkiIds.setText("Sign and Verify:\n"+euiccInfo.getPkiIdsForSignAsString());
+        } else {
+            textViewPkiIds.setText("Sign:\n" + euiccInfo.getPkiIdsForSignAsString()+"\nVerify:\n" + euiccInfo.getPkiIdsForVerifyAsString());
+        }
         textViewFirmwareVer.setText(euiccInfo.getEuiccFirmwareVer());
         textViewSasAccreditationNumber.setText(euiccInfo.getSasAcreditationNumber());
         textViewForbiddenProfilePolicyRules.setText(euiccInfo.getForbiddenProfilePolicyRules());
