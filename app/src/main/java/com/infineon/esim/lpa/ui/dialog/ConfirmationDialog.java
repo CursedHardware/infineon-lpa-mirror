@@ -41,6 +41,9 @@ public class ConfirmationDialog {
         String bodyStr;
 
         String newProfileName = newEnabledProfile.getNickname();
+        if (newEnabledProfile.getNickname() == null) {
+            newProfileName = newEnabledProfile.getName();
+        }
 
         if (currentEnabledProfile == null) {
             heading = R.string.profile_action_dialogue_enable_profile_heading;
@@ -51,6 +54,9 @@ public class ConfirmationDialog {
             heading = R.string.profile_action_dialogue_switch_profile_heading;
             buttonText = R.string.profile_details_button_switch_text;
             String currentProfileName = currentEnabledProfile.getNickname();
+            if (currentEnabledProfile.getNickname() == null) {
+                currentProfileName = currentEnabledProfile.getName();
+            }
             String bodyFormat = parent.getString(R.string.profile_action_dialogue_switch_profile_body);
             bodyStr = String.format(bodyFormat, newProfileName, currentProfileName, currentProfileName);
         }
