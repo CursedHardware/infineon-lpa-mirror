@@ -195,7 +195,7 @@ public class SeService implements EuiccService {
 
         try {
             Session session = reader.openSession();
-
+            Log.debug(TAG,"Reader name: " + reader.getName());
             boolean isAllowed = Atr.isAtrValid(session.getATR());
 
             session.close();

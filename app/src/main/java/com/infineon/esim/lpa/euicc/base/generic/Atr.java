@@ -102,6 +102,8 @@ public class Atr {
                 } else break;
             }
             if (isEuicc) return true;
+        } else {
+            Log.verbose(TAG, "ATR is null");
         }
         return false;
     }
