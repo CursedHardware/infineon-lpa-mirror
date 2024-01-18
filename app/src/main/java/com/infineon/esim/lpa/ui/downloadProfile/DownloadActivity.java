@@ -337,7 +337,7 @@ final public class DownloadActivity extends AppCompatActivity {
             case DOWNLOAD_PROFILE_STARTED:
             case DOWNLOAD_PROFILE_FINISHED:
                 downloadResult = viewModel.getDownloadResult();
-                if(downloadResult != null) {
+                if(authenticateResult != null && downloadResult != null) {
                     if(downloadResult.getSuccess() && authenticateResult.getSuccess()) {
                         setFinalConfirmationScreen(authenticateResult.getProfileMetadata());
                     } else {
