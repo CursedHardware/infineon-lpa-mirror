@@ -88,6 +88,7 @@ public class Es9PlusInterface {
 
         InitiateAuthenticationResp initiateAuthenticationResp = GS.fromJson(httpResponse.getContent(), InitiateAuthenticationResp.class);
         checkFunctionExecutionStatus("InitiateAuthentication", initiateAuthenticationResp);
+        if (!lastFunctionExecutionStatus.isSuccess()) return null;
 
         InitiateAuthenticationResponse initiateAuthenticationResponse = initiateAuthenticationResp.getResponse();
         Log.debug(TAG, "ES9+ <- : " + initiateAuthenticationResponse);
@@ -108,6 +109,7 @@ public class Es9PlusInterface {
 
         AuthenticateClientResp authenticateClientResp = GS.fromJson(httpResponse.getContent(), AuthenticateClientResp.class);
         checkFunctionExecutionStatus("AuthenticateClient", authenticateClientResp);
+        if (!lastFunctionExecutionStatus.isSuccess()) return null;
 
         AuthenticateClientResponseEs9 authenticateClientResponseEs9 = authenticateClientResp.getResponse();
         Log.debug(TAG, "ES9+ <- : " + authenticateClientResponseEs9);
@@ -128,6 +130,7 @@ public class Es9PlusInterface {
 
         GetBoundProfilePackageResp getBoundProfilePackageResp = GS.fromJson(httpResponse.getContent(), GetBoundProfilePackageResp.class);
         checkFunctionExecutionStatus("GetBoundProfilePackage", getBoundProfilePackageResp);
+        if (!lastFunctionExecutionStatus.isSuccess()) return null;
 
         GetBoundProfilePackageResponse getBoundProfilePackageResponse = getBoundProfilePackageResp.getResponse();
         Log.debug(TAG, "ES9+ <- : " + getBoundProfilePackageResponse);
@@ -148,6 +151,7 @@ public class Es9PlusInterface {
 
         CancelSessionResp cancelSessionResp = GS.fromJson(httpResponse.getContent(), CancelSessionResp.class);
         checkFunctionExecutionStatus("CancelSession", cancelSessionResp);
+        if (!lastFunctionExecutionStatus.isSuccess()) return null;
 
         CancelSessionResponseEs9 cancelSessionResponseEs9 = cancelSessionResp.getResponse();
         Log.debug(TAG, "ES9+ <- : " + cancelSessionResponseEs9);
@@ -191,10 +195,8 @@ public class Es9PlusInterface {
                 (responseMessage.getHeader().getFunctionExecutionStatus() != null)) {
 
             this.lastFunctionExecutionStatus = responseMessage.getHeader().getFunctionExecutionStatus();
-            String status = lastFunctionExecutionStatus.getStatus();
 
-            if(status.equals(FunctionExecutionStatus.EXECUTION_STATUS_SUCCESS) ||
-                    status.equals(FunctionExecutionStatus.EXECUTION_STATUS_WITH_WARNING)) {
+            if (lastFunctionExecutionStatus.isValid()) {
                 return;
             } else {
                 throw new RuntimeException("Error in " + functionName + ": FunctionExecutionStatus: " + lastFunctionExecutionStatus.toString());

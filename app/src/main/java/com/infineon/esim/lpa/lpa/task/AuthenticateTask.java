@@ -47,8 +47,9 @@ public class AuthenticateTask implements Callable<AuthenticateResult> {
         try {
             return lpa.authenticate(activationCode);
         } catch (Exception e) {
+            e.printStackTrace();
             Log.error(TAG," " + "Authenticating failed with exception: " + e.getMessage());
-            throw e;
+            return new AuthenticateResult(lpa.getLastEs9PlusError());
         }
     }
 }

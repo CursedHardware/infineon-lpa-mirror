@@ -61,6 +61,10 @@ public class FunctionExecutionStatus {
         return status.equals(EXECUTION_STATUS_SUCCESS) || status.equals(EXECUTION_STATUS_WITH_WARNING);
     }
 
+    public boolean isValid() {
+        return status.equals(EXECUTION_STATUS_SUCCESS) || status.equals(EXECUTION_STATUS_WITH_WARNING) || status.equals(EXECUTION_STATUS_WITH_EXPIRED) || status.equals(EXECUTION_STATUS_WITH_FAILED);
+    }
+
     @NonNull
     @Override
     public String toString() {
