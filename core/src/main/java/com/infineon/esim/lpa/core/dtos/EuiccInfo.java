@@ -24,6 +24,7 @@
 package com.infineon.esim.lpa.core.dtos;
 
 import com.beanit.jasn1.ber.types.BerOctetString;
+import com.gsma.sgp.messages.rspdefinitions.CertificationDataObject;
 import com.gsma.sgp.messages.rspdefinitions.PprIds;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
@@ -35,7 +36,6 @@ import java.util.List;
 
 public class EuiccInfo {
     private static final String TAG = EuiccInfo.class.getName();
-
     private String eid;
     private final String profileVersion;
     private final String svn;
@@ -46,6 +46,7 @@ public class EuiccInfo {
     private final List<String> pkiIdsForVerify;
     private final PprIds forbiddenProfilePolicyRules;
     private final BerOctetString extCardResource;
+    private final CertificationDataObject certificationDataObject;
 
     public EuiccInfo(EUICCInfo2 euiccInfo2) {
         this(null, euiccInfo2);
@@ -66,6 +67,7 @@ public class EuiccInfo {
         this.forbiddenProfilePolicyRules = euiccInfo2.getForbiddenProfilePolicyRules();
 
         this.extCardResource = euiccInfo2.getExtCardResource();
+        this.certificationDataObject = euiccInfo2.getCertificationDataObject();
     }
 
     public void setEid(String eid) {
@@ -137,6 +139,24 @@ public class EuiccInfo {
 
     public String getExtCardResource() {
         return extCardResource.toString();
+    }
+
+    public String getCertificationDataObject() {
+        StringBuilder sb = new StringBuilder();
+        if (certificationDataObject != null) {
+            sb.append(certificationDataObject);
+
+            sb.delete(0,2);
+            sb.deleteCharAt(sb.length()-1);
+
+            int i;
+            while ((i = sb.indexOf("\t")) != -1) {
+                sb.deleteCharAt(i);
+            }
+            return sb.toString();
+        }
+
+        return "N/A";
     }
 
     private static String versionTypeToString(VersionType versionType) {

@@ -109,6 +109,8 @@
     <string name="euicc_info_ext_card_resource_title">Extended Card Resource Information</string>
     <string name="euicc_info_ext_card_resource_example">8101008204000B967A8304000022AA</string>
     <string name="euicc_info_ext_card_resource_memory_example">Free Non-volatile Memory: %1$s KB\nFree Volatile Memory: %2$s KB</string>
+    <string name="euicc_info_certificationDataObject_title">CertificationDataObject</string>
+    <string name="euicc_info_certificationDataObject_example">1.2.840.1234567/myPlatformLabel</string>
 
     <!-- Scan Barcode Activity-->
     <string name="scan_qr_title">Download Profile</string>

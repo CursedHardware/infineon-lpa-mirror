@@ -228,5 +228,30 @@
         android:textIsSelectable="true"
         />
 
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_certificationDataObject_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
+
+        <TextView
+            android:id="@+id/text_certificationDataObject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_certificationDataObject_example"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:typeface="monospace"
+            android:textIsSelectable="true"
+            />
+
     </LinearLayout>
 </ScrollView>

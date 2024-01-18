@@ -55,6 +55,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
     private TextView textViewForbiddenProfilePolicyRules;
     private TextView textViewExtCardResource;
     private TextView textViewExtCardResource_memory;
+    private TextView textViewCertificationDataObject;
 
     private AlertDialog progressDialog;
 
@@ -104,6 +105,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewForbiddenProfilePolicyRules = findViewById(R.id.text_forbiddenProfilePolicyRules);
         textViewExtCardResource = findViewById(R.id.text_extCardResource);
         textViewExtCardResource_memory = findViewById(R.id.text_extCardResource_memory);
+        textViewCertificationDataObject = findViewById(R.id.text_certificationDataObject);
 
         textViewEid.setText("");
         textViewGsmaVersion.setText("");
@@ -114,6 +116,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewForbiddenProfilePolicyRules.setText("");
         textViewExtCardResource.setText("");
         textViewExtCardResource_memory.setText("");
+        textViewCertificationDataObject.setText("");
     }
 
     private void setEuiccInfo(EuiccInfo euiccInfo) {
@@ -132,6 +135,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewForbiddenProfilePolicyRules.setText(euiccInfo.getForbiddenProfilePolicyRules());
         textViewExtCardResource.setText(extCardResource);
         textViewExtCardResource_memory.setText(getString(R.string.euicc_info_ext_card_resource_memory_example, memoryData.get(0), memoryData.get(1)));
+        textViewCertificationDataObject.setText(euiccInfo.getCertificationDataObject());
     }
 
     private void dismissProgressDialog() {
