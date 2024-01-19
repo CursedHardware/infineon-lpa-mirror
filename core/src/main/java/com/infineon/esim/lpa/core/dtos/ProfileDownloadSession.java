@@ -428,6 +428,8 @@ public class ProfileDownloadSession {
                 updateState(PROFILE_INSTALLATION_SUCCESS);
                 return;
             }
+
+            this.lastError = new RemoteError("es10-error","null","null",profileInstallationResult.getProfileInstallationResultData().getFinalResult().getErrorResult().toString());
         }
 
         updateState(PROFILE_INSTALLATION_FAILED);
