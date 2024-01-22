@@ -38,8 +38,8 @@ import com.infineon.esim.lpa.util.android.DialogHelper;
 import com.infineon.esim.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class EuiccDetailsActivity extends AppCompatActivity {
     private static final String TAG = EuiccDetailsActivity.class.getName();
@@ -47,14 +47,20 @@ public class EuiccDetailsActivity extends AppCompatActivity {
     private EuiccDetailsViewModel viewModel;
 
     private TextView textViewEid;
-    private TextView textViewGsmaVersion;
     private TextView textViewTcaVersion;
-    private TextView textViewPkiIds;
+    private TextView textViewGsmaVersion;
     private TextView textViewFirmwareVer;
-    private TextView textViewSasAccreditationNumber;
-    private TextView textViewForbiddenProfilePolicyRules;
     private TextView textViewExtCardResource;
     private TextView textViewExtCardResource_memory;
+    private TextView textViewUiccCapability;
+    private TextView textViewJavaCardVersion;
+    private TextView textViewGlobalPlatformVersion;
+    private TextView textViewRspCapability;
+    private TextView textViewPkiIds;
+    private TextView textVieweUICCCategory;
+    private TextView textViewForbiddenProfilePolicyRules;
+    private TextView textViewProtectionProfileVersion;
+    private TextView textViewSasAccreditationNumber;
     private TextView textViewCertificationDataObject;
 
     private AlertDialog progressDialog;
@@ -97,44 +103,60 @@ public class EuiccDetailsActivity extends AppCompatActivity {
 
     private void attachUi() {
         textViewEid = findViewById(R.id.text_eid);
-        textViewGsmaVersion = findViewById(R.id.text_gsma_version);
         textViewTcaVersion = findViewById(R.id.text_tca_version);
-        textViewPkiIds = findViewById(R.id.text_pki_ids);
+        textViewGsmaVersion = findViewById(R.id.text_gsma_version);
         textViewFirmwareVer = findViewById(R.id.text_firmware_version);
-        textViewSasAccreditationNumber = findViewById(R.id.text_sas_accreditation);
-        textViewForbiddenProfilePolicyRules = findViewById(R.id.text_forbiddenProfilePolicyRules);
         textViewExtCardResource = findViewById(R.id.text_extCardResource);
         textViewExtCardResource_memory = findViewById(R.id.text_extCardResource_memory);
+        textViewUiccCapability = findViewById(R.id.text_uicc_capability);
+        textViewJavaCardVersion = findViewById(R.id.text_ts102241_version);
+        textViewGlobalPlatformVersion = findViewById(R.id.text_globalplatform_version);
+        textViewRspCapability = findViewById(R.id.text_rsp_capability);
+        textViewPkiIds = findViewById(R.id.text_pki_ids);
+        textVieweUICCCategory = findViewById(R.id.text_euicc_category);
+        textViewForbiddenProfilePolicyRules = findViewById(R.id.text_forbiddenProfilePolicyRules);
+        textViewProtectionProfileVersion = findViewById(R.id.text_protection_profile_version);
+        textViewSasAccreditationNumber = findViewById(R.id.text_sas_accreditation);
         textViewCertificationDataObject = findViewById(R.id.text_certificationDataObject);
 
         textViewEid.setText("");
-        textViewGsmaVersion.setText("");
         textViewTcaVersion.setText("");
-        textViewPkiIds.setText("");
+        textViewGsmaVersion.setText("");
         textViewFirmwareVer.setText("");
-        textViewSasAccreditationNumber.setText("");
-        textViewForbiddenProfilePolicyRules.setText("");
         textViewExtCardResource.setText("");
         textViewExtCardResource_memory.setText("");
+        textViewUiccCapability.setText("");
+        textViewJavaCardVersion.setText("");
+        textViewGlobalPlatformVersion.setText("");
+        textViewRspCapability.setText("");
+        textViewPkiIds.setText("");
+        textVieweUICCCategory.setText("");
+        textViewForbiddenProfilePolicyRules.setText("");
+        textViewProtectionProfileVersion.setText("");
+        textViewSasAccreditationNumber.setText("");
         textViewCertificationDataObject.setText("");
     }
 
     private void setEuiccInfo(EuiccInfo euiccInfo) {
         String extCardResource = euiccInfo.getExtCardResource();
+        String pkiIds = parsePkiList(euiccInfo.getPkiIdsForSign(),euiccInfo.getPkiIdsForVerify());
         ArrayList<String> memoryData = parseMemoryData(extCardResource);
+
         textViewEid.setText(euiccInfo.getEid());
-        textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewTcaVersion.setText(euiccInfo.getProfileVersion());
-        if (Objects.equals(euiccInfo.getPkiIdsForSignAsString(), euiccInfo.getPkiIdsForVerifyAsString())){
-            textViewPkiIds.setText("Sign and Verify:\n"+euiccInfo.getPkiIdsForSignAsString());
-        } else {
-            textViewPkiIds.setText("Sign:\n" + euiccInfo.getPkiIdsForSignAsString()+"\nVerify:\n" + euiccInfo.getPkiIdsForVerifyAsString());
-        }
+        textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewFirmwareVer.setText(euiccInfo.getEuiccFirmwareVer());
-        textViewSasAccreditationNumber.setText(euiccInfo.getSasAcreditationNumber());
-        textViewForbiddenProfilePolicyRules.setText(euiccInfo.getForbiddenProfilePolicyRules());
-        textViewExtCardResource.setText(extCardResource);
+        textViewExtCardResource.setText(euiccInfo.getExtCardResource());
         textViewExtCardResource_memory.setText(getString(R.string.euicc_info_ext_card_resource_memory_example, memoryData.get(0), memoryData.get(1)));
+        textViewUiccCapability.setText(euiccInfo.getUiccCapability());
+        textViewJavaCardVersion.setText(euiccInfo.getTs102241Version());
+        textViewGlobalPlatformVersion.setText(euiccInfo.getGlobalplatformVersion());
+        textViewRspCapability.setText(euiccInfo.getRspCapability());
+        textViewPkiIds.setText(pkiIds);
+        textVieweUICCCategory.setText(euiccInfo.getEuiccCategory());
+        textViewForbiddenProfilePolicyRules.setText(euiccInfo.getForbiddenProfilePolicyRules());
+        textViewProtectionProfileVersion.setText(euiccInfo.getPpVersion());
+        textViewSasAccreditationNumber.setText(euiccInfo.getSasAcreditationNumber());
         textViewCertificationDataObject.setText(euiccInfo.getCertificationDataObject());
     }
 
@@ -143,6 +165,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
     private static ArrayList<String> parseMemoryData(String hexData) {
         String str = hexData;
         String[] tags2 = {"82", "83"};
@@ -167,6 +190,30 @@ public class EuiccDetailsActivity extends AppCompatActivity {
             str = hexData;
         }
         return memoryDataList;
+    }
+
+    private static String parsePkiIds(List<String> pki) {
+        if (!pki.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+
+            for (String pkiId : pki) {
+                sb.append(pkiId);
+                sb.append("\n");
+            }
+            return sb.subSequence(0, sb.length() - 1).toString();
+        }
+        return "N/A";
+    }
+
+    private static String parsePkiList(List<String> ForSign, List<String> ForVerify) {
+        String sign = parsePkiIds(ForSign);
+        String verify = parsePkiIds(ForVerify);
+
+        if (sign.equals(verify)) {
+            return "Sign and Verify:\n" + sign;
+        } else {
+            return "Sign: " + sign + "\nVerify: " + verify;
+        }
     }
 
     final Observer<AsyncActionStatus> actionStatusObserver = actionStatus -> {

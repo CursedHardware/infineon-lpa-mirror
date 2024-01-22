@@ -31,202 +31,344 @@
         android:orientation="vertical"
         android:padding="30dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_eid_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_eid_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_eid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_eid_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:id="@+id/text_eid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_eid_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_gsma_sgp_22_version_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_gsma_sgp_22_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
+        <TextView
+            android:id="@+id/text_gsma_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_gsma_sgp22_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_gsma_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_gsma_sgp22_version_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_tca_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_tca_version_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:id="@+id/text_tca_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_tca_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_tca_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_tca_version_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_firmware_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_firmware_version_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:id="@+id/text_firmware_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_firmware_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <TextView
-        android:id="@+id/text_firmware_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_firmware_version_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_ext_card_resource_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            android:textStyle="bold" />
 
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <TextView
+            android:id="@+id/text_extCardResource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_ext_card_resource_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_ext_card_resource_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="true"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/text_extCardResource_memory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_ext_card_resource_memory_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_extCardResource"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_ext_card_resource_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
-    <TextView
-        android:id="@+id/text_extCardResource_memory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_ext_card_resource_memory_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_sas_accreditation_number_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_uicc_capability_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
+        <TextView
+            android:id="@+id/text_uicc_capability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_uicc_capability_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_sas_accreditation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_sas_accreditation_number_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="true"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_ts102241_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_forbiddenProfilePolicyRules"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_example"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:id="@+id/text_ts102241_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_ts102241_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
-    <Space
-        android:layout_height="20dp"
-        android:layout_width="match_parent" />
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_pki_ids_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_globalplatform_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
 
-    <TextView
-        android:id="@+id/text_pki_ids"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="@string/euicc_info_pki_ids_example"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:typeface="monospace"
-        android:textIsSelectable="true"
-        />
+        <TextView
+            android:id="@+id/text_globalplatform_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_globalplatform_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_rsp_capability_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
+
+        <TextView
+            android:id="@+id/text_rsp_capability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_rsp_capability_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_pki_ids_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
+
+        <TextView
+            android:id="@+id/text_pki_ids"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_pki_ids_example"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:typeface="monospace"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_category_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_euicc_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_category_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_forbiddenProfilePolicyRules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_info_forbidden_profile_policy_rules_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_protection_profile_version_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_protection_profile_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_protection_profile_version_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_sas_accreditation_number_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+            />
+
+        <TextView
+            android:id="@+id/text_sas_accreditation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/euicc_info_euicc_sas_accreditation_number_example"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"
+            />
 
         <Space
             android:layout_height="20dp"
@@ -252,6 +394,10 @@
             android:typeface="monospace"
             android:textIsSelectable="true"
             />
+
+        <Space
+            android:layout_height="20dp"
+            android:layout_width="match_parent" />
 
     </LinearLayout>
 </ScrollView>

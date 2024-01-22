@@ -23,9 +23,10 @@
 
 package com.infineon.esim.lpa.core.dtos;
 
+import com.beanit.jasn1.ber.types.BerBitString;
+import com.beanit.jasn1.ber.types.BerInteger;
 import com.beanit.jasn1.ber.types.BerOctetString;
 import com.gsma.sgp.messages.rspdefinitions.CertificationDataObject;
-import com.gsma.sgp.messages.rspdefinitions.PprIds;
 import com.gsma.sgp.messages.pkix1implicit88.SubjectKeyIdentifier;
 import com.gsma.sgp.messages.rspdefinitions.EUICCInfo2;
 import com.gsma.sgp.messages.rspdefinitions.VersionType;
@@ -40,13 +41,20 @@ public class EuiccInfo {
     private final String profileVersion;
     private final String svn;
     private final String euiccFirmwareVer;
+    private final String extCardResource;
+    private final String uiccCapability;
+    private final String ts102241Version;
     private final String globalplatformVersion;
+    private final String rspCapability;
     private final String sasAcreditationNumber;
     private final List<String> pkiIdsForSign;
     private final List<String> pkiIdsForVerify;
-    private final PprIds forbiddenProfilePolicyRules;
-    private final BerOctetString extCardResource;
-    private final CertificationDataObject certificationDataObject;
+    private final String euiccCategory;
+    private final String forbiddenProfilePolicyRules;
+    private final String ppVersion;
+    private final String certificationDataObject;
+    private final String treProperties;
+    private final String treProductReference;
 
     public EuiccInfo(EUICCInfo2 euiccInfo2) {
         this(null, euiccInfo2);
@@ -54,20 +62,29 @@ public class EuiccInfo {
 
     public EuiccInfo(String eid, EUICCInfo2 euiccInfo2) {
         this.eid = eid;
+
         this.profileVersion = versionTypeToString(euiccInfo2.getProfileVersion());
         this.svn = versionTypeToString(euiccInfo2.getSvn());
         this.euiccFirmwareVer = versionTypeToString(euiccInfo2.getEuiccFirmwareVer());
+        this.ts102241Version = versionTypeToString(euiccInfo2.getTs102241Version());
         this.globalplatformVersion = versionTypeToString(euiccInfo2.getGlobalplatformVersion());
+        this.ppVersion = versionTypeToString(euiccInfo2.getPpVersion());
 
-        this.sasAcreditationNumber = euiccInfo2.getSasAcreditationNumber().toString();
+        this.uiccCapability = bitStringToString(euiccInfo2.getUiccCapability());
+        this.rspCapability = bitStringToString(euiccInfo2.getRspCapability());
+        this.forbiddenProfilePolicyRules = bitStringToString(euiccInfo2.getForbiddenProfilePolicyRules());
+        this.treProperties = bitStringToString(euiccInfo2.getTreProperties());
 
-        this.pkiIdsForSign = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForSigning());
+        this.extCardResource = octetStringToString(euiccInfo2.getExtCardResource());
+        this.sasAcreditationNumber = octetStringToString(euiccInfo2.getSasAcreditationNumber());
+        this.treProductReference = octetStringToString(euiccInfo2.getTreProductReference());
+
         this.pkiIdsForVerify = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForVerification());
+        this.pkiIdsForSign = euiccPkiIdList(euiccInfo2.getEuiccCiPKIdListForSigning());
 
-        this.forbiddenProfilePolicyRules = euiccInfo2.getForbiddenProfilePolicyRules();
+        this.certificationDataObject = certificationDataObject(euiccInfo2.getCertificationDataObject());
 
-        this.extCardResource = euiccInfo2.getExtCardResource();
-        this.certificationDataObject = euiccInfo2.getCertificationDataObject();
+        this.euiccCategory = euiccCategory(euiccInfo2.getEuiccCategory());
     }
 
     public void setEid(String eid) {
@@ -90,73 +107,60 @@ public class EuiccInfo {
         return euiccFirmwareVer;
     }
 
+    public String getExtCardResource() {
+        return extCardResource;
+    }
+
+    public String getUiccCapability() {
+        return uiccCapability;
+    }
+
+    public String getTs102241Version() {
+        return ts102241Version;
+    }
 
     public String getGlobalplatformVersion() {
         return globalplatformVersion;
     }
 
-    public String getSasAcreditationNumber() {
-        return sasAcreditationNumber;
-    }
-
-    public List<String> getPkiIdsForSign() {
-        return pkiIdsForSign;
+    public String getRspCapability() {
+        return rspCapability;
     }
 
     public List<String> getPkiIdsForVerify() {
         return pkiIdsForVerify;
     }
 
-    public String getPkiIdsForSignAsString(){
-        StringBuilder sb = new StringBuilder();
-        if (!pkiIdsForSign.isEmpty()) {
-            for(String pkiId : pkiIdsForSign) {
-                sb.append(pkiId);
-                sb.append("\n");
-            }
-        } else {
-            return "Not Found";
-        }
-        return sb.subSequence(0, sb.length() - 1).toString();
+    public List<String> getPkiIdsForSign() {
+        return pkiIdsForSign;
     }
 
-    public String getPkiIdsForVerifyAsString(){
-        StringBuilder sb = new StringBuilder();
-        if (!pkiIdsForVerify.isEmpty()) {
-            for(String pkiId : pkiIdsForVerify) {
-                sb.append(pkiId);
-                sb.append("\n");
-            }
-        } else {
-            return "Not Found";
-        }
-        return sb.subSequence(0, sb.length() - 1).toString();
+    public String getEuiccCategory() {
+        return euiccCategory;
     }
 
     public String getForbiddenProfilePolicyRules() {
-        return forbiddenProfilePolicyRules.toString();
+        return forbiddenProfilePolicyRules;
     }
 
-    public String getExtCardResource() {
-        return extCardResource.toString();
+    public String getPpVersion() {
+        return ppVersion;
+    }
+
+    public String getSasAcreditationNumber() {
+        return sasAcreditationNumber;
     }
 
     public String getCertificationDataObject() {
-        StringBuilder sb = new StringBuilder();
-        if (certificationDataObject != null) {
-            sb.append(certificationDataObject);
+        return certificationDataObject;
+    }
 
-            sb.delete(0,2);
-            sb.deleteCharAt(sb.length()-1);
+    public String getTreProperties() {
+        return treProperties;
+    }
 
-            int i;
-            while ((i = sb.indexOf("\t")) != -1) {
-                sb.deleteCharAt(i);
-            }
-            return sb.toString();
-        }
-
-        return "N/A";
+    public String getTreProductReference() {
+        return treProductReference;
     }
 
     private static String versionTypeToString(VersionType versionType) {
@@ -170,6 +174,22 @@ public class EuiccInfo {
 
                 return major + "." + middle + "." + minor;
             }
+        }
+
+        return "N/A";
+    }
+
+    private static String bitStringToString(BerBitString string) {
+        if (string != null) {
+            return string.toString();
+        }
+
+        return "N/A";
+    }
+
+    private static String octetStringToString(BerOctetString string) {
+        if (string != null) {
+            return string.toString();
         }
 
         return "N/A";
@@ -195,5 +215,37 @@ public class EuiccInfo {
         return pkiIdList;
     }
 
+    private static String certificationDataObject(CertificationDataObject certData) {
+        if (certData != null) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(certData);
+            sb.delete(0, 2);
+
+            int i;
+            while ((i = sb.indexOf("\t")) != -1) {
+                sb.deleteCharAt(i);
+            }
+
+            return sb.subSequence(0, sb.length() - 2).toString();
+        }
+        return "N/A";
+    }
+
+    private static String euiccCategory(BerInteger euiccCategory) {
+        if (euiccCategory != null) {
+            switch (euiccCategory.byteValue()) {
+                case 0:
+                    return "other";
+                case 1:
+                    return "basicEuicc";
+                case 2:
+                    return "mediumEuicc";
+                case 3:
+                    return "contactlessEuicc";
+            }
+        }
+        return "N/A";
+    }
 
 }
