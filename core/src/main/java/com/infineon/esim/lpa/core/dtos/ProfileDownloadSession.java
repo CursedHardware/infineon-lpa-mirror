@@ -429,7 +429,7 @@ public class ProfileDownloadSession {
                 return;
             }
 
-            this.lastError = new RemoteError("es10-error","null","null",profileInstallationResult.getProfileInstallationResultData().getFinalResult().getErrorResult().toString());
+            this.lastError = new RemoteError("es10-error",null,null,null, profileInstallationResult.getProfileInstallationResultData().getFinalResult().getErrorResult().toString());
         }
 
         updateState(PROFILE_INSTALLATION_FAILED);

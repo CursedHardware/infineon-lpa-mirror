@@ -31,6 +31,7 @@ public class StatusCodeData {
     private String subjectCode;
     private String reasonCode;
     private String message;
+    private String subjectIdentifier;
 
     public StatusCodeData() {
     }
@@ -44,6 +45,7 @@ public class StatusCodeData {
     public StatusCodeData(String subjectCode, String reasonCode, String message, String subjectIdentifier) {
         this.subjectCode = subjectCode;
         this.reasonCode = reasonCode;
+        this.subjectIdentifier = subjectIdentifier;
         this.message = message;
     }
 
@@ -53,6 +55,10 @@ public class StatusCodeData {
 
     public String getReasonCode() {
         return reasonCode;
+    }
+
+    public String getSubjectIdentifier() {
+        return subjectIdentifier;
     }
 
     public String getMessage() {
@@ -65,6 +71,7 @@ public class StatusCodeData {
         return "StatusCodeData{" +
                 "subjectCode='" + subjectCode + '\'' +
                 ", reasonCode='" + reasonCode + '\'' +
+                ", subjectIdentifier='" + subjectIdentifier + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }

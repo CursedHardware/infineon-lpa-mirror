@@ -60,12 +60,15 @@ public class RemoteOperationResult {
         }
 
         if (remoteError != null) {
-            return String.format(
-                    "Status: %1$s\nSubject Code: %2$s\nReason Code: %3$s\nMessage: %4$s",
-                    remoteError.getStatus(),
-                    remoteError.getSubjectCode(),
-                    remoteError.getReasonCode(),
-                    remoteError.getMessage());
+            StringBuilder sb = new StringBuilder();
+
+            if (remoteError.getStatus() != null) sb.append(String.format("Status: %1$s\n",remoteError.getStatus()));
+            if (remoteError.getSubjectCode() != null) sb.append(String.format("Subject Code: %1$s\n",remoteError.getSubjectCode()));
+            if (remoteError.getReasonCode() != null) sb.append(String.format("Reason Code: %1$s\n",remoteError.getReasonCode()));
+            if (remoteError.getSubjectIdentifier() != null) sb.append(String.format("SubjectIdentifier: %1$s\n",remoteError.getSubjectIdentifier()));
+            if (remoteError.getMessage() != null) sb.append(String.format("Message: %1$s",remoteError.getMessage()));
+
+            return sb.toString();
         }
 
         return null;
