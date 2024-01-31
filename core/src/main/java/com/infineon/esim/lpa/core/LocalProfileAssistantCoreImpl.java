@@ -46,6 +46,7 @@ import com.infineon.esim.lpa.core.worker.local.DeleteProfileWorker;
 import com.infineon.esim.lpa.core.worker.local.DisableProfileWorker;
 import com.infineon.esim.lpa.core.worker.local.EnableProfileWorker;
 import com.infineon.esim.lpa.core.worker.local.GetEidWorker;
+import com.infineon.esim.lpa.core.worker.local.GetEuiccConfiguredAddressesWorker;
 import com.infineon.esim.lpa.core.worker.local.GetEuiccInfo2Worker;
 import com.infineon.esim.lpa.core.worker.local.ListProfilesWorker;
 import com.infineon.esim.lpa.core.worker.local.SetNicknameWorker;
@@ -118,6 +119,11 @@ public class LocalProfileAssistantCoreImpl implements LocalProfileAssistantCore 
     @Override
     public String getEID() throws Exception {
         return new GetEidWorker(es10Interface).getEid();
+    }
+
+    @Override
+    public String getEuiccConfiguredAddresses() throws Exception {
+        return new GetEuiccConfiguredAddressesWorker(es10Interface).getEuiccConfiguredAddresses();
     }
 
     @Override

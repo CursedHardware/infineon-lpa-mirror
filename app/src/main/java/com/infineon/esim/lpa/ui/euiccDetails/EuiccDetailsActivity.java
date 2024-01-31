@@ -47,6 +47,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
     private EuiccDetailsViewModel viewModel;
 
     private TextView textViewEid;
+    private TextView textViewConfiguredAddresses;
     private TextView textViewTcaVersion;
     private TextView textViewGsmaVersion;
     private TextView textViewFirmwareVer;
@@ -103,6 +104,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
 
     private void attachUi() {
         textViewEid = findViewById(R.id.text_eid);
+        textViewConfiguredAddresses = findViewById(R.id.text_configured_addresses);
         textViewTcaVersion = findViewById(R.id.text_tca_version);
         textViewGsmaVersion = findViewById(R.id.text_gsma_version);
         textViewFirmwareVer = findViewById(R.id.text_firmware_version);
@@ -120,6 +122,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         textViewCertificationDataObject = findViewById(R.id.text_certificationDataObject);
 
         textViewEid.setText("");
+        textViewConfiguredAddresses.setText("");
         textViewTcaVersion.setText("");
         textViewGsmaVersion.setText("");
         textViewFirmwareVer.setText("");
@@ -143,6 +146,7 @@ public class EuiccDetailsActivity extends AppCompatActivity {
         ArrayList<String> memoryData = parseMemoryData(extCardResource);
 
         textViewEid.setText(euiccInfo.getEid());
+        textViewConfiguredAddresses.setText(euiccInfo.getConfiguredAddresses());
         textViewTcaVersion.setText(euiccInfo.getProfileVersion());
         textViewGsmaVersion.setText(euiccInfo.getSvn());
         textViewFirmwareVer.setText(euiccInfo.getEuiccFirmwareVer());

@@ -44,8 +44,12 @@ public class GetEuiccInfoTask implements Callable<EuiccInfo> {
             String eid = lpa.getEID();
             Log.debug(TAG,"EID: " + eid);
 
+            String address = lpa.getEuiccConfiguredAddresses();
+            Log.debug(TAG,"EuiccConfiguredAddresses: " + address);
+
             EuiccInfo euiccInfo = lpa.getEuiccInfo2();
             euiccInfo.setEid(eid);
+            euiccInfo.setConfiguredAddresses(address);
 
             Log.debug(TAG,"EuiccInfo: " + euiccInfo);
 

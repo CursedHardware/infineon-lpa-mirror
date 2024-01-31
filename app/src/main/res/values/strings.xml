@@ -94,6 +94,8 @@
     <string name="euicc_info_progress_getting_euicc_info">Reading eUICC information</string>
     <string name="euicc_info_eid_title">EID</string>
     <string name="euicc_info_eid_example">89034011560010000000000000000121</string>
+    <string name="euicc_info_configured_addresses_title">eUICC Configured Addresses</string>
+    <string name="euicc_info_configured_addresses_example">rootDSAddress: testrootsmds.gsma.com</string>
     <string name="euicc_info_tca_version_title">TCA eUICC Profile Package Version</string>
     <string name="euicc_info_tca_version_example">2.2.2</string>
     <string name="euicc_info_gsma_sgp_22_version_title">GSMA SGP.22 Version</string>
