@@ -383,7 +383,8 @@ public class Bytes {
      * @return Byte array with decoded data
      */
     public static byte[] decodeBase64String(String input) {
-        return Base64.getDecoder().decode(input);
+            String str = input.replace("\n","");
+        return Base64.getDecoder().decode(str);
     }
 
     public static String encodeString(byte[] input) {
